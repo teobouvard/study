@@ -1,9 +1,9 @@
 /*************************************************************************
-                           Collection  -  description
-                             -------------------
-    début                : $DATE$
-    copyright            : (C) $YEAR$ par $AUTHOR$
-    e-mail               : $EMAIL$
+Collection  -  description
+-------------------
+début                : $DATE$
+copyright            : (C) $YEAR$ par $AUTHOR$
+e-mail               : $EMAIL$
 *************************************************************************/
 
 //---------- Interface de la classe <Collection> (fichier Collection.h) ----------------
@@ -24,48 +24,36 @@
 
 class Collection
 {
-//----------------------------------------------------------------- PUBLIC
+	//----------------------------------------------------------------- PUBLIC
 
 public:
-//----------------------------------------------------- Méthodes publiques
-    // type Méthode ( liste des paramètres );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-	
+	//----------------------------------------------------- Méthodes publiques
+
+	//procédure permettant de réallouer le tableau de trajets lorsqu'il est plein
+	//la taille du tableau est doublée à chaque appel à cette procédure
+	//arr : tableau de trajets 		n : taille actuelle du tableau
+	void Resize();
+
 	void Afficher() const;
 	void Ajouter(Trajet * t);
-	
-//------------------------------------------------- Surcharge d'opérateurs
-    Collection & operator = ( const Collection & unCollection );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
 
+	//------------------------------------------------- Surcharge d'opérateurs
+	//Collection & operator = ( const Collection & unCollection );
 
-//-------------------------------------------- Constructeurs - destructeur
-    Collection ( const Collection & unCollection );
-
-    Collection ();
-
-    virtual ~Collection ( );
-
-
-//------------------------------------------------------------------ PRIVE
+	//-------------------------------------------- Constructeurs - destructeur
+	Collection ( const Collection & unCollection );
+	Collection ();
+	virtual ~Collection ( );
+	//------------------------------------------------------------------ PRIVE
 
 protected:
-//----------------------------------------------------- Méthodes protégées
+	//----------------------------------------------------- Méthodes protégées
 
-//----------------------------------------------------- Attributs protégés
-    int nbElements;
-    int tailleTableau;
-    Trajet** elements;
+	//----------------------------------------------------- Attributs protégés
+	int nbElements;
+	int tailleTableau;
+	Trajet** elements;
 
 };
 
-//-------------------------------- Autres définitions dépendantes de <Collection>
-
 #endif // Collection_H
-

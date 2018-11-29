@@ -1,9 +1,9 @@
 /*************************************************************************
-                           Trajet  -  description
-                             -------------------
-    début                : $DATE$
-    copyright            : (C) $YEAR$ par $AUTHOR$
-    e-mail               : $EMAIL$
+Trajet  -  description
+-------------------
+début                : $DATE$
+copyright            : (C) $YEAR$ par $AUTHOR$
+e-mail               : $EMAIL$
 *************************************************************************/
 
 //---------- Interface de la classe <Trajet> (fichier Trajet.h) ----------------
@@ -26,44 +26,28 @@ using namespace std;
 
 class Trajet
 {
-//----------------------------------------------------------------- PUBLIC
+	//----------------------------------------------------------------- PUBLIC
 
 public:
-//----------------------------------------------------- Méthodes publiques
-    // type Méthode ( liste des paramètres );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-	
+	//----------------------------------------------------- Méthodes publiques
+
 	virtual void Afficher();
+	//------------------------------------------------- Surcharge d'opérateurs
+	//Trajet & operator = ( const Trajet & unTrajet );
 
+	//-------------------------------------------- Constructeurs - destructeur
+	Trajet ( const Trajet & unTrajet );
+	Trajet (const char * villeDep, const char * villeArr);
+	virtual ~Trajet ( );
 
-//------------------------------------------------- Surcharge d'opérateurs
-    //Trajet & operator = ( const Trajet & unTrajet );
+	//------------------------------------------------------------------ PRIVE
 
-
-
-//-------------------------------------------- Constructeurs - destructeur
-    Trajet ( const Trajet & unTrajet );
-
-
-    Trajet (const char * villeDep, const char * villeArr);
-
-
-    virtual ~Trajet ( );
-
-//------------------------------------------------------------------ PRIVE
-    
 protected:
-//----------------------------------------------------- Méthodes protégées
+	//----------------------------------------------------- Méthodes protégées
 
-//----------------------------------------------------- Attributs protégés
-    char * villeDepart;
-    char * villeArrivee;
+	//----------------------------------------------------- Attributs protégés
+	char * villeDepart;
+	char * villeArrivee;
 };
 
-//-------------------------------- Autres définitions dépendantes de <Trajet>
-
 #endif // Trajet_H
-

@@ -1,10 +1,10 @@
 /*************************************************************************
-                           TrajetSimple  -  description
-                             -------------------
-    début                : $DATE$
-    copyright            : (C) $YEAR$ par $AUTHOR$
-    e-mail               : $EMAIL$
- *************************************************************************/
+TrajetSimple  -  description
+-------------------
+début                : $DATE$
+copyright            : (C) $YEAR$ par $AUTHOR$
+e-mail               : $EMAIL$
+*************************************************************************/
 
 //---------- Réalisation de la classe <TrajetSimple> (fichier TrajetSimple.cpp) ------------
 
@@ -51,10 +51,10 @@ TrajetSimple::TrajetSimple ( const TrajetSimple & unTrajetSimple ) : Trajet(unTr
 {
 	modeTransport = new char[strlen(unTrajetSimple.modeTransport) + 1];
 	strcpy(modeTransport,unTrajetSimple.modeTransport);
-	
-#ifdef MAP
+
+	#ifdef MAP
 	cout << "Appel au constructeur de copie de <TrajetSimple>" << endl;
-#endif
+	#endif
 } //----- Fin de TrajetSimple (constructeur de copie)
 
 
@@ -62,26 +62,23 @@ TrajetSimple::TrajetSimple (const char * villeDep, const char * villeArr, const 
 {
 	modeTransport = new char[strlen(modeTrans) + 1];
 	strcpy(modeTransport,modeTrans);
-	
-#ifdef MAP
+
+	#ifdef MAP
 	cout << "Appel au constructeur de <TrajetSimple>" << endl;
-#endif
-	//----- Fin de TrajetSimple
-}
+	#endif
+} //----- Fin de TrajetSimple
 
 
 TrajetSimple::~TrajetSimple ( )
-// Algorithme :
-//
 {
 	delete [] modeTransport;
-#ifdef MAP
+
+	#ifdef MAP
 	cout << "Appel au destructeur de <TrajetSimple>" << endl;
-#endif
+	#endif
 } //----- Fin de ~TrajetSimple
 
 
 //------------------------------------------------------------------ PRIVE
 
 //----------------------------------------------------- Méthodes protégées
-

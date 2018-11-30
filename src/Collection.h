@@ -26,6 +26,8 @@ class Collection
 {
 	//----------------------------------------------------------------- PUBLIC
 
+friend class TrajetCompose;
+
 public:
 	//----------------------------------------------------- Méthodes publiques
 

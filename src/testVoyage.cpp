@@ -35,16 +35,20 @@ int main()
 
 	TrajetSimple* TS1 = new TrajetSimple("Lyon","Bordeaux","Train");
 	TrajetSimple* TS2 = new TrajetSimple("Bordeaux","Brest","Voiture");
-	TrajetSimple* TS3 = new TrajetSimple("Brest","Lille","Train");
+	//TrajetSimple* TS3 = new TrajetSimple("Brest","Lille","Train");
 
 	C1->Ajouter(TS1);
 	C1->Ajouter(TS2);
-	C1->Ajouter(TS3);
-	C1->Afficher();
+	//C1->Ajouter(TS3);
+	//C1->Afficher();
 
-	delete C1;
-	//delete TS1;
-	//delete TS2;
+	TrajetCompose* TC1 = new TrajetCompose(C1);
+
+	TC1->Afficher();
+
+	delete TC1;
+
+	delete C1; //delete les trajets contenus dans la collection
 	//delete TS3;
 
 	//TrajetCompose TC2("Paris","Marseille",1,tc2);

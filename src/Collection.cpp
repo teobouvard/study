@@ -29,10 +29,12 @@ void Collection::Resize()
 {
 	int newSize = 2*tailleTableau;
 	Trajet** resized_arr = new Trajet* [newSize]; //deleted dans le destructeur de Trajet ?
+
 	for(int i = 0; i < tailleTableau; i++){
 		resized_arr[i] = elements[i];
 	}
 	tailleTableau = newSize;
+
 	delete[] elements;
 	elements = resized_arr;
 
@@ -101,7 +103,7 @@ Collection::Collection ()
 Collection::~Collection ()
 {
 	for (int i = 0; i < nbElements; i++){
-		//delete [] elements[i]; //ce delete cause un segmentation fault du à un invalid write and free
+		//delete elements[i]; //ce delete cause un segmentation fault du à un invalid write and free
 	}
 
 	delete [] elements;

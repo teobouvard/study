@@ -7,7 +7,7 @@ e-mail               : $EMAIL$
 *************************************************************************/
 
 //---------- Interface de la classe <Trajet> (fichier Trajet.h) ----------------
-#if ! defined ( Trajet_H )
+#ifndef Trajet_H
 #define Trajet_H
 
 //--------------------------------------------------- Interfaces utilisées
@@ -31,7 +31,7 @@ class Trajet
 public:
 	//----------------------------------------------------- Méthodes publiques
 
-	virtual void Afficher(); //= 0;
+	virtual void Afficher() const = 0;
 	//-------------------------------------------------- Surcharge d'opérateurs
 	//Trajet & operator = ( const Trajet & unTrajet );
 

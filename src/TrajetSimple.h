@@ -7,20 +7,16 @@ e-mail               : $EMAIL$
 *************************************************************************/
 
 //---------- Interface de la classe <TrajetSimple> (fichier TrajetSimple.h) ----------------
-#if ! defined ( TrajetSimple_H )
+#ifndef TrajetSimple_H
 #define TrajetSimple_H
 
 //--------------------------------------------------- Interfaces utilisées
 
 //------------------------------------------------------------- Constantes
-
 //------------------------------------------------------------------ Types
 
 //------------------------------------------------------------------------
 // Rôle de la classe <TrajetSimple>
-//
-//
-//------------------------------------------------------------------------
 
 class TrajetSimple : public Trajet
 {
@@ -28,7 +24,7 @@ class TrajetSimple : public Trajet
 
 public:
   //----------------------------------------------------- Méthodes publiques
-  void Afficher();
+  void Afficher() const;
 
   //------------------------------------------------- Surcharge d'opérateurs
   //TrajetSimple & operator = ( const TrajetSimple & unTrajetSimple );

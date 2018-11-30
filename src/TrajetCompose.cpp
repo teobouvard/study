@@ -16,12 +16,11 @@ using namespace std;
 
 //------------------------------------------------------ Include personnel
 //attention à l'ordre des include
-#include "TrajetCompose.h"
-#include "Collection.h"
 #include "Trajet.h"
+#include "TrajetCompose.h"
 
 
-
+//#include "Collection.h"
 
 //------------------------------------------------------------- Constantes
 
@@ -53,25 +52,26 @@ cout << "Appel au constructeur de copie de <TrajetCompose>" << endl;
 #endif
 } //----- Fin de TrajetCompose (constructeur de copie)
 
-
-TrajetCompose::TrajetCompose (char * villeDep, char * villeArr, int nbTrajets) : Trajet(villeDep,villeArr), nombreTrajets(nbTrajets)
+*/
+TrajetCompose::TrajetCompose (char * villeDep, char * villeArr, int nbTrajets) : Trajet(villeDep,villeArr)
 {
-#ifdef MAP
-cout << "Appel au constructeur de <TrajetCompose>" << endl;
-#endif
+  nombreTrajets = nbTrajets;
+  #ifdef MAP
+  cout << "Appel au constructeur de <TrajetCompose>" << endl;
+  #endif
 } //----- Fin de TrajetCompose
 
 
 TrajetCompose::~TrajetCompose ( )
-{
+{/*
   delete [] collectionTrajets;
 
   #ifdef MAP
   cout << "Appel au destructeur de <TrajetCompose>" << endl;
   #endif
-} //----- Fin de ~TrajetCompose
-*/
+  */} //----- Fin de ~TrajetCompose
 
-//------------------------------------------------------------------ PRIVE
 
-//----------------------------------------------------- Méthodes protégées
+  //------------------------------------------------------------------ PRIVE
+
+  //----------------------------------------------------- Méthodes protégées

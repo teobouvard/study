@@ -7,7 +7,7 @@
 *************************************************************************/
 
 //---------- Interface de la classe <TrajetCompose> (fichier TrajetCompose.h) ----------------
-#if ! defined ( TrajetCompose_H )
+#ifndef TrajetCompose_H
 #define TrajetCompose_H
 
 //--------------------------------------------------- Interfaces utilisées
@@ -17,7 +17,6 @@
 //------------------------------------------------------------------ Types
 
 //------------------------------------------------------------------------
-
 class TrajetCompose : public Trajet
 {
 //----------------------------------------------------------------- PUBLIC
@@ -40,8 +39,8 @@ public:
 
 //-------------------------------------------- Constructeurs - destructeur
     //TrajetCompose ( const TrajetCompose & unTrajetCompose );
-    //TrajetCompose ( char * villeDep, char * villeArr, int nbTrajets);
-    //virtual ~TrajetCompose ( );
+    TrajetCompose (char * villeDep, char * villeArr, int nbTrajets);
+    virtual ~TrajetCompose ( );
 
 //------------------------------------------------------------------ PRIVE
 
@@ -49,7 +48,7 @@ protected:
 //----------------------------------------------------- Méthodes protégées
 
 //----------------------------------------------------- Attributs protégés
-Collection collectionTrajets;
+//Collection collectionTrajets;
 int nombreTrajets;
 char * villeDepart;
 char * villeArrivee;

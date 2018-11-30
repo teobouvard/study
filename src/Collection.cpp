@@ -34,11 +34,8 @@ void Collection::Resize()
 	}
 	tailleTableau = newSize;
 	delete[] elements;
-	/*for(int i = 0; i < tailleTableau; i++){
-		delete [] elements[i];
-	}*/
 	elements = resized_arr;
-	
+
 }
 
 void Collection::Afficher() const

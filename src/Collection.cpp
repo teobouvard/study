@@ -77,7 +77,7 @@ Collection::Collection ( const Collection & unCollection )
 	nbElements = unCollection.nbElements;
 
 	for (int i = 0; i < nbElements; i++){
-		elements[i] = unCollection.elements[i];
+		*elements[i] = *unCollection.elements[i];
 	}
 
 	#ifdef MAP

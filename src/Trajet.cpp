@@ -40,6 +40,9 @@ void Trajet::Afficher() const
 //-------------------------------------------- Constructeurs - destructeur
 Trajet::Trajet ( const Trajet & unTrajet )
 {
+	villeDepart = new char[strlen(unTrajet.villeDepart) + 1];
+	villeArrivee = new char[strlen(unTrajet.villeArrivee) + 1];
+
 	strcpy(villeDepart,unTrajet.villeDepart);
 	strcpy(villeArrivee,unTrajet.villeArrivee);
 	{

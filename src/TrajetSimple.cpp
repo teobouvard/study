@@ -26,7 +26,7 @@ using namespace std;
 
 void TrajetSimple::Afficher() const
 {
-	cout << "Trajet Simple : " << endl;
+	cout << "Trajet Simple" << endl;
 	Trajet::Afficher();
 	cout << "Moyen de Transport : " << modeTransport << endl << endl;
 }
@@ -45,7 +45,6 @@ TrajetSimple::TrajetSimple ( const TrajetSimple & unTrajetSimple ) : Trajet(unTr
 {
 	modeTransport = new char[strlen(unTrajetSimple.modeTransport) + 1];
 	strcpy(modeTransport,unTrajetSimple.modeTransport);
-
 	#ifdef MAP
 	cout << "Appel au constructeur de copie de <TrajetSimple>" << endl;
 	#endif

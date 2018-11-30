@@ -7,7 +7,7 @@
 *************************************************************************/
 
 //---------- Interface de la classe <Catalogue> (fichier Catalogue.h) ----------------
-#if ! defined ( Catalogue_H )
+#ifndef Catalogue_H
 #define Catalogue_H
 
 //--------------------------------------------------- Interfaces utilisées
@@ -22,7 +22,7 @@
 //
 //------------------------------------------------------------------------
 
-class Catalogue 
+class Catalogue
 {
 //----------------------------------------------------------------- PUBLIC
 
@@ -74,4 +74,3 @@ protected:
 //-------------------------------- Autres définitions dépendantes de <Catalogue>
 
 #endif // Catalogue_H
-

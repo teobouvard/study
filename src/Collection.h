@@ -7,7 +7,7 @@ e-mail               : $EMAIL$
 *************************************************************************/
 
 //---------- Interface de la classe <Collection> (fichier Collection.h) ----------------
-#if ! defined ( Collection_H )
+#ifndef Collection_H
 #define Collection_H
 
 //--------------------------------------------------- Interfaces utilisées
@@ -52,7 +52,6 @@ protected:
 	int nbElements;
 	int tailleTableau;
 	Trajet** elements;
-
 };
 
 #endif // Collection_H

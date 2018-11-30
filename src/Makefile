@@ -1,7 +1,7 @@
 #Outils
 CPP=g++
 LD=g++
-ECHO=echo
+ECHO=ECHO
 
 #Options
 CPPFLAGS=-ansi -pedantic -Wall -std=c++11 -DMAP -g

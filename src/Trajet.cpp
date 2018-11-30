@@ -22,7 +22,7 @@ using namespace std;
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-void Trajet::Afficher()
+void Trajet::Afficher() const
 {
 	cout << "Ville de depart : " << villeDepart << endl;
 	cout << "Ville d'arrivée : " << villeArrivee << endl;

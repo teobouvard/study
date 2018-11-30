@@ -15,21 +15,16 @@ e-mail               : $EMAIL$
 using namespace std;
 
 //------------------------------------------------------ Include personnel
-#include "TrajetSimple.h"
 #include "Trajet.h"
+#include "TrajetSimple.h"
 
 //------------------------------------------------------------- Constantes
 
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-// type TrajetSimple::Méthode ( liste des paramètres )
-// Algorithme :
-//
-//{
-//} //----- Fin de Méthode
 
-void TrajetSimple::Afficher()
+void TrajetSimple::Afficher() const
 {
 	cout << "Trajet Simple : " << endl;
 	Trajet::Afficher();

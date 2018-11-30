@@ -31,7 +31,6 @@ public:
 
 	//procédure permettant de réallouer le tableau de trajets lorsqu'il est plein
 	//la taille du tableau est doublée à chaque appel à cette procédure
-	//arr : tableau de trajets 		n : taille actuelle du tableau
 	void Resize();
 
 	void Afficher() const;

@@ -14,9 +14,9 @@ e-mail               : $EMAIL$
 #include <cstring>
 //------------------------------------------------------ Include personnel
 #include "Trajet.h"
+#include "Collection.h"
 #include "TrajetSimple.h"
 #include "TrajetCompose.h"
-#include "Collection.h"
 
 ///////////////////////////////////////////////////////////////////  PRIVE
 //------------------------------------------------------------- Constantes
@@ -43,9 +43,9 @@ int main()
 	C1->Afficher();
 
 	delete C1;
-	delete TS1;
-	delete TS2;
-	delete TS3;
+	//delete TS1;
+	//delete TS2;
+	//delete TS3;
 
 	//TrajetCompose TC2("Paris","Marseille",1,tc2);
 	//TS1.Afficher();

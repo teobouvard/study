@@ -17,10 +17,6 @@
 //------------------------------------------------------------------ Types
 
 //------------------------------------------------------------------------
-// Rôle de la classe <TrajetCompose>
-//
-//
-//------------------------------------------------------------------------
 
 class TrajetCompose : public Trajet
 {
@@ -42,25 +38,10 @@ public:
     // Contrat :
     //
 
-
 //-------------------------------------------- Constructeurs - destructeur
-    TrajetCompose ( const TrajetCompose & unTrajetCompose );
-    // Mode d'emploi (constructeur de copie) :
-    //
-    // Contrat :
-    //
-
-    TrajetCompose ( char * villeDep, char * villeArr, int nbTrajets);
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
-    virtual ~TrajetCompose ( );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
+    //TrajetCompose ( const TrajetCompose & unTrajetCompose );
+    //TrajetCompose ( char * villeDep, char * villeArr, int nbTrajets);
+    //virtual ~TrajetCompose ( );
 
 //------------------------------------------------------------------ PRIVE
 
@@ -68,13 +49,12 @@ protected:
 //----------------------------------------------------- Méthodes protégées
 
 //----------------------------------------------------- Attributs protégés
+Collection collectionTrajets;
 int nombreTrajets;
 char * villeDepart;
 char * villeArrivee;
-//Collection collectionTrajets;
 };
 
 //-------------------------------- Autres définitions dépendantes de <TrajetCompose>
 
 #endif // TrajetCompose_H
-

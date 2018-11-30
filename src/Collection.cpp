@@ -20,7 +20,7 @@ using namespace std;
 
 //------------------------------------------------------------- Constantes
 
-static const int TAILLE_INITIALE = 10; //doit être différent de 0 pour Resize()
+const int TAILLE_INITIALE = 10; //doit être différent de 0 pour Resize()
 
 //----------------------------------------------------------------- PUBLIC
 
@@ -103,7 +103,7 @@ Collection::Collection ()
 Collection::~Collection ()
 {
 	for (int i = 0; i < nbElements; i++){
-		//delete elements[i]; //ce delete cause un segmentation fault du à un invalid write and free
+		delete elements[i]; //ce delete cause un segmentation fault du à un invalid write and free
 	}
 
 	delete [] elements;

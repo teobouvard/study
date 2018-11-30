@@ -15,9 +15,8 @@ e-mail               : $EMAIL$
 using namespace std;
 
 //------------------------------------------------------ Include personnel
-
-#include "Trajet.h"
 #include "TrajetSimple.h"
+#include "Trajet.h"
 
 //------------------------------------------------------------- Constantes
 

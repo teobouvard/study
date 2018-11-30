@@ -20,7 +20,7 @@ using namespace std;
 
 //------------------------------------------------------------- Constantes
 
-static const int TAILLE_INITIALE = 1; //doit être différent de 0 pour Resize()
+static const int TAILLE_INITIALE = 10; //doit être différent de 0 pour Resize()
 
 //----------------------------------------------------------------- PUBLIC
 
@@ -46,7 +46,7 @@ void Collection::Afficher() const
 
 	for (int i = 0; i < nbElements; i++)
 	{
-		elements[i]->Afficher();
+		elements[i]->Trajet::Afficher();
 	}
 }
 

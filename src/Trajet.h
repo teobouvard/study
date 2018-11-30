@@ -31,8 +31,8 @@ class Trajet
 public:
 	//----------------------------------------------------- Méthodes publiques
 
-	virtual void Afficher();
-	//------------------------------------------------- Surcharge d'opérateurs
+	virtual void Afficher() = 0;
+	//-------------------------------------------------- Surcharge d'opérateurs
 	//Trajet & operator = ( const Trajet & unTrajet );
 
 	//-------------------------------------------- Constructeurs - destructeur

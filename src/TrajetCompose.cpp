@@ -17,10 +17,9 @@ using namespace std;
 //------------------------------------------------------ Include personnel
 //attention à l'ordre des include
 #include "Trajet.h"
+#include "Collection.h"
 #include "TrajetCompose.h"
 
-
-//#include "Collection.h"
 
 //------------------------------------------------------------- Constantes
 

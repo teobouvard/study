@@ -48,7 +48,7 @@ protected:
 //----------------------------------------------------- Méthodes protégées
 
 //----------------------------------------------------- Attributs protégés
-//Collection collectionTrajets;
+Collection collectionTrajets;
 int nombreTrajets;
 char * villeDepart;
 char * villeArrivee;

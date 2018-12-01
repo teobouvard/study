@@ -36,7 +36,7 @@ public:
 	//la taille du tableau est doublée à chaque appel à cette procédure
 	void Resize();
 
-	void Afficher() const;
+	void AfficherCollection() const;
 	void Ajouter(Trajet * t);
 
 	//------------------------------------------------- Surcharge d'opérateurs

@@ -40,7 +40,7 @@ void Collection::Resize()
 
 }
 
-void Collection::Afficher() const
+void Collection::AfficherCollection() const
 {
 	cout << "La collection comporte " << nbElements << " elements" << endl << endl;
 

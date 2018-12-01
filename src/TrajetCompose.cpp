@@ -29,12 +29,12 @@ using namespace std;
 void TrajetCompose::Afficher() const
 {
 	cout << "Trajet Compose" << endl;
-  cout << "Ville de départ : " << escales.elements[0]->villeDepart << "  ";
-  cout << "Ville d'arrivée : " << escales.elements[nombreEscales-1]->villeArrivee << endl;
+  cout << "Ville de départ : " << escales->elements[0]->villeDepart << "  ";
+  cout << "Ville d'arrivée : " << escales->elements[nombreEscales-1]->villeArrivee << endl;
   cout << "Escales : " << endl;
 
   for (int i = 0; i < nombreEscales; i++){
-    escales.elements[i]->Afficher();
+    escales->elements[i]->Afficher();
   }
 }
 
@@ -62,8 +62,9 @@ TrajetCompose::TrajetCompose (Collection* c)
 : Trajet(c->elements[0]->villeDepart,c->elements[c->nbElements-1]->villeArrivee)
 {
   nombreEscales = c->nbElements;
+	escales = new Collection;
   for (int i = 0; i < nombreEscales; i++){
-    escales.elements[i] = c->elements[i];
+    escales->elements[i] = c->elements[i];
   }
   #ifdef MAP
   cout << "Appel au constructeur de <TrajetCompose>" << endl;
@@ -73,6 +74,7 @@ TrajetCompose::TrajetCompose (Collection* c)
 
 TrajetCompose::~TrajetCompose ( )
 {
+	delete escales;
   #ifdef MAP
   cout << "Appel au destructeur de <TrajetCompose>" << endl;
   #endif

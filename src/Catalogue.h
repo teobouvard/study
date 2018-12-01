@@ -28,15 +28,12 @@ class Catalogue
 
 public:
 //----------------------------------------------------- Méthodes publiques
-    // type Méthode ( liste des paramètres );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
+void AjouterTrajet(Trajet* unTrajet);
+void AfficherCatalogue();
 
 
 //------------------------------------------------- Surcharge d'opérateurs
-    Catalogue & operator = ( const Catalogue & unCatalogue );
+    //Catalogue & operator = ( const Catalogue & unCatalogue );
     // Mode d'emploi :
     //
     // Contrat :
@@ -44,23 +41,9 @@ public:
 
 
 //-------------------------------------------- Constructeurs - destructeur
-    Catalogue ( const Catalogue & unCatalogue );
-    // Mode d'emploi (constructeur de copie) :
-    //
-    // Contrat :
-    //
-
+    //Catalogue ( const Catalogue & unCatalogue );
     Catalogue ( );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
     virtual ~Catalogue ( );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
 
 //------------------------------------------------------------------ PRIVE
 
@@ -68,7 +51,8 @@ protected:
 //----------------------------------------------------- Méthodes protégées
 
 //----------------------------------------------------- Attributs protégés
-
+  Collection* collectionTrajets;
+  int nbTrajets;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Catalogue>

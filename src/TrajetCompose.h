@@ -45,7 +45,7 @@ protected:
 //----------------------------------------------------- Méthodes protégées
 
 //----------------------------------------------------- Attributs protégés
-Collection escales;
+Collection* escales;
 int nombreEscales;
 char * villeDepart;
 char * villeArrivee;

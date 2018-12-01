@@ -55,7 +55,6 @@ TrajetSimple::TrajetSimple (const char * villeDep, const char * villeArr, const 
 {
 	modeTransport = new char[strlen(modeTrans) + 1];
 	strcpy(modeTransport,modeTrans);
-
 	#ifdef MAP
 	cout << "Appel au constructeur de <TrajetSimple>" << endl;
 	#endif
@@ -65,9 +64,8 @@ TrajetSimple::TrajetSimple (const char * villeDep, const char * villeArr, const 
 TrajetSimple::~TrajetSimple ( )
 {
 	delete [] modeTransport;
-
 	#ifdef MAP
-	cout << "Appel au destructeur de <TrajetSimple>" << endl;
+	cout << "Appel au destructeur de <TrajetSimple>"<< endl;
 	#endif
 } //----- Fin de ~TrajetSimple
 

@@ -64,7 +64,7 @@ void testTrajetCompose(){
 int main()
 {
 
-testTrajetCompose();
+	testTrajetCompose();
 
 	return 0;
 }

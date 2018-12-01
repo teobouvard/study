@@ -28,7 +28,6 @@ void Trajet::Afficher() const
 	cout << "Ville d'arrivée : " << villeArrivee << endl;
 }
 
-
 //------------------------------------------------- Surcharge d'opérateurs
 /*Trajet & Trajet::operator = ( const Trajet & unTrajet )
 // Algorithme :
@@ -40,6 +39,9 @@ void Trajet::Afficher() const
 //-------------------------------------------- Constructeurs - destructeur
 Trajet::Trajet ( const Trajet & unTrajet )
 {
+	villeDepart = new char[strlen(unTrajet.villeDepart) + 1];
+	villeArrivee = new char[strlen(unTrajet.villeArrivee) + 1];
+
 	strcpy(villeDepart,unTrajet.villeDepart);
 	strcpy(villeArrivee,unTrajet.villeArrivee);
 	{

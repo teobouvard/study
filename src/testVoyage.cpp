@@ -29,30 +29,42 @@ e-mail               : $EMAIL$
 
 //////////////////////////////////////////////////////////////////  PUBLIC
 //---------------------------------------------------- Fonctions publiques
-int main()
-{
-	Collection* C1 = new Collection;
 
+void testCopieCollection(){
 	TrajetSimple* TS1 = new TrajetSimple("Lyon","Bordeaux","Train");
 	TrajetSimple* TS2 = new TrajetSimple("Bordeaux","Brest","Voiture");
-	//TrajetSimple* TS3 = new TrajetSimple("Brest","Lille","Train");
 
+	Collection* C1 = new Collection;
 	C1->Ajouter(TS1);
 	C1->Ajouter(TS2);
-	//C1->Ajouter(TS3);
-	//C1->Afficher();
+
+	Collection* C2 = new Collection(*C1);
+	delete C1;
+
+	C2->Afficher();
+	delete C2;
+}
+
+void testTrajetCompose(){
+	TrajetSimple* TS2 = new TrajetSimple("Bordeaux","Brest","Voiture");
+	TrajetSimple* TS3 = new TrajetSimple("Brest","Lille","Train");
+
+	Collection* C1 = new Collection;
+	C1->Ajouter(TS2);
+	C1->Ajouter(TS3);
 
 	TrajetCompose* TC1 = new TrajetCompose(C1);
-
 	TC1->Afficher();
 
+	delete C1;
 	delete TC1;
+}
 
-	delete C1; //delete les trajets contenus dans la collection
-	//delete TS3;
 
-	//TrajetCompose TC2("Paris","Marseille",1,tc2);
-	//TS1.Afficher();
+int main()
+{
+
+	testTrajetCompose();
 
 	return 0;
 }

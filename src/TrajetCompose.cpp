@@ -15,7 +15,7 @@ e-mail               : $EMAIL$
 using namespace std;
 
 //------------------------------------------------------ Include personnel
-//attention à l'ordre des include
+//attention à l'ordre des include !
 #include "Trajet.h"
 #include "Collection.h"
 #include "TrajetCompose.h"
@@ -28,7 +28,11 @@ using namespace std;
 //----------------------------------------------------- Méthodes publiques
 void TrajetCompose::Afficher() const
 {
-	cout << "Trajet Compose : " << endl;
+	cout << "Trajet Compose" << endl;
+  cout << "Ville de départ : " << escales.elements[0]->villeDepart << "  ";
+  cout << "Ville d'arrivée : " << escales.elements[nombreEscales-1]->villeArrivee << endl;
+  cout << "Escales : " << endl;
+
   for (int i = 0; i < nombreEscales; i++){
     escales.elements[i]->Afficher();
   }

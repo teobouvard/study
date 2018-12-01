@@ -75,9 +75,12 @@ void Collection::Ajouter(Trajet * t)
 Collection::Collection ( const Collection & unCollection )
 {
 	nbElements = unCollection.nbElements;
+	elements = new Trajet* [nbElements];
 
+	//pas fonctionnel car instancie un objet de type Trajet, il faut trouver un moyen
+	//de déterminer quel type de Trajet c'est
 	for (int i = 0; i < nbElements; i++){
-		elements[i] = unCollection.elements[i];
+		elements[i] = new Trajet(*unCollection.elements[i]);
 	}
 
 	#ifdef MAP
@@ -101,7 +104,7 @@ Collection::Collection ()
 Collection::~Collection ()
 {
 	for (int i = 0; i < nbElements; i++){
-		delete elements[i]; //ce delete cause un segmentation fault du à un invalid write and free
+		delete elements[i]; //il faut choisir si on delete les trajets ici ou dans le main
 	}
 
 	delete [] elements;

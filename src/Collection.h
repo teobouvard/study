@@ -26,6 +26,7 @@ class Collection
 {
 	//----------------------------------------------------------------- PUBLIC
 
+//afin d'accéder aux attributs d'une collection dans le constructeur de TrajetCompose
 friend class TrajetCompose;
 
 public:

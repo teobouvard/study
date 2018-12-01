@@ -2,6 +2,7 @@
 POO C++
 
 A FAIRE : 
+
   -constructeur de copie de Collection : l'initialisation des elements n'est pas possible par instanciation de Trajet() si on veut que ce soit une classe virtuelle pure. trouver un moyen de creer les bon types de trajet dans les elements.
   
   -l'ordre des include est un vrai cancer, faire bien attention lors de l'ajout d'un nouveau module

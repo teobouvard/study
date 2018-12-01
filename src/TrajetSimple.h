@@ -24,7 +24,7 @@ class TrajetSimple : public Trajet
 
 public:
   //----------------------------------------------------- Méthodes publiques
-  void Afficher() const;
+  virtual void Afficher() const;
 
   //------------------------------------------------- Surcharge d'opérateurs
   //TrajetSimple & operator = ( const TrajetSimple & unTrajetSimple );

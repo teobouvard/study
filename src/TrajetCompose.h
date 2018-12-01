@@ -24,10 +24,7 @@ class TrajetCompose : public Trajet
 public:
 //----------------------------------------------------- Méthodes publiques
     // type Méthode ( liste des paramètres );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
+  virtual void Afficher() const;
 
 
 //------------------------------------------------- Surcharge d'opérateurs
@@ -39,7 +36,7 @@ public:
 
 //-------------------------------------------- Constructeurs - destructeur
     //TrajetCompose ( const TrajetCompose & unTrajetCompose );
-    TrajetCompose (char * villeDep, char * villeArr, int nbTrajets);
+    TrajetCompose (Collection* c);
     virtual ~TrajetCompose ( );
 
 //------------------------------------------------------------------ PRIVE
@@ -48,8 +45,8 @@ protected:
 //----------------------------------------------------- Méthodes protégées
 
 //----------------------------------------------------- Attributs protégés
-//Collection collectionTrajets;
-int nombreTrajets;
+Collection escales;
+int nombreEscales;
 char * villeDepart;
 char * villeArrivee;
 };

@@ -45,9 +45,7 @@ void Collection::Afficher() const
 	cout << "La collection comporte " << nbElements << " elements" << endl << endl;
 
 	for (int i = 0; i < nbElements; i++)
-	{
-		elements[i]->Trajet::Afficher();
-	}
+		elements[i]->Afficher();
 }
 
 void Collection::Ajouter(Trajet * t)

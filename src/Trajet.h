@@ -23,6 +23,7 @@ class Trajet
 	//----------------------------------------------------------------- PUBLIC
 	//afin d'afficher les villes du trajet dans l'affichage d'un TrajetCompose
 	friend class TrajetCompose;
+	friend class Catalogue;
 
 	//afin d'accéder aux villes lors du constructeur de copie de Collection
 	//a résoudre

@@ -30,6 +30,7 @@ public:
 //----------------------------------------------------- Méthodes publiques
 void AjouterTrajet(Trajet* unTrajet);
 void AfficherCatalogue();
+void RechercherTrajet(char* depart, char* arrivee);
 
 
 //------------------------------------------------- Surcharge d'opérateurs

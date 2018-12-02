@@ -24,6 +24,15 @@ using namespace std;
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
+void Catalogue::RechercherTrajet(char* depart, char* arrivee){
+  for (int i = 0; i < nbTrajets; i++){
+    Trajet* trajetEvalue = collectionTrajets->elements[i];
+    if(strcmp(depart,trajetEvalue->villeDepart)==0 && strcmp(arrivee,trajetEvalue->villeArrivee)==0){
+      trajetEvalue->Afficher();
+    }
+  }
+}
+
 void Catalogue::AjouterTrajet(Trajet* unTrajet)
 {
   collectionTrajets->Ajouter(unTrajet);
@@ -31,7 +40,8 @@ void Catalogue::AjouterTrajet(Trajet* unTrajet)
 }
 
 void Catalogue::AfficherCatalogue(){
-    collectionTrajets->Collection::AfficherCollection();
+  cout << "Le catalogue comporte " << nbTrajets << " trajets" << endl << endl;
+  collectionTrajets->Collection::AfficherCollection();
 }
 
 //------------------------------------------------- Surcharge d'opérateurs

@@ -11,6 +11,7 @@ e-mail               : $EMAIL$
 /////////////////////////////////////////////////////////////////  INCLUDE
 //-------------------------------------------------------- Include système
 #include <iostream>
+using namespace std;
 #include <cstring>
 //------------------------------------------------------ Include personnel
 #include "Trajet.h"
@@ -21,6 +22,8 @@ e-mail               : $EMAIL$
 
 ///////////////////////////////////////////////////////////////////  PRIVE
 //------------------------------------------------------------- Constantes
+
+const int TAILLE_MAX_STRING = 20;
 
 //------------------------------------------------------------------ Types
 
@@ -91,19 +94,139 @@ void testCatalogue(){
 	catalogue->AjouterTrajet(TS3);
 	catalogue->AjouterTrajet(TC1);
 
-
 	catalogue->AfficherCatalogue();
 
 	delete catalogue;
+}
 
+void init(){
+	cout << "Bienvenue à la SNCF" << endl << endl;
+}
 
+void annonce(){
+	cout << "Afficher le catalogue : 0 | Ajouter un trajet : 1 | Rechercher un trajet : 2 | Quitter cette app agile : 3" << endl << endl;
+}
+
+//retourne un pointeur sur un trajet simple créé lors de la fonction
+Trajet* CreerTrajet(){
+	char* ville1 = new char[TAILLE_MAX_STRING];
+	char* ville2 = new char[TAILLE_MAX_STRING];
+	char* mdTransport = new char[TAILLE_MAX_STRING];
+
+	cout << "Ville de départ ?"<< endl;
+	cin >> ville1;
+	cout << "Ville d'arrivée ?"<< endl;
+	cin >> ville2;
+	cout << "Mode de Transport ?"<< endl;
+	cin >> mdTransport;
+
+	Trajet* trajet = new TrajetSimple(ville1, ville2, mdTransport);
+
+	delete [] ville1;
+	delete [] ville2;
+	delete [] mdTransport;
+
+	return trajet;
+}
+
+//fonction récursive qui ajoute des trajets simple à la collection de base
+//si un trajet composé contient un trajet composé, la fonction s'auto-appelle
+//option : 0-> trajet simple 		1->trajet composé
+void ajoutCollection(Collection * c, int option){
+	if(option == 0){
+		c->Ajouter(CreerTrajet());
+	} else if(option == 1){
+		int nEscales;
+		cout << "Nombre d'escales?" << endl;
+		cin >> nEscales;
+		while(nEscales==0){
+			cout << "Le nombre d'escales doit etre positif. Veuillez le (vous) resaisir" << endl;
+			cin >> nEscales;
+		}
+		Collection* collectionTrajets = new Collection;
+		for(int i = 0 ; i < nEscales; i++){
+			cout << "Trajet simple : 0 | Trajet composé 1" << endl;
+			int choix;
+			cin >> choix;
+			ajoutCollection(collectionTrajets,choix);
+		}
+		TrajetCompose* trajet = new TrajetCompose(collectionTrajets);
+		c->Ajouter(trajet);
+	}
+}
+
+//premier étage de l'ajout d'un trajet au catalogue
+//si on crée un trajet composé, appel à ajoutCollection
+void ajoutCatalogue(Catalogue * c, int option){
+	if(option == 0){
+		c->AjouterTrajet(CreerTrajet());
+	} else if(option == 1){
+		int nEscales;
+		cout << "Nombre d'escales?" << endl;
+		cin >> nEscales;
+		while(nEscales==0){
+			cout << "Le nombre d'escales doit etre positif. Veuillez le (vous) resaisir" << endl;
+			cin >> nEscales;
+		}
+		Collection* collectionTrajets = new Collection;
+		for(int i = 0 ; i < nEscales; i++){
+			cout << "Trajet simple : 0 | Trajet composé 1" << endl;
+			int choix;
+			cin >> choix;
+			ajoutCollection(collectionTrajets,choix);
+		}
+		TrajetCompose* trajet = new TrajetCompose(collectionTrajets);
+		c->AjouterTrajet(trajet);
+	}
 }
 
 int main()
 {
+	int lecture;
+	char* ville1 = new char[TAILLE_MAX_STRING];
+	char* ville2 = new char[TAILLE_MAX_STRING];
+	Catalogue* catalogue = new Catalogue;
 
-	//testTrajetCompose();
-	testCatalogue();
+	init();
+	annonce();
+
+	cin >> lecture;
+	while(lecture!=3){
+		switch (lecture) {
+
+			case 0 :
+			catalogue->AfficherCatalogue();
+			break;
+
+			case 1 :
+			cout << "Trajet simple : 0 | Trajet composé 1" << endl;
+			cin >> lecture;
+			ajoutCatalogue(catalogue,lecture);
+			break;
+
+			case 2 :
+
+			cout << "Ville de départ ?"<< endl;
+			cin >> ville1;
+			cout << "Ville d'arrivée ?"<< endl;
+			cin >> ville2;
+
+			catalogue->RechercherTrajet(ville1, ville2);
+			break;
+
+			default :
+			cout << "Faute de frappe ? (bolosse)" << endl;
+			break;
+		}
+		annonce();
+		cin >> lecture;
+	}
+
+	delete [] ville1;
+	delete [] ville2;
+
+	delete catalogue;
+
 
 	return 0;
 }

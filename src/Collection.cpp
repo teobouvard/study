@@ -42,8 +42,6 @@ void Collection::Resize()
 
 void Collection::AfficherCollection() const
 {
-	cout << "La collection comporte " << nbElements << " elements" << endl << endl;
-
 	for (int i = 0; i < nbElements; i++)
 		elements[i]->Afficher();
 }

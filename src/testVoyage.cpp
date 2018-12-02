@@ -185,7 +185,7 @@ int main()
 	int lecture;
 	char* ville1 = new char[TAILLE_MAX_STRING];
 	char* ville2 = new char[TAILLE_MAX_STRING];
-	Catalogue* catalogue = new Catalogue;
+	Catalogue catalogue;
 
 	init();
 	annonce();
@@ -195,13 +195,13 @@ int main()
 		switch (lecture) {
 
 			case 0 :
-			catalogue->AfficherCatalogue();
+			catalogue.AfficherCatalogue();
 			break;
 
 			case 1 :
 			cout << "Trajet simple : 0 | Trajet composé 1" << endl;
 			cin >> lecture;
-			ajoutCatalogue(catalogue,lecture);
+			ajoutCatalogue(&catalogue,lecture);
 			break;
 
 			case 2 :
@@ -211,7 +211,7 @@ int main()
 			cout << "Ville d'arrivée ?"<< endl;
 			cin >> ville2;
 
-			catalogue->RechercherTrajet(ville1, ville2);
+			catalogue.RechercherTrajet(ville1, ville2);
 			break;
 
 			default :
@@ -224,9 +224,6 @@ int main()
 
 	delete [] ville1;
 	delete [] ville2;
-
-	delete catalogue;
-
 
 	return 0;
 }

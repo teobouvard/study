@@ -13,72 +13,47 @@ e-mail               : $EMAIL$
 //-------------------------------------------------------- Include système
 #include <iostream>
 using namespace std;
-
 //------------------------------------------------------ Include personnel
-//attention à l'ordre des include !
 #include "Trajet.h"
 #include "Collection.h"
 #include "TrajetCompose.h"
-
-
-//------------------------------------------------------------- Constantes
-
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
 void TrajetCompose::Afficher() const
 {
 	cout << "Trajet Compose" << endl;
-  cout << "Ville de départ : " << escales->elements[0]->villeDepart << "  ";
-  cout << "Ville d'arrivée : " << escales->elements[nombreEscales-1]->villeArrivee << endl;
-  cout << "Escales : " << nombreEscales << endl;
+	cout << "Ville de départ : " << escales->getElement(0)->getVille(0) << "  ";
+	cout << "Ville d'arrivée : " << escales->getElement(nombreEscales-1)->getVille(1) << endl;
+	cout << "Escales : " << nombreEscales << endl;
 
-  for (int i = 0; i < nombreEscales; i++){
+	for (int i = 0; i < nombreEscales; i++){
 		cout << "		";
-    escales->elements[i]->Afficher();
-  }
+		escales->getElement(i)->Afficher();
+	}
 }
 
-
-//------------------------------------------------- Surcharge d'opérateurs
-/*TrajetCompose & TrajetCompose::operator = ( const TrajetCompose & unTrajetCompose )
-// Algorithme :
-//
-{
-} //----- Fin de operator =*/
-
-
 //-------------------------------------------- Constructeurs - destructeur
-/*TrajetCompose::TrajetCompose ( const TrajetCompose & unTrajetCompose ) : Trajet(unTrajetCompose)
-{
-nombreTrajets = unTrajetCompose.nombreTrajets;
-lesTrajets = unTrajetCompose.lesTrajets;
-#ifdef MAP
-cout << "Appel au constructeur de copie de <TrajetCompose>" << endl;
-#endif
-} //----- Fin de TrajetCompose (constructeur de copie)
 
-*/
 TrajetCompose::TrajetCompose (Collection* c)
-: Trajet(c->elements[0]->villeDepart,c->elements[c->nbElements-1]->villeArrivee)
+: Trajet(c->getElement(0)->getVille(0),c->getElement(c->getNbElements()-1)->getVille(1))
 {
-  nombreEscales = c->nbElements;
+	nombreEscales = c->getNbElements();
 	escales = c;
-  #ifdef MAP
-  cout << "Appel au constructeur de <TrajetCompose>" << endl;
-  #endif
+	#ifdef MAP
+	cout << "Appel au constructeur de <TrajetCompose>" << endl;
+	#endif
 } //----- Fin de TrajetCompose
-
 
 TrajetCompose::~TrajetCompose ( )
 {
 	delete escales;
-  #ifdef MAP
-  cout << "Appel au destructeur de <TrajetCompose>" << endl;
-  #endif
-  } //----- Fin de ~TrajetCompose
+	#ifdef MAP
+	cout << "Appel au destructeur de <TrajetCompose>" << endl;
+	#endif
+} //----- Fin de ~TrajetCompose
 
 
-  //------------------------------------------------------------------ PRIVE
+//------------------------------------------------------------------ PRIVE
 
-  //----------------------------------------------------- Méthodes protégées
+//----------------------------------------------------- Méthodes protégées

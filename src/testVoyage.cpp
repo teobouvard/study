@@ -34,21 +34,6 @@ const int TAILLE_MAX_STRING = 20;
 //////////////////////////////////////////////////////////////////  PUBLIC
 //---------------------------------------------------- Fonctions publiques
 
-void testCopieCollection(){
-	TrajetSimple* TS1 = new TrajetSimple("Lyon","Bordeaux","Train");
-	TrajetSimple* TS2 = new TrajetSimple("Bordeaux","Brest","Voiture");
-
-	Collection* C1 = new Collection;
-	C1->Ajouter(TS1);
-	C1->Ajouter(TS2);
-
-	Collection* C2 = new Collection(*C1);
-	delete C1;
-
-	C2->AfficherCollection();
-	delete C2;
-}
-
 void testTrajetCompose(){
 	TrajetSimple* TS2 = new TrajetSimple("Bordeaux","Brest","Voiture");
 	TrajetSimple* TS3 = new TrajetSimple("Brest","Lille","Train");

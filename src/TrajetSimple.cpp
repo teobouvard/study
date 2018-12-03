@@ -13,15 +13,10 @@ e-mail               : $EMAIL$
 //-------------------------------------------------------- Include système
 #include <iostream>
 using namespace std;
-
 //------------------------------------------------------ Include personnel
 #include "Trajet.h"
 #include "TrajetSimple.h"
-
-//------------------------------------------------------------- Constantes
-
 //----------------------------------------------------------------- PUBLIC
-
 //----------------------------------------------------- Méthodes publiques
 
 void TrajetSimple::Afficher() const
@@ -31,25 +26,7 @@ void TrajetSimple::Afficher() const
 	cout << "Moyen de Transport : " << modeTransport << endl << endl;
 }
 
-
-//------------------------------------------------- Surcharge d'opérateurs
-/*TrajetSimple & TrajetSimple::operator = ( const TrajetSimple & unTrajetSimple )
-// Algorithme :
-//
-{
-} //----- Fin de operator =*/
-
-
 //-------------------------------------------- Constructeurs - villeDepartdestructeur
-TrajetSimple::TrajetSimple ( const TrajetSimple & unTrajetSimple ) : Trajet(unTrajetSimple)
-{
-	modeTransport = new char[strlen(unTrajetSimple.modeTransport) + 1];
-	strcpy(modeTransport,unTrajetSimple.modeTransport);
-	#ifdef MAP
-	cout << "Appel au constructeur de copie de <TrajetSimple>" << endl;
-	#endif
-} //----- Fin de TrajetSimple (constructeur de copie)
-
 
 TrajetSimple::TrajetSimple (const char * villeDep, const char * villeArr, const char * modeTrans ) : Trajet(villeDep, villeArr)
 {
@@ -68,8 +45,3 @@ TrajetSimple::~TrajetSimple ( )
 	cout << "Appel au destructeur de <TrajetSimple>"<< endl;
 	#endif
 } //----- Fin de ~TrajetSimple
-
-
-//------------------------------------------------------------------ PRIVE
-
-//----------------------------------------------------- Méthodes protégées

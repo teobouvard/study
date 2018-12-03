@@ -1,19 +1,17 @@
 #Outils
 CPP=g++
 LD=g++
-ECHO=ECHO
+ECHO=echo
 
 #Options
 CPPFLAGS=-ansi -pedantic -Wall -std=c++11 -DMAP -g
 RMFLAGS=-rf
-LDFLAGS=
-
+RM=rm
 
 #Fichiers
 HEAD=$(wildcard *.h)
 SRC=$(wildcard *.cpp)
 OBJ=$(SRC:.cpp=.o)
-LIBS=
 
 #Cibles spéciales
 EXE=out
@@ -25,7 +23,7 @@ CLEAN=clean
 #Cibles
 $(EXE): $(OBJ)
 	@$(ECHO) "Edition des liens"
-	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
+	@$(LD) $^ -o $@
 
 $(RUN): $(EXE)
 	@$(ECHO) "Execution de $^"
@@ -35,6 +33,6 @@ $(CLEAN):
 	@$(RM) $(RMFLAGS) $(EXE) $(OBJ)
 
 #Regles d'inférences
-%.o: %.cpp
+%.o: %.cpp %.h
 	@$(ECHO) "Compilation de $<"
 	@$(CPP) $(CPPFLAGS) -c $< -o $@

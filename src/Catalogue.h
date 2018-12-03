@@ -10,52 +10,29 @@
 #ifndef Catalogue_H
 #define Catalogue_H
 
-//--------------------------------------------------- Interfaces utilisées
-
-//------------------------------------------------------------- Constantes
-
-//------------------------------------------------------------------ Types
-
-//------------------------------------------------------------------------
 // Rôle de la classe <Catalogue>
-//
-//
-//------------------------------------------------------------------------
 
+//------------------------------------------------------------------------
 class Catalogue
 {
 //----------------------------------------------------------------- PUBLIC
-
 public:
 //----------------------------------------------------- Méthodes publiques
+
 void AjouterTrajet(Trajet* unTrajet);
 void AfficherCatalogue();
-void RechercherTrajet(char* depart, char* arrivee);
-
-
-//------------------------------------------------- Surcharge d'opérateurs
-    //Catalogue & operator = ( const Catalogue & unCatalogue );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
+void RechercherTrajet(char* depart, char* arrivee) const;
 
 //-------------------------------------------- Constructeurs - destructeur
-    //Catalogue ( const Catalogue & unCatalogue );
+
     Catalogue ( );
     virtual ~Catalogue ( );
 
 //------------------------------------------------------------------ PRIVE
-
 protected:
-//----------------------------------------------------- Méthodes protégées
-
 //----------------------------------------------------- Attributs protégés
   Collection* collectionTrajets;
   int nbTrajets;
 };
-
-//-------------------------------- Autres définitions dépendantes de <Catalogue>
 
 #endif // Catalogue_H

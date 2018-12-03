@@ -10,26 +10,14 @@ e-mail               : $EMAIL$
 #ifndef Collection_H
 #define Collection_H
 
-//--------------------------------------------------- Interfaces utilisées
-
-//------------------------------------------------------------- Constantes
-
-//------------------------------------------------------------------ Types
-
-//------------------------------------------------------------------------
 // Rôle de la classe <Collection>
-//
-//
+
+
 //------------------------------------------------------------------------
 
 class Collection
 {
 	//----------------------------------------------------------------- PUBLIC
-
-//afin d'accéder aux attributs d'une collection dans le constructeur de TrajetCompose
-friend class TrajetCompose;
-friend class Catalogue;
-
 public:
 	//----------------------------------------------------- Méthodes publiques
 
@@ -39,9 +27,8 @@ public:
 
 	void AfficherCollection() const;
 	void Ajouter(Trajet * t);
-
-	//------------------------------------------------- Surcharge d'opérateurs
-	//Collection & operator = ( const Collection & unCollection );
+	Trajet* getElement(int i) const;
+	int getNbElements() const;
 
 	//-------------------------------------------- Constructeurs - destructeur
 	Collection ( const Collection & unCollection );

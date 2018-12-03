@@ -89,7 +89,7 @@ void init(){
 }
 
 void annonce(){
-	cout << "Afficher le catalogue : 0 | Ajouter un trajet : 1 | Rechercher un trajet : 2 | Quitter cette app agile : 3" << endl << endl;
+	cout << "Afficher le catalogue : 0 | Ajouter un trajet : 1 | Rechercher un trajet : 2 | Rechercher un trajet (avancé) : 3 | Quitter cette app agile : 9" << endl << endl;
 }
 
 //retourne un pointeur sur un trajet simple créé lors de la fonction
@@ -179,7 +179,7 @@ int main()
 	annonce();
 
 	cin >> lecture;
-	while(lecture!=3){
+	while(lecture!=9){
 		switch (lecture) {
 
 			case 0 :
@@ -199,6 +199,15 @@ int main()
 			cin >> ville2;
 			cout << endl;
 			catalogue.RechercherTrajet(ville1, ville2);
+			break;
+
+			case 3 :
+			cout << "Ville de départ ?"<< endl;
+			cin >> ville1;
+			cout << "Ville d'arrivée ?"<< endl;
+			cin >> ville2;
+			cout << endl;
+			catalogue.RechercherTrajetAvance(ville1, ville2);
 			break;
 
 			default :

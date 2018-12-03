@@ -19,6 +19,7 @@ using namespace std;
 #include "Catalogue.h"
 //------------------------------------------------------------- Constantes
 const int PROFONDEUR_MAXIMALE = 5;
+int profondeurRecherche = 0;
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
@@ -34,23 +35,25 @@ void Catalogue::RechercherTrajet(char* depart, char* arrivee) const{
   cout << compteur << " trajets trouvés." << endl << endl;
 }
 
-/*void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee) const{
-Collection
- while(profondeurRecherche < PROFONDEUR_MAXIMALE)
+void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee) const{
+
   for (int i = 0; i < nbTrajets; i++){
+    while(profondeurRecherche < PROFONDEUR_MAXIMALE){
+
     Trajet* trajetEvalue = collectionTrajets->getElement(i);
+
     if(strcmp(depart,trajetEvalue->getVille(0))==0){
-      if(strcmp(arrivee,trajetEvalue->getVille(1))==0)){
+      if(strcmp(arrivee,trajetEvalue->getVille(1))==0){
           trajetEvalue->Afficher();
         }
-    }
-    if(strcmp(depart,trajetEvalue->getVille(0))==0 && strcmp(arrivee,trajetEvalue->getVille(1))==0){
-      compteur++;
-      trajetEvalue->Afficher();
+        else{
+          profondeurRecherche++;
+          Catalogue::RechercherTrajetAvance(trajetEvalue->getVille(1),arrivee);
+        }
+      }
     }
   }
-  cout << compteur << " trajets trouvés." << endl;
-}*/
+}
 
 void Catalogue::AjouterTrajet(Trajet* unTrajet)
 {
@@ -59,7 +62,7 @@ void Catalogue::AjouterTrajet(Trajet* unTrajet)
 }
 
 void Catalogue::AfficherCatalogue(){
-  cout << "Le catalogue comporte " << nbTrajets << " trajets" << endl << endl;
+  cout << "Le catalogue comporte " << nbTrajets << " trajets." << endl << endl;
   collectionTrajets->Collection::AfficherCollection();
 }
 

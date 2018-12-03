@@ -22,12 +22,12 @@ using namespace std;
 //----------------------------------------------------- Méthodes publiques
 void TrajetCompose::Afficher() const
 {
-	cout << "Trajet Composé de " << nombreEscales << " escales." << endl;
+	cout << "Trajet Composé comportant " << nombreEscales << " escales." << endl;
 	cout << "Ville de départ : " << escales->getElement(0)->getVille(0) << "  ";
 	cout << "Ville d'arrivée : " << escales->getElement(nombreEscales-1)->getVille(1) << endl;
 
 	for (int i = 0; i < nombreEscales; i++){
-		cout << "		";
+		cout << "	";
 		escales->getElement(i)->Afficher();
 	}
 	cout << endl;

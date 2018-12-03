@@ -35,7 +35,6 @@ protected:
 //----------------------------------------------------- Attributs protégés
   Collection* collectionTrajets;
   int nbTrajets;
-  int profondeurRecherche;
 };
 
 #endif // Catalogue_H

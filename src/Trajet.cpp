@@ -20,8 +20,7 @@ using namespace std;
 //----------------------------------------------------- Méthodes publiques
 void Trajet::Afficher() const
 {
-	cout << "Ville de depart : " << villeDepart << endl;
-	cout << "Ville d'arrivée : " << villeArrivee << endl;
+	cout << villeDepart << " -> " << villeArrivee;
 }
 
 char* Trajet::getVille(int depart_arrivee) const

@@ -16,8 +16,6 @@ using namespace std;
 class Trajet
 {
 	//----------------------------------------------------------------- PUBLIC
-	//afin d'afficher les villes du trajet dans l'affichage d'un TrajetCompose
-	//friend class TrajetCompose;
 
 public:
 	//----------------------------------------------------- Méthodes publiques

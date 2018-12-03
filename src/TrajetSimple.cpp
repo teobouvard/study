@@ -21,9 +21,9 @@ using namespace std;
 
 void TrajetSimple::Afficher() const
 {
-	cout << "Trajet Simple" << endl;
+	cout << "Trajet Simple : ";
 	Trajet::Afficher();
-	cout << "Moyen de Transport : " << modeTransport << endl << endl;
+	cout << " en " << modeTransport << endl << endl;
 }
 
 //-------------------------------------------- Constructeurs - villeDepartdestructeur

@@ -17,17 +17,40 @@ using namespace std;
 #include "Trajet.h"
 #include "Collection.h"
 #include "Catalogue.h"
+//------------------------------------------------------------- Constantes
+const int PROFONDEUR_MAXIMALE = 5;
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
 void Catalogue::RechercherTrajet(char* depart, char* arrivee) const{
+  int compteur = 0;
   for (int i = 0; i < nbTrajets; i++){
     Trajet* trajetEvalue = collectionTrajets->getElement(i);
     if(strcmp(depart,trajetEvalue->getVille(0))==0 && strcmp(arrivee,trajetEvalue->getVille(1))==0){
+      compteur++;
       trajetEvalue->Afficher();
     }
   }
+  cout << compteur << " trajets trouvés." << endl << endl;
 }
+
+/*void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee) const{
+Collection
+ while(profondeurRecherche < PROFONDEUR_MAXIMALE)
+  for (int i = 0; i < nbTrajets; i++){
+    Trajet* trajetEvalue = collectionTrajets->getElement(i);
+    if(strcmp(depart,trajetEvalue->getVille(0))==0){
+      if(strcmp(arrivee,trajetEvalue->getVille(1))==0)){
+          trajetEvalue->Afficher();
+        }
+    }
+    if(strcmp(depart,trajetEvalue->getVille(0))==0 && strcmp(arrivee,trajetEvalue->getVille(1))==0){
+      compteur++;
+      trajetEvalue->Afficher();
+    }
+  }
+  cout << compteur << " trajets trouvés." << endl;
+}*/
 
 void Catalogue::AjouterTrajet(Trajet* unTrajet)
 {

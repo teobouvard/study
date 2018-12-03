@@ -85,7 +85,7 @@ void testCatalogue(){
 }
 
 void init(){
-	cout << "Bienvenue à la SNCF" << endl << endl;
+	cout << "Bienvenue dans le Gestionnaire de Trajets" << endl << endl;
 }
 
 void annonce(){
@@ -163,6 +163,9 @@ void ajoutCatalogue(Catalogue * c, int option){
 		TrajetCompose* trajet = new TrajetCompose(collectionTrajets);
 		c->AjouterTrajet(trajet);
 	}
+	else if(option == 2){
+		cout << endl;
+	}
 }
 
 int main()
@@ -184,18 +187,17 @@ int main()
 			break;
 
 			case 1 :
-			cout << "Trajet simple : 0 | Trajet composé 1" << endl;
+			cout << endl << "Trajet simple : 0 | Trajet composé : 1 | Annuler : 2" << endl;
 			cin >> lecture;
 			ajoutCatalogue(&catalogue,lecture);
 			break;
 
 			case 2 :
-
 			cout << "Ville de départ ?"<< endl;
 			cin >> ville1;
 			cout << "Ville d'arrivée ?"<< endl;
 			cin >> ville2;
-
+			cout << endl;
 			catalogue.RechercherTrajet(ville1, ville2);
 			break;
 
@@ -203,6 +205,7 @@ int main()
 			cout << "Faute de frappe ? (bolosse)" << endl;
 			break;
 		}
+
 		annonce();
 		cin >> lecture;
 	}

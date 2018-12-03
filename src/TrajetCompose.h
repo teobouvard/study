@@ -1,9 +1,9 @@
 /*************************************************************************
-                           TrajetCompose  -  description
-                             -------------------
-    début                : $DATE$
-    copyright            : (C) $YEAR$ par $AUTHOR$
-    e-mail               : $EMAIL$
+TrajetCompose  -  description
+-------------------
+début                : $DATE$
+copyright            : (C) $YEAR$ par $AUTHOR$
+e-mail               : $EMAIL$
 *************************************************************************/
 
 //---------- Interface de la classe <TrajetCompose> (fichier TrajetCompose.h) ----------------
@@ -13,25 +13,24 @@
 //------------------------------------------------------------------------
 class TrajetCompose : public Trajet
 {
-//----------------------------------------------------------------- PUBLIC
+  //----------------------------------------------------------------- PUBLIC
 public:
-//----------------------------------------------------- Méthodes publiques
-    // type Méthode ( liste des paramètres );
+  //----------------------------------------------------- Méthodes publiques
   virtual void Afficher() const;
 
-//-------------------------------------------- Constructeurs - destructeur
-    //TrajetCompose ( const TrajetCompose & unTrajetCompose );
-    TrajetCompose (Collection* c);
-    virtual ~TrajetCompose ( );
+  //-------------------------------------------- Constructeurs - destructeur
 
-//------------------------------------------------------------------ PRIVE
+  TrajetCompose (Collection* c);
+  virtual ~TrajetCompose ( );
+
+  //------------------------------------------------------------------ PRIVE
 protected:
 
-//----------------------------------------------------- Attributs protégés
-Collection* escales;
-int nombreEscales;
-char * villeDepart;
-char * villeArrivee;
+  //----------------------------------------------------- Attributs protégés
+  Collection* escales;
+  int nombreEscales;
+  char * villeDepart;
+  char * villeArrivee;
 };
 
 #endif // TrajetCompose_H

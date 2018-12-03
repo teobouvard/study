@@ -22,6 +22,8 @@ public:
 void AjouterTrajet(Trajet* unTrajet);
 void AfficherCatalogue();
 void RechercherTrajet(char* depart, char* arrivee) const;
+void RechercherTrajetAvance(char* depart, char* arrivee) const;
+
 
 //-------------------------------------------- Constructeurs - destructeur
 
@@ -33,6 +35,7 @@ protected:
 //----------------------------------------------------- Attributs protégés
   Collection* collectionTrajets;
   int nbTrajets;
+  int profondeurRecherche;
 };
 
 #endif // Catalogue_H

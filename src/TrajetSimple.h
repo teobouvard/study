@@ -9,6 +9,8 @@ e-mail               : $EMAIL$
 //---------- Interface de la classe <TrajetSimple> (fichier TrajetSimple.h) ----------------
 #ifndef TrajetSimple_H
 #define TrajetSimple_H
+//--------------------------------------------------- Interfaces utilisées
+#include "Trajet.h"
 //------------------------------------------------------------------------
 // Rôle de la classe <TrajetSimple>
 

@@ -14,7 +14,6 @@ e-mail               : $EMAIL$
 #include <iostream>
 using namespace std;
 //------------------------------------------------------ Include personnel
-#include "Trajet.h"
 #include "TrajetSimple.h"
 //----------------------------------------------------------------- PUBLIC
 //----------------------------------------------------- Méthodes publiques
@@ -27,7 +26,7 @@ void TrajetSimple::Afficher() const
 }
 
 Trajet* TrajetSimple::clone() const{
-	
+
 	return new TrajetSimple(villeDepart,villeArrivee,modeTransport);
 }
 

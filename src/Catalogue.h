@@ -9,6 +9,9 @@
 //---------- Interface de la classe <Catalogue> (fichier Catalogue.h) ----------------
 #ifndef Catalogue_H
 #define Catalogue_H
+//--------------------------------------------------- Interfaces utilisées
+#include "Trajet.h"
+#include "Collection.h"
 
 // Rôle de la classe <Catalogue>
 

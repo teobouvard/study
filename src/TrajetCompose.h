@@ -9,6 +9,9 @@ e-mail               : $EMAIL$
 //---------- Interface de la classe <TrajetCompose> (fichier TrajetCompose.h) ----------------
 #ifndef TrajetCompose_H
 #define TrajetCompose_H
+//--------------------------------------------------- Interfaces utilisées
+#include "Trajet.h"
+#include "Collection.h"
 
 //------------------------------------------------------------------------
 class TrajetCompose : public Trajet

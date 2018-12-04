@@ -14,12 +14,9 @@ e-mail               : $EMAIL$
 #include <iostream>
 using namespace std;
 //------------------------------------------------------ Include personnel
-#include "Trajet.h"
-#include "Collection.h"
 #include "Catalogue.h"
 //------------------------------------------------------------- Constantes
 const int PROFONDEUR_MAXIMALE = 5;
-int profondeurRecherche = 0;
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
@@ -35,9 +32,7 @@ void Catalogue::RechercherTrajet(char* depart, char* arrivee) const{
   cout << compteur << " trajets trouvés." << endl << endl;
 }
 
-void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee, int profondeurRecherche,Collection* c) const{
-
-  //while(profondeurRecherche < PROFONDEUR_MAXIMALE){
+void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee, int profondeurRecherche, Collection* c) const{
 
   for (int i = 0; i < nbTrajets; i++){
     Collection* c1 = c->cloneCollection();
@@ -45,11 +40,11 @@ void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee, int profonde
     c1->Ajouter(trajetEvalue);
     if(strcmp(depart,trajetEvalue->getVille(0))==0){
       if(strcmp(arrivee,trajetEvalue->getVille(1))==0){
+        cout << "Option " << i << endl;
         c1->AfficherCollection();
-
       }
       else{
-        if(profondeurRecherche<=5){
+        if(profondeurRecherche < PROFONDEUR_MAXIMALE){
           Catalogue::RechercherTrajetAvance(trajetEvalue->getVille(1),arrivee,++profondeurRecherche,c1);
         }
       }
@@ -57,7 +52,6 @@ void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee, int profonde
     delete c1;
   }
 }
-//}
 
 void Catalogue::AjouterTrajet(Trajet* unTrajet)
 {
@@ -66,8 +60,8 @@ void Catalogue::AjouterTrajet(Trajet* unTrajet)
 }
 
 void Catalogue::AfficherCatalogue(){
-  cout << "Le catalogue comporte " << nbTrajets << " trajets." << endl << endl;
-  collectionTrajets->Collection::AfficherCollection();
+  cout << endl << "Le catalogue comporte " << nbTrajets << " trajets." << endl << endl;
+  collectionTrajets->AfficherCollection();
 }
 
 //-------------------------------------------- Constructeurs - destructeur

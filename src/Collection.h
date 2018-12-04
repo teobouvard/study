@@ -9,6 +9,9 @@ e-mail               : $EMAIL$
 //---------- Interface de la classe <Collection> (fichier Collection.h) ----------------
 #ifndef Collection_H
 #define Collection_H
+//--------------------------------------------------- Interfaces utilisées
+#include "Trajet.h"
+#include "Collection.h"
 
 // Rôle de la classe <Collection>
 

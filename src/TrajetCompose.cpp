@@ -14,8 +14,6 @@ e-mail               : $EMAIL$
 #include <iostream>
 using namespace std;
 //------------------------------------------------------ Include personnel
-#include "Trajet.h"
-#include "Collection.h"
 #include "TrajetCompose.h"
 //----------------------------------------------------------------- PUBLIC
 
@@ -34,7 +32,7 @@ void TrajetCompose::Afficher() const
 }
 
 Trajet* TrajetCompose::clone() const{
-	
+
 	Collection* c = escales->cloneCollection();
 	return new TrajetCompose(c);
 }

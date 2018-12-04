@@ -13,11 +13,9 @@ e-mail               : $EMAIL$
 #include <iostream>
 using namespace std;
 //------------------------------------------------------ Include personnel
-#include "Trajet.h"
 #include "Collection.h"
 //------------------------------------------------------------- Constantes
 const int TAILLE_INITIALE = 10; //doit être différent de 0 pour Resize()
-
 //----------------------------------------------------------------- PUBLIC
 //----------------------------------------------------- Méthodes publiques
 void Collection::Resize()

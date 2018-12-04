@@ -10,8 +10,6 @@ e-mail               : $EMAIL$
 #ifndef Trajet_H
 #define Trajet_H
 //--------------------------------------------------- Interfaces utilisées
-#include <cstring>
-using namespace std;
 
 class Trajet
 {

@@ -15,33 +15,37 @@ e-mail               : $EMAIL$
 using namespace std;
 //------------------------------------------------------ Include personnel
 #include "Catalogue.h"
+#define underline "\033[4m"
+#define stopu "\033[0m"
+
 //------------------------------------------------------------- Constantes
 const int PROFONDEUR_MAXIMALE = 5;
-//----------------------------------------------------------------- PUBLIC
 
+//----------------------------------------------------------------- PUBLIC
+static int nbOption = 0;
 //----------------------------------------------------- Méthodes publiques
 void Catalogue::RechercherTrajet(char* depart, char* arrivee) const{
-  int compteur = 0;
   for (int i = 0; i < nbTrajets; i++){
     Trajet* trajetEvalue = collectionTrajets->getElement(i);
     if(strcmp(depart,trajetEvalue->getVille(0))==0 && strcmp(arrivee,trajetEvalue->getVille(1))==0){
       compteur++;
+      cout << "\t" << underline << "Option " << ++nbOption << stopu << endl;
       trajetEvalue->Afficher();
     }
   }
-  cout << compteur << " trajets trouvés." << endl << endl;
 }
 
 void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee, int profondeurRecherche, Collection* c) const{
-
   for (int i = 0; i < nbTrajets; i++){
     Collection* c1 = c->cloneCollection();
     Trajet* trajetEvalue = collectionTrajets->getElement(i)->clone();
     c1->Ajouter(trajetEvalue);
+
     if(strcmp(depart,trajetEvalue->getVille(0))==0){
       if(strcmp(arrivee,trajetEvalue->getVille(1))==0){
-        cout << "Option " << i << endl;
+        cout << "\t" << underline << "Option " << ++nbOption << stopu << endl;
         c1->AfficherCollection();
+        cout << endl;
       }
       else{
         if(profondeurRecherche < PROFONDEUR_MAXIMALE){
@@ -62,6 +66,11 @@ void Catalogue::AjouterTrajet(Trajet* unTrajet)
 void Catalogue::AfficherCatalogue(){
   cout << endl << "Le catalogue comporte " << nbTrajets << " trajets." << endl << endl;
   collectionTrajets->AfficherCollection();
+  cout << endl;
+}
+
+void Catalogue::RaZ_nbOption(){
+  nbOption = 0;
 }
 
 //-------------------------------------------- Constructeurs - destructeur

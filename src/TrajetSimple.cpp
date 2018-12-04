@@ -22,7 +22,7 @@ void TrajetSimple::Afficher() const
 {
 	cout << "Trajet Simple : ";
 	Trajet::Afficher();
-	cout << " en " << modeTransport << endl << endl;
+	cout << " en " << modeTransport << endl;
 }
 
 Trajet* TrajetSimple::clone() const{

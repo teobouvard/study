@@ -175,7 +175,7 @@ int main()
 	char* ville2 = new char[TAILLE_MAX_STRING];
 	Catalogue catalogue;
 	Collection c;
-	
+
 
 	init();
 	annonce();
@@ -210,6 +210,7 @@ int main()
 			cin >> ville2;
 			cout << endl;
 			catalogue.RechercherTrajetAvance(ville1, ville2,0,&c);
+			catalogue.RaZ_nbOption();
 			break;
 
 			default :

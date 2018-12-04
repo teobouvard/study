@@ -21,6 +21,7 @@ public:
 	//----------------------------------------------------- Méthodes publiques
 	virtual void Afficher() const = 0;
 	char* getVille(int depart_arrivee) const;
+	virtual Trajet* clone() const = 0;
 
 	//-------------------------------------------- Constructeurs - destructeur
 	Trajet (const char * villeDep, const char * villeArr);

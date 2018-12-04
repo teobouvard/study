@@ -18,6 +18,7 @@ class TrajetSimple : public Trajet
 public:
   //----------------------------------------------------- Méthodes publiques
   virtual void Afficher() const;
+  virtual Trajet* clone() const;
 
   //-------------------------------------------- Constructeurs - destructeur
   TrajetSimple ( const TrajetSimple & unTrajetSimple );

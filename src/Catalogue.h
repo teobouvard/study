@@ -22,7 +22,7 @@ public:
 void AjouterTrajet(Trajet* unTrajet);
 void AfficherCatalogue();
 void RechercherTrajet(char* depart, char* arrivee) const;
-void RechercherTrajetAvance(char* depart, char* arrivee) const;
+void RechercherTrajetAvance(char* depart, char* arrivee, int profondeurRecherche, Collection* c) const;
 
 
 //-------------------------------------------- Constructeurs - destructeur

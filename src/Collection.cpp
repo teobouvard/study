@@ -78,6 +78,19 @@ Collection::Collection ()
 	#endif
 } //----- Fin de Collection
 
+
+
+
+Collection* Collection::cloneCollection() const{
+	Collection* c = new Collection;
+	for (int i = 0; i < nbElements; i++){
+		c->Ajouter(elements[i]->clone());
+	}
+	return c;
+}
+
+
+
 Collection::~Collection ()
 {
 	for (int i = 0; i < nbElements; i++){

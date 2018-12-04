@@ -29,6 +29,7 @@ public:
 	void Ajouter(Trajet * t);
 	Trajet* getElement(int i) const;
 	int getNbElements() const;
+	Collection* cloneCollection() const;
 
 	//-------------------------------------------- Constructeurs - destructeur
 	Collection ( const Collection & unCollection );

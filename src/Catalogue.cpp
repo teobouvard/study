@@ -35,25 +35,29 @@ void Catalogue::RechercherTrajet(char* depart, char* arrivee) const{
   cout << compteur << " trajets trouvés." << endl << endl;
 }
 
-void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee) const{
+void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee, int profondeurRecherche,Collection* c) const{
+
+  //while(profondeurRecherche < PROFONDEUR_MAXIMALE){
 
   for (int i = 0; i < nbTrajets; i++){
-    while(profondeurRecherche < PROFONDEUR_MAXIMALE){
-
-    Trajet* trajetEvalue = collectionTrajets->getElement(i);
-
+    Collection* c1 = c->cloneCollection();
+    Trajet* trajetEvalue = collectionTrajets->getElement(i)->clone();
+    c1->Ajouter(trajetEvalue);
     if(strcmp(depart,trajetEvalue->getVille(0))==0){
       if(strcmp(arrivee,trajetEvalue->getVille(1))==0){
-          trajetEvalue->Afficher();
-        }
-        else{
-          profondeurRecherche++;
-          Catalogue::RechercherTrajetAvance(trajetEvalue->getVille(1),arrivee);
+        c1->AfficherCollection();
+
+      }
+      else{
+        if(profondeurRecherche<=5){
+          Catalogue::RechercherTrajetAvance(trajetEvalue->getVille(1),arrivee,++profondeurRecherche,c1);
         }
       }
     }
+    delete c1;
   }
 }
+//}
 
 void Catalogue::AjouterTrajet(Trajet* unTrajet)
 {

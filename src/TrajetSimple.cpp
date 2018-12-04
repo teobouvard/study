@@ -26,6 +26,13 @@ void TrajetSimple::Afficher() const
 	cout << " en " << modeTransport << endl << endl;
 }
 
+Trajet* TrajetSimple::clone() const{
+	
+	return new TrajetSimple(villeDepart,villeArrivee,modeTransport);
+}
+
+
+
 //-------------------------------------------- Constructeurs - villeDepartdestructeur
 
 TrajetSimple::TrajetSimple (const char * villeDep, const char * villeArr, const char * modeTrans ) : Trajet(villeDep, villeArr)

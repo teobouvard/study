@@ -33,6 +33,12 @@ void TrajetCompose::Afficher() const
 	cout << endl;
 }
 
+Trajet* TrajetCompose::clone() const{
+	
+	Collection* c = escales->cloneCollection();
+	return new TrajetCompose(c);
+}
+
 //-------------------------------------------- Constructeurs - destructeur
 
 TrajetCompose::TrajetCompose (Collection* c)

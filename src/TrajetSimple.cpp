@@ -26,11 +26,8 @@ void TrajetSimple::Afficher() const
 }
 
 Trajet* TrajetSimple::clone() const{
-
 	return new TrajetSimple(villeDepart,villeArrivee,modeTransport);
 }
-
-
 
 //-------------------------------------------- Constructeurs - villeDepartdestructeur
 

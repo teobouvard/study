@@ -201,6 +201,7 @@ int main()
 			cin >> ville2;
 			cout << endl;
 			catalogue.RechercherTrajet(ville1, ville2);
+			catalogue.RaZ_nbOption();
 			break;
 
 			case 3 :

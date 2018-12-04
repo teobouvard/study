@@ -14,8 +14,10 @@ e-mail               : $EMAIL$
 using namespace std;
 //------------------------------------------------------ Include personnel
 #include "Collection.h"
+#define underline "\033[4m"
+#define stopu "\033[0m"
 //------------------------------------------------------------- Constantes
-const int TAILLE_INITIALE = 10; //doit être différent de 0 pour Resize()
+const int TAILLE_INITIALE = 5; //doit être différent de 0 pour Resize()
 //----------------------------------------------------------------- PUBLIC
 //----------------------------------------------------- Méthodes publiques
 void Collection::Resize()
@@ -34,8 +36,11 @@ void Collection::Resize()
 
 void Collection::AfficherCollection() const
 {
-	for (int i = 0; i < nbElements; i++)
+	for (int i = 0; i < nbElements; i++){
+		cout << underline <<"Trajet " << i + 1 << stopu << endl;
 		elements[i]->Afficher();
+		cout << endl;
+	}
 }
 
 Trajet* Collection::getElement(int i) const
@@ -76,9 +81,6 @@ Collection::Collection ()
 	#endif
 } //----- Fin de Collection
 
-
-
-
 Collection* Collection::cloneCollection() const{
 	Collection* c = new Collection;
 	for (int i = 0; i < nbElements; i++){
@@ -86,8 +88,6 @@ Collection* Collection::cloneCollection() const{
 	}
 	return c;
 }
-
-
 
 Collection::~Collection ()
 {

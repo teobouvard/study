@@ -25,11 +25,11 @@ public:
 void AjouterTrajet(Trajet* unTrajet);
 void AfficherCatalogue();
 void RechercherTrajet(char* depart, char* arrivee) const;
+
 void RechercherTrajetAvance(char* depart, char* arrivee, int profondeurRecherche, Collection* c) const;
 
-//procédure utilisé pour l'affichage du nombre d'option dans les recherches
+//procédure utilisé pour réinitialiser l'affichage du nombre d'options dans les recherches
 void RaZ_nbOption();
-
 
 //-------------------------------------------- Constructeurs - destructeur
 

@@ -19,19 +19,23 @@ using namespace std;
 #define stopu "\033[0m"
 
 //------------------------------------------------------------- Constantes
-const int PROFONDEUR_MAXIMALE = 5;
+const int PROFONDEUR_MAXIMALE = 2;
 
 //----------------------------------------------------------------- PUBLIC
 static int nbOption = 0;
 //----------------------------------------------------- Méthodes publiques
+
 void Catalogue::RechercherTrajet(char* depart, char* arrivee) const{
   for (int i = 0; i < nbTrajets; i++){
     Trajet* trajetEvalue = collectionTrajets->getElement(i);
     if(strcmp(depart,trajetEvalue->getVille(0))==0 && strcmp(arrivee,trajetEvalue->getVille(1))==0){
-      compteur++;
       cout << "\t" << underline << "Option " << ++nbOption << stopu << endl;
       trajetEvalue->Afficher();
+      cout << endl;
     }
+  }
+  if (nbOption == 0){
+    cout << "Aucun trajet trouvé :(" << endl << endl;
   }
 }
 
@@ -43,12 +47,12 @@ void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee, int profonde
 
     if(strcmp(depart,trajetEvalue->getVille(0))==0){
       if(strcmp(arrivee,trajetEvalue->getVille(1))==0){
-        cout << "\t" << underline << "Option " << ++nbOption << stopu << endl;
+        cout << "\t" << underline << "Option " << ++nbOption << stopu << endl << endl;
         c1->AfficherCollection();
         cout << endl;
       }
       else{
-        if(profondeurRecherche < PROFONDEUR_MAXIMALE){
+        if(profondeurRecherche < PROFONDEUR_MAXIMALE-1){
           Catalogue::RechercherTrajetAvance(trajetEvalue->getVille(1),arrivee,++profondeurRecherche,c1);
         }
       }
@@ -66,7 +70,6 @@ void Catalogue::AjouterTrajet(Trajet* unTrajet)
 void Catalogue::AfficherCatalogue(){
   cout << endl << "Le catalogue comporte " << nbTrajets << " trajets." << endl << endl;
   collectionTrajets->AfficherCollection();
-  cout << endl;
 }
 
 void Catalogue::RaZ_nbOption(){

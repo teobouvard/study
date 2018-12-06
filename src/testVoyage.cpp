@@ -150,7 +150,7 @@ void ajoutCatalogue(Catalogue * c, int option){
 		cout << "Nombre d'escales?" << endl;
 		cin >> nEscales;
 		while(nEscales==0){
-			cout << "Le nombre d'escales doit etre positif. Veuillez le (vous) resaisir" << endl;
+			cout << "Le nombre d'escales doit etre un entier positif. Veuillez le (vous) resaisir" << endl;
 			cin >> nEscales;
 		}
 		Collection* collectionTrajets = new Collection;
@@ -168,9 +168,14 @@ void ajoutCatalogue(Catalogue * c, int option){
 	}
 }
 
+void error(){
+	cout << "input error" << endl;
+	exit(0);
+}
+
 int main()
 {
-	int lecture;
+	char lecture[10];
 	char* ville1 = new char[TAILLE_MAX_STRING];
 	char* ville2 = new char[TAILLE_MAX_STRING];
 	Catalogue catalogue;
@@ -180,21 +185,22 @@ int main()
 	init();
 	annonce();
 
-	cin >> lecture;
-	while(lecture!=9){
-		switch (lecture) {
-
-			case 0 :
+	if (fscanf(stdin,"%99s",lecture)!=1)
+		error();
+	while(strcmp(lecture,"4")!=0){
+		if(strcmp(lecture,"0")==0){
 			catalogue.AfficherCatalogue();
-			break;
-
-			case 1 :
+		}
+		else if(strcmp(lecture,"1")==0){
 			cout << endl << "Trajet simple : 0 | Trajet composé : 1 | Annuler : 2" << endl;
 			cin >> lecture;
-			ajoutCatalogue(&catalogue,lecture);
-			break;
+			if(strcmp(lecture,"0")==0)
+				ajoutCatalogue(&catalogue,0);
+			else if(strcmp(lecture,"1")==0)
+				ajoutCatalogue(&catalogue,1);
 
-			case 2 :
+		}
+		else if (strcmp(lecture,"2")==0){
 			cout << "Ville de départ ?"<< endl;
 			cin >> ville1;
 			cout << "Ville d'arrivée ?"<< endl;
@@ -202,9 +208,8 @@ int main()
 			cout << endl;
 			catalogue.RechercherTrajet(ville1, ville2);
 			catalogue.RaZ_nbOption();
-			break;
-
-			case 3 :
+		}
+		else if(strcmp(lecture,"3")==0){
 			cout << "Ville de départ ?"<< endl;
 			cin >> ville1;
 			cout << "Ville d'arrivée ?"<< endl;
@@ -212,15 +217,12 @@ int main()
 			cout << endl;
 			catalogue.RechercherTrajetAvance(ville1, ville2,0,&c);
 			catalogue.RaZ_nbOption();
-			break;
-
-			default :
-			cout << "Faute de frappe ? (bolosse)" << endl;
-			break;
 		}
-
 		annonce();
-		cin >> lecture;
+
+		if(fscanf(stdin,"%99s", lecture)!=1)
+			error();
+
 	}
 
 	delete [] ville1;

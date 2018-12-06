@@ -19,7 +19,7 @@ using namespace std;
 #define stopu "\033[0m"
 
 //------------------------------------------------------------- Constantes
-const int PROFONDEUR_MAXIMALE = 2;
+const int PROFONDEUR_MAXIMALE = 10;
 
 //----------------------------------------------------------------- PUBLIC
 static int nbOption = 0;

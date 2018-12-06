@@ -1,9 +1,8 @@
 /*************************************************************************
 Collection  -  description
 -------------------
-début                : $DATE$
-copyright            : (C) $YEAR$ par $AUTHOR$
-e-mail               : $EMAIL$
+début                : Novembre 2018
+copyright            : Mathis Guilhin & Téo Bouvard
 *************************************************************************/
 
 //---------- Réalisation de la classe <Collection> (fichier Collection.cpp) ------------
@@ -15,7 +14,7 @@ using namespace std;
 //------------------------------------------------------ Include personnel
 #include "Collection.h"
 #define underline "\033[4m"
-#define stopu "\033[0m"
+#define stopunderline "\033[0m"
 //------------------------------------------------------------- Constantes
 const int TAILLE_INITIALE = 5; //doit être différent de 0 pour Resize()
 //----------------------------------------------------------------- PUBLIC
@@ -37,7 +36,7 @@ void Collection::Resize()
 void Collection::AfficherCollection() const
 {
 	for (int i = 0; i < nbElements; i++){
-		cout << "\t" << underline <<"Trajet " << i + 1 << stopu << endl;
+		cout << "\t" << underline <<"Trajet " << i + 1 << stopunderline << endl;
 		elements[i]->Afficher();
 		cout << endl;
 	}

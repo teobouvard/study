@@ -1,9 +1,8 @@
 /*************************************************************************
 Collection  -  description
 -------------------
-début                : $DATE$
-copyright            : (C) $YEAR$ par $AUTHOR$
-e-mail               : $EMAIL$
+début                : Novembre 2018
+copyright            : Mathis Guilhin & Téo Bouvard
 *************************************************************************/
 
 //---------- Interface de la classe <Collection> (fichier Collection.h) ----------------
@@ -32,6 +31,8 @@ public:
 	void Ajouter(Trajet * t);
 	Trajet* getElement(int i) const;
 	int getNbElements() const;
+
+	//fonction qui crée une collection identique à celle sur laquelle elle est appellée
 	Collection* cloneCollection() const;
 
 	//-------------------------------------------- Constructeurs - destructeur

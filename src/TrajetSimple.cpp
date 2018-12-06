@@ -1,9 +1,8 @@
 /*************************************************************************
 TrajetSimple  -  description
 -------------------
-début                : $DATE$
-copyright            : (C) $YEAR$ par $AUTHOR$
-e-mail               : $EMAIL$
+début                : Novembre 2018
+copyright            : Mathis Guilhin & Téo Bouvard
 *************************************************************************/
 
 //---------- Réalisation de la classe <TrajetSimple> (fichier TrajetSimple.cpp) ------------

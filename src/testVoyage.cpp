@@ -1,9 +1,8 @@
 /*************************************************************************
 testVoyage  -  description
 -------------------
-début                : $DATE$
-copyright            : (C) $YEAR$ par $AUTHOR$
-e-mail               : $EMAIL$
+début                : Novembre 2018
+copyright            : Mathis Guilhin & Téo Bouvard
 *************************************************************************/
 
 //---------- Réalisation du module <testVoyage> (fichier testVoyage.cpp) ---------------
@@ -12,7 +11,6 @@ e-mail               : $EMAIL$
 //-------------------------------------------------------- Include système
 #include <iostream>
 using namespace std;
-#include <cstring>
 //------------------------------------------------------ Include personnel
 #include "Trajet.h"
 #include "Collection.h"
@@ -45,7 +43,7 @@ void annonce(){
 }
 
 //retourne un pointeur sur un trajet simple créé lors de la fonction
-Trajet* CreerTrajet(){
+Trajet* CreerTrajetSimple(){
 	char* ville1 = new char[TAILLE_MAX_STRING];
 	char* ville2 = new char[TAILLE_MAX_STRING];
 	char* mdTransport = new char[TAILLE_MAX_STRING];
@@ -71,7 +69,7 @@ Trajet* CreerTrajet(){
 //option : 0-> trajet simple 		1->trajet composé
 void ajoutCollection(Collection * c, int option){
 	if(option == 0){
-		c->Ajouter(CreerTrajet());
+		c->Ajouter(CreerTrajetSimple());
 	} else if(option == 1){
 		int nEscales;
 		cout << "Nombre d'escales?" << endl;
@@ -100,7 +98,7 @@ void ajoutCollection(Collection * c, int option){
 //si on crée un trajet composé, appel à ajoutCollection
 void ajoutCatalogue(Catalogue * c, int option){
 	if(option == 0){
-		c->AjouterTrajet(CreerTrajet());
+		c->AjouterTrajet(CreerTrajetSimple());
 	} else if(option == 1){
 		int nEscales;
 		cout << "Nombre d'escales?" << endl;

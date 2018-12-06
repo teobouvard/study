@@ -25,8 +25,8 @@ public:
 void AjouterTrajet(Trajet* unTrajet);
 void AfficherCatalogue();
 void RechercherTrajet(char* depart, char* arrivee) const;
-
 void RechercherTrajetAvance(char* depart, char* arrivee, int profondeurRecherche, Collection* c) const;
+Collection* getCollection();
 
 //procédure utilisé pour réinitialiser l'affichage du nombre d'options dans les recherches
 void RaZ_nbOption();

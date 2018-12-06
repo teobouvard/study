@@ -37,7 +37,7 @@ void Collection::Resize()
 void Collection::AfficherCollection() const
 {
 	for (int i = 0; i < nbElements; i++){
-		cout << underline <<"Trajet " << i + 1 << stopu << endl;
+		cout << "\t" << underline <<"Trajet " << i + 1 << stopu << endl;
 		elements[i]->Afficher();
 		cout << endl;
 	}

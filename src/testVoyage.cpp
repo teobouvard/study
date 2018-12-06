@@ -20,6 +20,8 @@ using namespace std;
 #include "TrajetCompose.h"
 #include "Catalogue.h"
 
+#define BIGNUMBER 9999999999
+
 ///////////////////////////////////////////////////////////////////  PRIVE
 //------------------------------------------------------------- Constantes
 
@@ -123,16 +125,20 @@ void ajoutCollection(Collection * c, int option){
 	} else if(option == 1){
 		int nEscales;
 		cout << "Nombre d'escales?" << endl;
-		cin >> nEscales;
-		while(nEscales==0){
-			cout << "Le nombre d'escales doit etre positif. Veuillez le (vous) resaisir" << endl;
-			cin >> nEscales;
+		while(!(cin >> nEscales) || nEscales < 2){
+			cin.clear();
+			cin.ignore(BIGNUMBER, '\n');
+			cout << "Entrée invalide. Réessayez" << endl;
 		}
 		Collection* collectionTrajets = new Collection;
 		for(int i = 0 ; i < nEscales; i++){
 			cout << "Trajet simple : 0 | Trajet composé 1" << endl;
 			int choix;
-			cin >> choix;
+			while(!(cin >> choix)){
+				cin.clear();
+				cin.ignore(BIGNUMBER, '\n');
+				cout << "Entrée invalide. Réessayez" << endl;
+			}
 			ajoutCollection(collectionTrajets,choix);
 		}
 		TrajetCompose* trajet = new TrajetCompose(collectionTrajets);
@@ -148,16 +154,20 @@ void ajoutCatalogue(Catalogue * c, int option){
 	} else if(option == 1){
 		int nEscales;
 		cout << "Nombre d'escales?" << endl;
-		cin >> nEscales;
-		while(nEscales==0){
-			cout << "Le nombre d'escales doit etre un entier positif. Veuillez le (vous) resaisir" << endl;
-			cin >> nEscales;
+		while(!(cin >> nEscales)){
+			cin.clear();
+			cin.ignore(BIGNUMBER, '\n');
+			cout << "Entrée invalide. Réessayez" << endl;
 		}
 		Collection* collectionTrajets = new Collection;
-		for(int i = 0 ; i < nEscales; i++){
+		for (int i = 0 ; i < nEscales; i++){
 			cout << "Trajet simple : 0 | Trajet composé 1" << endl;
 			int choix;
-			cin >> choix;
+			while(!(cin >> choix)){
+				cin.clear();
+				cin.ignore(BIGNUMBER, '\n');
+				cout << "Entrée invalide. Réessayez" << endl;
+			}
 			ajoutCollection(collectionTrajets,choix);
 		}
 		TrajetCompose* trajet = new TrajetCompose(collectionTrajets);
@@ -168,39 +178,42 @@ void ajoutCatalogue(Catalogue * c, int option){
 	}
 }
 
-void error(){
-	cout << "input error" << endl;
-	exit(0);
-}
-
 int main()
 {
-	char lecture[10];
+	int lecture;
 	char* ville1 = new char[TAILLE_MAX_STRING];
 	char* ville2 = new char[TAILLE_MAX_STRING];
 	Catalogue catalogue;
 	Collection c;
 
-
 	init();
 	annonce();
 
-	if (fscanf(stdin,"%99s",lecture)!=1)
-		error();
-	while(strcmp(lecture,"4")!=0){
-		if(strcmp(lecture,"0")==0){
-			catalogue.AfficherCatalogue();
-		}
-		else if(strcmp(lecture,"1")==0){
-			cout << endl << "Trajet simple : 0 | Trajet composé : 1 | Annuler : 2" << endl;
-			cin >> lecture;
-			if(strcmp(lecture,"0")==0)
-				ajoutCatalogue(&catalogue,0);
-			else if(strcmp(lecture,"1")==0)
-				ajoutCatalogue(&catalogue,1);
+	while(!(cin >> lecture)){
+		cin.clear();
+		cin.ignore(BIGNUMBER, '\n');
+		cout << "Entrée invalide. Réessayez" << endl;
+	}
 
-		}
-		else if (strcmp(lecture,"2")==0){
+	while(lecture != 9){
+
+		switch (lecture){
+
+			case 0 :
+			catalogue.AfficherCatalogue();
+			break;
+
+			case 1 :
+			cout << endl << "Trajet simple : 0 | Trajet composé : 1 | Annuler : 2" << endl;
+			while(!(cin >> lecture)){
+				cin.clear();
+				cin.ignore(BIGNUMBER, '\n');
+				cout << "Entrée invalide. Réessayez" << endl;
+			}
+			ajoutCatalogue(&catalogue,lecture);
+			break;
+
+			case 2 :
 			cout << "Ville de départ ?"<< endl;
 			cin >> ville1;
 			cout << "Ville d'arrivée ?"<< endl;
@@ -208,8 +221,9 @@ int main()
 			cout << endl;
 			catalogue.RechercherTrajet(ville1, ville2);
 			catalogue.RaZ_nbOption();
-		}
-		else if(strcmp(lecture,"3")==0){
+			break;
+
+			case 3 :
 			cout << "Ville de départ ?"<< endl;
 			cin >> ville1;
 			cout << "Ville d'arrivée ?"<< endl;
@@ -217,13 +231,24 @@ int main()
 			cout << endl;
 			catalogue.RechercherTrajetAvance(ville1, ville2,0,&c);
 			catalogue.RaZ_nbOption();
+			break;
+
+			default :
+			cout << "Entrée invalide. Réessayez" << endl;
+			break;
+
 		}
+
 		annonce();
 
-		if(fscanf(stdin,"%99s", lecture)!=1)
-			error();
-
+		while(!(cin >> lecture)){
+			cin.clear();
+			cin.ignore(BIGNUMBER, '\n');
+			cout << "Entrée invalide. Réessayez" << endl;
+		}
 	}
+
+	cout << "Au revoir !" << endl << endl;
 
 	delete [] ville1;
 	delete [] ville2;

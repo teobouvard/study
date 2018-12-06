@@ -76,6 +76,10 @@ void Catalogue::RaZ_nbOption(){
   nbOption = 0;
 }
 
+Collection* Catalogue::getCollection(){
+  return collectionTrajets;
+}
+
 //-------------------------------------------- Constructeurs - destructeur
 
 Catalogue::Catalogue ()

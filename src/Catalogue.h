@@ -1,8 +1,8 @@
 /*************************************************************************
-                           Catalogue  -  description
-                             -------------------
-    début                : Novembre 2018
-    copyright            : Mathis Guilhin & Téo Bouvard
+Catalogue  -  description
+-------------------
+début                : Novembre 2018
+copyright            : Mathis Guilhin & Téo Bouvard
 *************************************************************************/
 
 //---------- Interface de la classe <Catalogue> (fichier Catalogue.h) ----------------
@@ -17,27 +17,28 @@
 //------------------------------------------------------------------------
 class Catalogue
 {
-//----------------------------------------------------------------- PUBLIC
+  //----------------------------------------------------------------- PUBLIC
 public:
-//----------------------------------------------------- Méthodes publiques
+  //----------------------------------------------------- Méthodes publiques
 
-void AjouterTrajet(Trajet* unTrajet);
-void AfficherCatalogue();
-void RechercherTrajet(char* depart, char* arrivee) const;
-void RechercherTrajetAvance(char* depart, char* arrivee, int profondeurRecherche, Collection* c) const;
-Collection* getCollection();
+  void AfficherCatalogue();
+  void RechercherTrajet(char* depart, char* arrivee) const;
+  void RechercherTrajetAvance(char* depart, char* arrivee, int profondeurRecherche, Collection* c) const;
+  Collection* getCollection();
 
-//procédure utilisé pour réinitialiser l'affichage du nombre d'options dans les recherches
-void RaZ_nbOption();
+  //procédure utilisée pour réinitialiser l'affichage du nombre d'options dans les recherches
+  void RaZ_nbOption();
 
-//-------------------------------------------- Constructeurs - destructeur
+  void addOneTrajet();
 
-    Catalogue ( );
-    virtual ~Catalogue ( );
+  //-------------------------------------------- Constructeurs - destructeur
 
-//------------------------------------------------------------------ PRIVE
+  Catalogue ( );
+  virtual ~Catalogue ( );
+
+  //------------------------------------------------------------------ PRIVE
 protected:
-//----------------------------------------------------- Attributs protégés
+  //----------------------------------------------------- Attributs protégés
   Collection* collectionTrajets;
   int nbTrajets;
 };

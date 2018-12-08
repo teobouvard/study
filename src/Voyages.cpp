@@ -18,7 +18,7 @@ using namespace std;
 #include "TrajetCompose.h"
 #include "Catalogue.h"
 
-#define BIGNUMBER 9999999999
+#define BIGNUMBER 99999999
 
 ///////////////////////////////////////////////////////////////////  PRIVE
 //------------------------------------------------------------- Constantes
@@ -92,39 +92,11 @@ void ajoutCollection(Collection * c, int option){
 		TrajetCompose* trajet = new TrajetCompose(collectionTrajets);
 		c->Ajouter(trajet);
 	}
-}
-
-//premier étage de l'ajout d'un trajet au catalogue
-//si on crée un trajet composé, appel à ajoutCollection
-void ajoutCatalogue(Catalogue * c, int option){
-	if(option == 0){
-		c->AjouterTrajet(CreerTrajetSimple());
-	} else if(option == 1){
-		int nEscales;
-		cout << "Nombre d'escales?" << endl;
-		while(!(cin >> nEscales)){
-			cin.clear();
-			cin.ignore(BIGNUMBER, '\n');
-			cout << "Entrée invalide. Réessayez" << endl;
-		}
-		Collection* collectionTrajets = new Collection;
-		for (int i = 0 ; i < nEscales; i++){
-			cout << "Trajet simple : 0 | Trajet composé 1" << endl;
-			int choix;
-			while(!(cin >> choix)){
-				cin.clear();
-				cin.ignore(BIGNUMBER, '\n');
-				cout << "Entrée invalide. Réessayez" << endl;
-			}
-			ajoutCollection(collectionTrajets,choix);
-		}
-		TrajetCompose* trajet = new TrajetCompose(collectionTrajets);
-		c->AjouterTrajet(trajet);
-	}
 	else if(option == 2){
 		cout << endl;
 	}
 }
+
 
 int main()
 {
@@ -158,7 +130,8 @@ int main()
 				cin.ignore(BIGNUMBER, '\n');
 				cout << "Entrée invalide. Réessayez" << endl;
 			}
-			ajoutCatalogue(&catalogue,lecture);
+			catalogue.addOneTrajet();
+			ajoutCollection(catalogue.getCollection(),lecture);
 			break;
 
 			case 2 :

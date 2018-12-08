@@ -25,45 +25,51 @@ static int nbOption = 0;
 //----------------------------------------------------- Méthodes publiques
 
 void Catalogue::RechercherTrajet(char* depart, char* arrivee) const{
-  for (int i = 0; i < nbTrajets; i++){
-    Trajet* trajetEvalue = collectionTrajets->getElement(i);
-    if(strcmp(depart,trajetEvalue->getVille(0))==0 && strcmp(arrivee,trajetEvalue->getVille(1))==0){
-      cout << "\t" << underline << "Option " << ++nbOption << stopu << endl;
-      trajetEvalue->Afficher();
-      cout << endl;
-    }
+  if (nbTrajets == 0){
+    cout << "Catalogue vide !" << endl << endl;
   }
-  if (nbOption == 0){
-    cout << "Aucun trajet trouvé :(" << endl << endl;
+
+  else {
+    for (int i = 0; i < nbTrajets; i++){
+      Trajet* trajetEvalue = collectionTrajets->getElement(i);
+      if(strcmp(depart,trajetEvalue->getVille(0))==0 && strcmp(arrivee,trajetEvalue->getVille(1))==0){
+        cout << "\t" << underline << "Option " << ++nbOption << stopu << endl;
+        trajetEvalue->Afficher();
+        cout << endl;
+      }
+    }
+    if (nbOption == 0){
+      cout << "Aucun trajet trouvé :(" << endl << endl;
+    }
   }
 }
 
 void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee, int profondeurRecherche, Collection* c) const{
-  for (int i = 0; i < nbTrajets; i++){
-    Collection* c1 = c->cloneCollection();
-    Trajet* trajetEvalue = collectionTrajets->getElement(i)->clone();
-    c1->Ajouter(trajetEvalue);
+  if (nbTrajets == 0){
+    cout << "Catalogue vide !" << endl << endl;
+  }
 
-    if(strcmp(depart,trajetEvalue->getVille(0))==0){
-      if(strcmp(arrivee,trajetEvalue->getVille(1))==0){
-        cout << "\t" << underline << "Option " << ++nbOption << stopu << endl << endl;
-        c1->AfficherCollection();
-        cout << endl;
-      }
-      else{
-        if(profondeurRecherche < PROFONDEUR_MAXIMALE-1){
-          Catalogue::RechercherTrajetAvance(trajetEvalue->getVille(1),arrivee,++profondeurRecherche,c1);
+  else {
+    for (int i = 0; i < nbTrajets; i++){
+      Collection* c1 = c->cloneCollection();
+      Trajet* trajetEvalue = collectionTrajets->getElement(i)->clone();
+      c1->Ajouter(trajetEvalue);
+
+      if(strcmp(depart,trajetEvalue->getVille(0))==0){
+        if(strcmp(arrivee,trajetEvalue->getVille(1))==0){
+          cout << "\t" << underline << "Option " << ++nbOption << stopu << endl << endl;
+          c1->AfficherCollection();
+          cout << endl;
+        }
+        else{
+          if(profondeurRecherche < PROFONDEUR_MAXIMALE-1){
+            Catalogue::RechercherTrajetAvance(trajetEvalue->getVille(1),arrivee,++profondeurRecherche,c1);
+          }
         }
       }
+      delete c1;
     }
-    delete c1;
   }
-}
-
-void Catalogue::AjouterTrajet(Trajet* unTrajet)
-{
-  collectionTrajets->Ajouter(unTrajet);
-  nbTrajets++;
 }
 
 void Catalogue::AfficherCatalogue(){
@@ -77,6 +83,10 @@ void Catalogue::RaZ_nbOption(){
 
 Collection* Catalogue::getCollection(){
   return collectionTrajets;
+}
+
+void Catalogue::addOneTrajet(){
+  nbTrajets++;
 }
 
 //-------------------------------------------- Constructeurs - destructeur

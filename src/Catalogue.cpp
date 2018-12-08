@@ -26,7 +26,7 @@ static int nbOption = 0;
 
 void Catalogue::RechercherTrajet(char* depart, char* arrivee) const{
   if (nbTrajets == 0){
-    cout << "Catalogue vide !" << endl << endl;
+    cerr << "Catalogue vide !" << endl << endl;
   }
 
   else {
@@ -39,14 +39,14 @@ void Catalogue::RechercherTrajet(char* depart, char* arrivee) const{
       }
     }
     if (nbOption == 0){
-      cout << "Aucun trajet trouvé :(" << endl << endl;
+      cerr << "Aucun trajet trouvé :(" << endl << endl;
     }
   }
 }
 
 void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee, int profondeurRecherche, Collection* c) const{
   if (nbTrajets == 0){
-    cout << "Catalogue vide !" << endl << endl;
+    cerr << "Catalogue vide !" << endl << endl;
   }
 
   else {

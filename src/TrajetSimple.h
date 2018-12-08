@@ -11,8 +11,8 @@ copyright            : Mathis Guilhin & Téo Bouvard
 //--------------------------------------------------- Interfaces utilisées
 #include "Trajet.h"
 //------------------------------------------------------------------------
-// Rôle de la classe <TrajetSimple>
-/*
+/*  Rôle de la classe <TrajetSimple>
+
 La classe <TrajetSimple> est une sorte de Trajet qui comporte un mode de Transport
 */
 

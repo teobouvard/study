@@ -9,8 +9,8 @@ copyright            : Mathis Guilhin & Téo Bouvard
 #ifndef Trajet_H
 #define Trajet_H
 //--------------------------------------------------- Interfaces utilisées
-// Rôle de la classe <Trajet>
-/*
+/*	Rôle de la classe <Trajet>
+
 La classe <Trajet> est une classe abstraite qui représente un Trajet comme un
 objet ayant une ville de départ et une ville d'arrivée.
 */

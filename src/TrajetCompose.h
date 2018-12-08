@@ -12,9 +12,9 @@ copyright            : Mathis Guilhin & Téo Bouvard
 #include "Trajet.h"
 #include "Collection.h"
 //------------------------------------------------------------------------
-// Rôle de la classe <TrajetCompose>
-/*
-La classe <TrajetSimple> est une sorte de Trajet qui comporte un nombre d'escales
+/*  Rôle de la classe <TrajetCompose>
+
+La classe <TrajetCompose> est une sorte de Trajet qui comporte un nombre d'escales
 et une collection de trajets qui correspond aux différentes escales
 */
 

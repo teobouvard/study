@@ -69,6 +69,15 @@ void Collection::Ajouter(Trajet * t)
 		#endif
 	}
 }
+
+Collection* Collection::cloneCollection() const{
+	Collection* c = new Collection;
+	for (int i = 0; i < nbElements; i++){
+		c->Ajouter(elements[i]->clone());
+	}
+	return c;
+}
+
 //-------------------------------------------- Constructeurs - destructeur
 Collection::Collection ()
 {
@@ -79,14 +88,6 @@ Collection::Collection ()
 	cout << "Appel au constructeur de <Collection>" << endl;
 	#endif
 } //----- Fin de Collection
-
-Collection* Collection::cloneCollection() const{
-	Collection* c = new Collection;
-	for (int i = 0; i < nbElements; i++){
-		c->Ajouter(elements[i]->clone());
-	}
-	return c;
-}
 
 Collection::~Collection ()
 {

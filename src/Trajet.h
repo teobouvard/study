@@ -27,7 +27,7 @@ public:
 	/*
 	- méthode qui renvoie la ville de départ (depart_arrivee = 0) ou d'arrivée
 	(depart_arrivee = 1) d'un trajet
-	- utilisée dans les méthodes de recherche du Catalogue, et l'affichage des
+	- utilisée dans les méthodes de recherche du Catalogue et l'affichage des
 	trajets composés
 	*/
 	char* getVille(int depart_arrivee) const;

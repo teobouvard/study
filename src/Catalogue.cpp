@@ -25,12 +25,12 @@ static int nbOption = 0;
 //----------------------------------------------------- Méthodes publiques
 
 void Catalogue::RechercherTrajet(char* depart, char* arrivee) const{
-  if (nbTrajets == 0){
+  if (collectionTrajets->getNbElements() == 0){
     cerr << "Catalogue vide !" << endl << endl;
   }
 
   else {
-    for (int i = 0; i < nbTrajets; i++){
+    for (int i = 0; i < collectionTrajets->getNbElements(); i++){
       Trajet* trajetEvalue = collectionTrajets->getElement(i);
       if(strcmp(depart,trajetEvalue->getVille(0))==0 && strcmp(arrivee,trajetEvalue->getVille(1))==0){
         cout << "\t" << underline << "Option " << ++nbOption << stopu << endl;
@@ -45,12 +45,12 @@ void Catalogue::RechercherTrajet(char* depart, char* arrivee) const{
 }
 
 void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee, int profondeurRecherche, Collection* c) const{
-  if (nbTrajets == 0){
+  if (collectionTrajets->getNbElements() == 0){
     cerr << "Catalogue vide !" << endl << endl;
   }
 
   else {
-    for (int i = 0; i < nbTrajets; i++){
+    for (int i = 0; i < collectionTrajets->getNbElements(); i++){
       Collection* c1 = c->cloneCollection();
       Trajet* trajetEvalue = collectionTrajets->getElement(i)->clone();
       c1->Ajouter(trajetEvalue);
@@ -73,7 +73,7 @@ void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee, int profonde
 }
 
 void Catalogue::AfficherCatalogue(){
-  cout << endl << "Le catalogue comporte " << nbTrajets << " trajets." << endl << endl;
+  cout << endl << "Le catalogue comporte " << collectionTrajets->getNbElements() << " trajets." << endl << endl;
   collectionTrajets->AfficherCollection();
 }
 
@@ -85,15 +85,10 @@ Collection* Catalogue::getCollection(){
   return collectionTrajets;
 }
 
-void Catalogue::addOneTrajet(){
-  nbTrajets++;
-}
-
 //-------------------------------------------- Constructeurs - destructeur
 
 Catalogue::Catalogue ()
 {
-  nbTrajets = 0;
   collectionTrajets = new Collection;
   #ifdef MAP
   cout << "Appel au constructeur de <Catalogue>" << endl;

@@ -128,7 +128,6 @@ int main()
 				cin.ignore(BIGNUMBER, '\n');
 				cout << "Entrée invalide. Réessayez" << endl;
 			}
-			catalogue.addOneTrajet();
 			creationTrajet(catalogue.getCollection(),lecture);
 			break;
 

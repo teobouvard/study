@@ -11,7 +11,7 @@ copyright            : Mathis Guilhin & Téo Bouvard
 //--------------------------------------------------- Interfaces utilisées
 #include "Trajet.h"
 #include "Collection.h"
-
+//-----------------------------------------------------------------------------
 /* Rôle de la classe <Collection>
 
 La classe <Collection> correspond à la structure de données utilisée pour ce TP.

@@ -5,13 +5,13 @@ début                : Novembre 2018
 copyright            : Mathis Guilhin & Téo Bouvard
 *************************************************************************/
 
-//---------- Interface de la classe <TrajetCompose> (fichier TrajetCompose.h) ----------------
+//---------- Interface de la classe <TrajetCompose> (fichier TrajetCompose.h)
 #ifndef TrajetCompose_H
 #define TrajetCompose_H
 //--------------------------------------------------- Interfaces utilisées
 #include "Trajet.h"
 #include "Collection.h"
-//------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /*  Rôle de la classe <TrajetCompose>
 
 La classe <TrajetCompose> est une sorte de Trajet qui comporte un nombre d'escales

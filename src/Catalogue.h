@@ -11,9 +11,14 @@ copyright            : Mathis Guilhin & Téo Bouvard
 //--------------------------------------------------- Interfaces utilisées
 #include "Trajet.h"
 #include "Collection.h"
+//-----------------------------------------------------------------------------
+/* Rôle de la classe <Catalogue>
 
-// Rôle de la classe <Catalogue>
-
+La classe <Catalogue> correspond à la structure de données utilisée pour ce TP.
+Elle est constituée d'un tableau dynamique de pointeurs sur des trajets. La taille
+actuelle du tableau dynamique est stockée dans l'attribut tailleTableau, et le
+nombre de trajets qu'elle contient dans l'attribut nbElements.
+*/
 //------------------------------------------------------------------------
 class Catalogue
 {
@@ -40,7 +45,6 @@ public:
 protected:
   //----------------------------------------------------- Attributs protégés
   Collection* collectionTrajets;
-  int nbTrajets;
 };
 
 #endif // Catalogue_H

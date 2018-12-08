@@ -14,7 +14,6 @@ copyright            : Mathis Guilhin & Téo Bouvard
 // Rôle de la classe <TrajetSimple>
 /*
 La classe <TrajetSimple> est une sorte de Trajet qui comporte un mode de Transport
-
 */
 
 class TrajetSimple : public Trajet
@@ -22,16 +21,22 @@ class TrajetSimple : public Trajet
   //----------------------------------------------------------------- PUBLIC
 public:
   //----------------------------------------------------- Méthodes publiques
+
+  //redéfinition de l'affichage d'un Trajet, permettant d'afficher le mode de transport
   virtual void Afficher() const;
+
+  //redéfinition du clonage d'un trajet
   virtual Trajet* clone() const;
 
   //-------------------------------------------- Constructeurs - destructeur
 
-  /*construit un Trajet Simple grâce à une ville de départ, une ville d'arrivée
-  et un mode de transport*/
+  /*
+  construction d'un Trajet Simple grâce à une ville de départ, une ville d'arrivée
+  et un mode de transport
+  */
   TrajetSimple ( const char * villeDep, const char * villeArr, const char * modeTrans );
 
-  //détruit le pointeur attribut de la classe
+  //destuction du pointeur attribut de la classe
   virtual ~TrajetSimple ( );
 
   //------------------------------------------------------------------ PRIVE

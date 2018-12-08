@@ -11,8 +11,11 @@ copyright            : Mathis Guilhin & Téo Bouvard
 //--------------------------------------------------- Interfaces utilisées
 #include "Trajet.h"
 #include "Collection.h"
-
 //------------------------------------------------------------------------
+// Rôle de la classe <TrajetCompose>
+/*
+La classe <TrajetSimple> est une sorte de Trajet qui comporte un mode de Transport
+*/
 class TrajetCompose : public Trajet
 {
   //----------------------------------------------------------------- PUBLIC
@@ -31,8 +34,8 @@ protected:
   //----------------------------------------------------- Attributs protégés
   Collection* escales;
   int nombreEscales;
-  char * villeDepart;
-  char * villeArrivee;
+  //char * villeDepart;
+  //char * villeArrivee;
 };
 
 #endif // TrajetCompose_H

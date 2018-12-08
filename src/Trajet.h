@@ -41,10 +41,10 @@ public:
 
 	//-------------------------------------------- Constructeurs - destructeur
 
-	//construit un trajet grâce à une ville de départ et une ville d'arrivée
+	//construction d'un trajet grâce à une ville de départ et une ville d'arrivée
 	Trajet (const char * villeDep, const char * villeArr);
 
-	//détruit les deux pointeurs attributs de la classe
+	//destruction des deux pointeurs attributs de la classe
 	virtual ~Trajet ( );
 
 	//------------------------------------------------------------------ PRIVE

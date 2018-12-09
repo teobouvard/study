@@ -69,13 +69,21 @@ void creationTrajet(Collection * c, int option){
 	} else if(option == 2){
 		int nEscales;
 		cout << "Nombre d'escales?" << endl;
-		cin >> nEscales;
+		while(!(cin >> nEscales) || nEscales < 2){
+			cin.clear();
+			cin.ignore(BIGNUMBER, '\n');
+			cout << "Entrée invalide. Réessayez" << endl;
+		}
 		Collection* collectionTrajets = new Collection;
 		for(int i = 0 ; i < nEscales; i++){
 			cout << "Escale n°" << i+1 << endl;
 			cout << "Trajet simple : 1 | Trajet composé 2" << endl;
 			int choix;
-			cin >> choix;
+			while(!(cin >> choix)){
+				cin.clear();
+				cin.ignore(BIGNUMBER, '\n');
+				cout << "Entrée invalide. Réessayez" << endl;
+			}
 			creationTrajet(collectionTrajets,choix);
 		}
 		TrajetCompose* trajet = new TrajetCompose(collectionTrajets);
@@ -87,7 +95,7 @@ void creationTrajet(Collection * c, int option){
 }
 
 
-int main()
+int main2()
 {
 	int lecture;
 	char* ville1 = new char[TAILLE_MAX_STRING];
@@ -99,7 +107,11 @@ int main()
 
 	annonce();
 
-	cin >> lecture;
+	while(!(cin >> lecture)){
+		cin.clear();
+		cin.ignore(BIGNUMBER, '\n');
+		cout << "Entrée invalide. Réessayez" << endl;
+	}
 
 	while(lecture != 9){
 
@@ -111,7 +123,11 @@ int main()
 
 			case 1 :
 			cout << endl << "Trajet simple : 1 | Trajet composé : 2 | Annuler : 0" << endl;
-			cin >> lecture;
+			while(!(cin >> lecture)){
+				cin.clear();
+				cin.ignore(BIGNUMBER, '\n');
+				cout << "Entrée invalide. Réessayez" << endl;
+			}
 			creationTrajet(catalogue.getCollection(),lecture);
 			break;
 
@@ -143,7 +159,11 @@ int main()
 
 		annonce();
 
-		cin >> lecture;
+		while(!(cin >> lecture)){
+			cin.clear();
+			cin.ignore(BIGNUMBER, '\n');
+			cout << "Entrée invalide. Réessayez" << endl;
+		}
 	}
 
 	cout << "Au revoir !" << endl << endl;

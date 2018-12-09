@@ -14,8 +14,8 @@ copyright            : Mathis Guilhin & Téo Bouvard
 //-----------------------------------------------------------------------------
 /*  Rôle de la classe <TrajetCompose>
 
-La classe <TrajetCompose> est une sorte de Trajet qui comporte un nombre d'escales
-et une collection de trajets qui correspond aux différentes escales
+La classe <TrajetCompose> est une sorte de Trajet comportant une collection de
+trajets : les différentes escales
 */
 
 class TrajetCompose : public Trajet

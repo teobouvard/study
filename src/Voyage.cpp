@@ -26,7 +26,7 @@ const int TAILLE_MAX_STRING = 20;
 //------------------------------------------------------ Fonctions privées
 
 static void affichageMenu(){
-  cout << "Afficher le catalogue : 0 | Ajouter un trajet : 1 | Rechercher un trajet : 2 | Rechercher un trajet (avancé) : 3 | Quitter cette app agile : 9" << endl << endl;
+  cout << "Afficher le catalogue : 0 | Ajouter un trajet : 1 | Rechercher un trajet : 2 | Rechercher un trajet (avancé) : 3 | Quitter l'application : 9" << endl << endl;
 }
 
 static Trajet* creerTrajetSimple(){

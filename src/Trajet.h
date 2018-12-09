@@ -35,7 +35,7 @@ public:
 	/*
 	- méthode virtuelle pure qui permet de cloner un trajet
 	- utilisée dans les méthodes de recherche du Catalogue, le clonage d'une Collection
-	et implémentée dans TrajetSimple et TrajetCompose
+		et définie uniquement dans TrajetSimple et TrajetCompose
 	*/
 	virtual Trajet* clone() const = 0;
 

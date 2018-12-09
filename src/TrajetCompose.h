@@ -44,7 +44,6 @@ public:
 protected:
   //----------------------------------------------------- Attributs protégés
   Collection* escales;
-  int nombreEscales;
 };
 
 #endif // TrajetCompose_H

@@ -19,11 +19,11 @@ using namespace std;
 //----------------------------------------------------- Méthodes publiques
 void TrajetCompose::Afficher() const
 {
-	cout << "Trajet Composé comportant " << nombreEscales << " escales." << endl;
+	cout << "Trajet Composé comportant " << escales->getNbElements() << " escales." << endl;
 	cout << "Ville de départ : " << escales->getElement(0)->getVille(0) << "  ";
-	cout << "Ville d'arrivée : " << escales->getElement(nombreEscales-1)->getVille(1) << endl;
+	cout << "Ville d'arrivée : " << escales->getElement(escales->getNbElements()-1)->getVille(1) << endl;
 
-	for (int i = 0; i < nombreEscales; i++){
+	for (int i = 0; i < escales->getNbElements(); i++){
 		cout << "	";
 		escales->getElement(i)->Afficher();
 	}
@@ -41,7 +41,6 @@ Trajet* TrajetCompose::clone() const{
 TrajetCompose::TrajetCompose (Collection* c)
 : Trajet(c->getElement(0)->getVille(0),c->getElement(c->getNbElements()-1)->getVille(1))
 {
-	nombreEscales = c->getNbElements();
 	escales = c;
 	#ifdef MAP
 	cout << "Appel au constructeur de <TrajetCompose>" << endl;

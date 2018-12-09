@@ -44,21 +44,21 @@ public:
 	/*
 	- retourne le pointeur sur le trajet contenu à l'indice i du tableau dynamique
 	- utilisé dans le constructeur et l'affichage de TrajetCompose ainsi que les
-	  méthodes de recherche du Catalogue
+	méthodes de recherche du Catalogue
 	*/
 	Trajet* getElement(int i) const;
 
 	/*
 	- retourne le nombre d'élements contenus du tableau dynamique
 	- utilisé dans le constructeur de TrajetCompose, les recherches et l'affichage
-		du Catalogue
+	du Catalogue
 	*/
 	int getNbElements() const;
 
 	/*
 	- crée une collection identique à celle sur laquelle elle est appellée
 	- utilisé dans la recherche avancée du Catalogue et le clonage d'un
-		TrajetCompose
+	TrajetCompose
 	*/
 	Collection* cloneCollection() const;
 

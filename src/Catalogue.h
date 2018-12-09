@@ -41,9 +41,9 @@ public:
   paramètre depart et comme ville d'arrivée le paramètre arrivee, en composant
   les trajets
   - cette méthode est récursive, le paramètre profondeurRecherche permet de savoir
-    à quel étage de la recherche on se situe
+  à quel étage de la recherche on se situe
   - le paramètre c est une collection de trajets qui correspond à une des compositions
-    de trajets permettant d'arriver à destination
+  de trajets permettant d'arriver à destination
   */
   void RechercherTrajetAvance(char* depart, char* arrivee, int profondeurRecherche, Collection* c) const;
 

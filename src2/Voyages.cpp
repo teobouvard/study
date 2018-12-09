@@ -38,7 +38,6 @@ void annonce(){
 	cout << "Afficher le catalogue : 0 | Ajouter un trajet : 1 | Rechercher un trajet : 2 | Rechercher un trajet (avancé) : 3 | Quitter cette app agile : 9" << endl << endl;
 }
 
-//retourne un pointeur sur un trajet simple créé lors de la fonction
 Trajet* CreerTrajetSimple(){
 	char* ville1 = new char[TAILLE_MAX_STRING];
 	char* ville2 = new char[TAILLE_MAX_STRING];
@@ -60,9 +59,6 @@ Trajet* CreerTrajetSimple(){
 	return trajet;
 }
 
-//fonction récursive qui ajoute des trajets simple à la collection de base
-//si un trajet composé contient un trajet composé, la fonction s'auto-appelle
-//option : 0-> trajet simple 		1->trajet composé
 void creationTrajet(Collection * c, int option){
 	if(option == 1){
 		c->Ajouter(CreerTrajetSimple());

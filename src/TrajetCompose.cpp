@@ -30,8 +30,8 @@ void TrajetCompose::Afficher() const
 	cout << endl;
 }
 
-Trajet* TrajetCompose::clone() const{
-
+Trajet* TrajetCompose::clone() const
+{
 	Collection* c = escales->cloneCollection();
 	return new TrajetCompose(c);
 }

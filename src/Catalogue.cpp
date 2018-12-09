@@ -8,15 +8,13 @@ copyright            : Mathis Guilhin & Téo Bouvard
 //---------- Réalisation de la classe <Catalogue> (fichier Catalogue.cpp) ------------
 
 //---------------------------------------------------------------- INCLUDE
-
 //-------------------------------------------------------- Include système
 #include <iostream>
 using namespace std;
 //------------------------------------------------------ Include personnel
 #include "Catalogue.h"
 #define underline "\033[4m"
-#define stopu "\033[0m"
-
+#define stopunderline "\033[0m"
 //------------------------------------------------------------- Constantes
 const int PROFONDEUR_MAXIMALE = 10;
 
@@ -33,7 +31,7 @@ void Catalogue::RechercherTrajet(char* depart, char* arrivee) const{
     for (int i = 0; i < collectionTrajets->getNbElements(); i++){
       Trajet* trajetEvalue = collectionTrajets->getElement(i);
       if(strcmp(depart,trajetEvalue->getVille(0))==0 && strcmp(arrivee,trajetEvalue->getVille(1))==0){
-        cout << "\t" << underline << "Option " << ++nbOption << stopu << endl;
+        cout << "\t" << underline << "Option " << ++nbOption << stopunderline << endl;
         trajetEvalue->Afficher();
         cout << endl;
       }
@@ -57,7 +55,7 @@ void Catalogue::RechercherTrajetAvance(char* depart, char* arrivee, int profonde
 
       if(strcmp(depart,trajetEvalue->getVille(0))==0){
         if(strcmp(arrivee,trajetEvalue->getVille(1))==0){
-          cout << "\t" << underline << "Option " << ++nbOption << stopu << endl << endl;
+          cout << "\t" << underline << "Option " << ++nbOption << stopunderline << endl << endl;
           c1->AfficherCollection();
           cout << endl;
         }

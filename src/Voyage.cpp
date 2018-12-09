@@ -78,7 +78,7 @@ int main(){
   Catalogue catalogue;
   Collection c;
 
-  cout << "Bienvenue dans le Gestionnaire de Trajets" << endl << endl;
+  cout << endl << "Bienvenue dans le Gestionnaire de Trajets" << endl << endl;
   affichageMenu();
   cin >> lecture;
 

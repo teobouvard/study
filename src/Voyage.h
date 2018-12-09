@@ -35,4 +35,6 @@ static Trajet* creerTrajetSimple();
 */
 static void creationTrajet(Collection * c, int option);
 
+int main();
+
 #endif // Voyage_H

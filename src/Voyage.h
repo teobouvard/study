@@ -11,6 +11,8 @@ copyright            : Mathis Guilhin & Téo Bouvard
 //------------------------------------------------------------------------
 /*  Rôle du module <Voyage>
 
+Ce module implémente l'interface graphique de l'application et la création des
+trajets qui vont être ajoutés au Catalogue.
 */
 
 /////////////////////////////////////////////////////////////////  INCLUDE

@@ -16,7 +16,7 @@ copyright            : Mathis Guilhin & Téo Bouvard
 
 La classe <Collection> correspond à la structure de données utilisée pour ce TP.
 Elle est constituée d'un tableau dynamique de pointeurs sur des trajets. La taille
-actuelle du tableau dynamique est stockée dans l'attribut tailleTableau, et le
+actuelle du tableau dynamique est stockée dans l'attribut nbElementsMax, et le
 nombre de trajets qu'elle contient dans l'attribut nbElements.
 */
 
@@ -50,7 +50,8 @@ public:
 
 	/*
 	- retourne le nombre d'élements contenus du tableau dynamique
-	- utilisé dans le constructeur de TrajetCompose
+	- utilisé dans le constructeur de TrajetCompose, les recherches et l'affichage
+		du Catalogue
 	*/
 	int getNbElements() const;
 
@@ -77,7 +78,7 @@ protected:
 	//----------------------------------------------------- Méthodes protégées
 	//----------------------------------------------------- Attributs protégés
 	int nbElements;
-	int tailleTableau;
+	int nbElementsMax;
 	Trajet** elements;
 };
 

@@ -16,18 +16,18 @@ using namespace std;
 #define underline "\033[4m"
 #define stopunderline "\033[0m"
 //------------------------------------------------------------- Constantes
-const int TAILLE_INITIALE = 5; //doit être différent de 0 pour Resize()
+const int TAILLE_INITIALE = 1; //doit être différent de 0 pour Resize()
 //----------------------------------------------------------------- PUBLIC
 //----------------------------------------------------- Méthodes publiques
 void Collection::Resize()
 {
-	int newSize = 2*tailleTableau;
+	int newSize = 2*nbElementsMax;
 	Trajet** resized_arr = new Trajet* [newSize];
 
-	for(int i = 0; i < tailleTableau; i++){
+	for(int i = 0; i < nbElementsMax; i++){
 		resized_arr[i] = elements[i];
 	}
-	tailleTableau = newSize;
+	nbElementsMax = newSize;
 
 	delete[] elements;
 	elements = resized_arr;
@@ -55,7 +55,7 @@ int Collection::getNbElements() const
 void Collection::Ajouter(Trajet * t)
 {
 	//ajout d'un nouveau trajet si la taille le permet
-	if (nbElements < tailleTableau){
+	if (nbElements < nbElementsMax){
 		elements[nbElements++] = t;
 	}
 	//sinon redimensionnement du tableau dynamique
@@ -65,7 +65,7 @@ void Collection::Ajouter(Trajet * t)
 
 		#ifdef MAP2
 		cout << "Nouveau nbElements " << nbElements << endl;
-		cout << "Nouveau TailleTableau " << tailleTableau << endl;
+		cout << "Nouveau nbElementsMax " << nbElementsMax << endl;
 		#endif
 	}
 }
@@ -83,7 +83,7 @@ Collection::Collection ()
 {
 	nbElements = 0;
 	elements = new Trajet* [TAILLE_INITIALE];
-	tailleTableau = TAILLE_INITIALE;
+	nbElementsMax = TAILLE_INITIALE;
 	#ifdef MAP
 	cout << "Appel au constructeur de <Collection>" << endl;
 	#endif

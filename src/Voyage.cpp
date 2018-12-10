@@ -67,7 +67,6 @@ static void creationTrajet(Collection * c, int option){
     }
     
     //on vérifie que le trajet ajouté est valide
-    TrajetCompose* trajet = new TrajetCompose(collectionTrajets);
     bool valide = true;
     for(int i = 0; i < collectionTrajets->getNbElements() - 1; i++){
       if (strcmp(collectionTrajets->getElement(i)->getVille(1),collectionTrajets->getElement(i+1)->getVille(0)) != 0){
@@ -75,11 +74,13 @@ static void creationTrajet(Collection * c, int option){
       }
     }
     if (valide){
+      TrajetCompose* trajet = new TrajetCompose(collectionTrajets);
       c->Ajouter(trajet);
+      cout << "Trajet ajouté au catalogue" << endl;
     }
     else{
       cout << "Saisie de trajet non valide !" << endl;
-      delete trajet;
+      delete collectionTrajets;
     }
   }
 }

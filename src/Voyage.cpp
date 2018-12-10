@@ -20,6 +20,7 @@ using namespace std;
 ///////////////////////////////////////////////////////////////////  PRIVE
 //------------------------------------------------------------- Constantes
 const int TAILLE_MAX_STRING = 20;
+#define BIGNUMBER 999999
 //------------------------------------------------------------------ Types
 //---------------------------------------------------- Variables statiques
 
@@ -56,7 +57,11 @@ static void creationTrajet(Collection * c, int option){
   } else if(option == 2){
     int nEscales;
     cout << "Nombre d'escales ?" << endl;
-    cin >> nEscales;
+    while(!(cin >> nEscales)){
+			cin.clear();
+			cin.ignore(BIGNUMBER, '\n');
+			cout << "Entrée invalide. Réessayez" << endl;
+		}
     Collection* collectionTrajets = new Collection;
     for(int i = 0 ; i < nEscales; i++){
       cout << "Escale n°" << i+1 << endl;
@@ -65,7 +70,7 @@ static void creationTrajet(Collection * c, int option){
       cin >> choix;
       creationTrajet(collectionTrajets,choix);
     }
-    
+
     //on vérifie que le trajet ajouté est valide
     bool valide = true;
     for(int i = 0; i < collectionTrajets->getNbElements() - 1; i++){
@@ -95,7 +100,11 @@ int main(){
 
   cout << endl << "Bienvenue dans le Gestionnaire de Trajets" << endl << endl;
   affichageMenu();
-  cin >> lecture;
+  while(!(cin >> lecture)){
+    cin.clear();
+    cin.ignore(BIGNUMBER, '\n');
+    cout << "Entrée invalide. Réessayez" << endl;
+  }
 
   while(lecture != 9){
 
@@ -138,7 +147,11 @@ int main(){
     }
 
     affichageMenu();
-    cin >> lecture;
+    while(!(cin >> lecture)){
+			cin.clear();
+			cin.ignore(BIGNUMBER, '\n');
+			cout << "Entrée invalide. Réessayez" << endl;
+		}
   }
 
   cout << "Au revoir !" << endl << endl;

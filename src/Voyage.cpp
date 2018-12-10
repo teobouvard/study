@@ -10,6 +10,7 @@ copyright            : Mathis Guilhin & Téo Bouvard
 /////////////////////////////////////////////////////////////////  INCLUDE
 //-------------------------------------------------------- Include système
 #include <iostream>
+#include <cstring>
 using namespace std;
 //------------------------------------------------------ Include personnel
 #include "Voyage.h"
@@ -20,7 +21,6 @@ using namespace std;
 //------------------------------------------------------------- Constantes
 const int TAILLE_MAX_STRING = 20;
 //------------------------------------------------------------------ Types
-
 //---------------------------------------------------- Variables statiques
 
 //------------------------------------------------------ Fonctions privées
@@ -65,8 +65,22 @@ static void creationTrajet(Collection * c, int option){
       cin >> choix;
       creationTrajet(collectionTrajets,choix);
     }
+    
+    //on vérifie que le trajet ajouté est valide
     TrajetCompose* trajet = new TrajetCompose(collectionTrajets);
-    c->Ajouter(trajet);
+    bool valide = true;
+    for(int i = 0; i < collectionTrajets->getNbElements() - 1; i++){
+      if (strcmp(collectionTrajets->getElement(i)->getVille(1),collectionTrajets->getElement(i+1)->getVille(0)) != 0){
+        valide = false;
+      }
+    }
+    if (valide){
+      c->Ajouter(trajet);
+    }
+    else{
+      cout << "Saisie de trajet non valide !" << endl;
+      delete trajet;
+    }
   }
 }
 

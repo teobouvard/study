@@ -22,9 +22,7 @@ using namespace std;
 const int TAILLE_MAX_STRING = 20;
 
 //------------------------------------------------------------------ Types
-
 //---------------------------------------------------- Variables statiques
-
 //------------------------------------------------------ Fonctions privées
 
 static void affichageMenu(){

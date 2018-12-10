@@ -54,8 +54,3 @@ TrajetCompose::~TrajetCompose ( )
 	cout << "Appel au destructeur de <TrajetCompose>" << endl;
 	#endif
 } //----- Fin de ~TrajetCompose
-
-
-//------------------------------------------------------------------ PRIVE
-
-//----------------------------------------------------- Méthodes protégées

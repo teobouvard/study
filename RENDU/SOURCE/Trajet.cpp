@@ -59,8 +59,3 @@ Trajet::~Trajet ( )
 	cout << "Appel au destructeur de <Trajet>" << endl;
 	#endif
 } //----- Fin de ~Trajet
-
-
-//------------------------------------------------------------------ PRIVE
-
-//----------------------------------------------------- Méthodes protégées

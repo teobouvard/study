@@ -9,7 +9,7 @@ copyright            : Mathis Guilhin & Téo Bouvard
 
 //---------------------------------------------------------------- INCLUDE
 //-------------------------------------------------------- Include système
-#include <string>
+#include <cstring>
 #include <iostream>
 using namespace std;
 //------------------------------------------------------ Include personnel

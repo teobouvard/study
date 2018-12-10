@@ -5,7 +5,7 @@ début                : Novembre 2018
 copyright            : Mathis Guilhin & Téo Bouvard
 *************************************************************************/
 
-//---------- Interface de la classe <Catalogue> (fichier Catalogue.h) ----------------
+//---------- Interface de la classe <Catalogue> (fichier Catalogue.h) ----------
 #ifndef Catalogue_H
 #define Catalogue_H
 //--------------------------------------------------- Interfaces utilisées

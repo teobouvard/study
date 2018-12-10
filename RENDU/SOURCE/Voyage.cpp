@@ -10,6 +10,7 @@ copyright            : Mathis Guilhin & Téo Bouvard
 /////////////////////////////////////////////////////////////////  INCLUDE
 //-------------------------------------------------------- Include système
 #include <iostream>
+#include <cstring>
 using namespace std;
 //------------------------------------------------------ Include personnel
 #include "Voyage.h"

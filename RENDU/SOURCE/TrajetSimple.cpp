@@ -11,6 +11,7 @@ copyright            : Mathis Guilhin & Téo Bouvard
 
 //-------------------------------------------------------- Include système
 #include <iostream>
+#include <cstring>
 using namespace std;
 //------------------------------------------------------ Include personnel
 #include "TrajetSimple.h"

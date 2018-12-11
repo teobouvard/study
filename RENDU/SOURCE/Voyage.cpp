@@ -76,7 +76,6 @@ static void creationTrajet(Collection * c, int option){
     if (valide){
       TrajetCompose* trajet = new TrajetCompose(collectionTrajets);
       c->Ajouter(trajet);
-      cout << "Trajet ajouté au catalogue" << endl;
     }
     else{
       cout << "Saisie de trajet non valide !" << endl;

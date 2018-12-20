@@ -1,42 +1,50 @@
 package com.example.drumpad;
 
-import android.media.MediaPlayer;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
-    MediaPlayer mp0,mp1,mp2,mp3;
+    private SoundPool soundPool;
+
+    // Maximum sound stream
+    private static final int MAX_STREAMS = 16;
+
+    private int soundId0, soundId1, soundId2, soundId3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mp0 = MediaPlayer.create(this, R.raw.clap0);
-        mp1 = MediaPlayer.create(this, R.raw.clapslapper);
-        mp2 = MediaPlayer.create(this, R.raw.crash808);
-        mp3 = MediaPlayer.create(this, R.raw.crashnoise);
-    }
+        this.soundPool = new SoundPool(MAX_STREAMS, AudioManager.STREAM_MUSIC, 0);
 
+        this.soundId0 = this.soundPool.load(this, R.raw.clap0,1);
+        this.soundId1 = this.soundPool.load(this, R.raw.kickacoustic02,1);
+        this.soundId2 = this.soundPool.load(this, R.raw.crashacoustic,1);
+        this.soundId3 = this.soundPool.load(this, R.raw.openhat808,1);
+
+    }
 
     public void button0Click(View view){
-        mp0.start();
+        this.soundPool.play(this.soundId0,1, 1, 1, 0, 1f);
     }
+
 
     public void button1Click(View view){
-        mp1.start();
+        this.soundPool.play(this.soundId1,1, 1, 1, 0, 1f);
     }
+
 
     public void button2Click(View view){
-        mp2.start();
-    }
+        this.soundPool.play(this.soundId2,1, 1, 1, 0, 1f);    }
 
     public void button3Click(View view){
-        mp3.start();
-    }
-
+        this.soundPool.play(this.soundId3,1, 1, 1, 0, 1f);    }
+/*
     public void button4Click(View view){
         final MediaPlayer mp4 = MediaPlayer.create(this, R.raw.hihatacoustic01);
         mp4.start();
@@ -96,4 +104,5 @@ public class MainActivity extends AppCompatActivity {
         final MediaPlayer mp15 = MediaPlayer.create(this, R.raw.clap0);
         mp15.start();
     }
+    */
 }

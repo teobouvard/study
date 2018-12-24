@@ -171,7 +171,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text=" serial : " />
+            android:text=" serial " />
     </RelativeLayout>
 
     <Button
@@ -179,10 +179,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="57dp"
-        android:layout_marginLeft="57dp"
         android:layout_marginBottom="25dp"
         android:onClick="onClickStart"
         android:text="START" />
@@ -193,9 +191,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/startButton"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_marginEnd="39dp"
-        android:layout_marginRight="39dp"
         android:onClick="onClickStop"
         android:text="STOP" />
 

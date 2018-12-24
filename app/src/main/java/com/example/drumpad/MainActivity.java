@@ -1,22 +1,18 @@
 package com.example.drumpad;
 
 import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
 
@@ -34,7 +30,6 @@ public class MainActivity extends Activity {
 
     private int soundId0, soundId1, soundId2, soundId3;
 
-    public final String ACTION_USB_PERMISSION = "com.example.drumpad.USB_PERMISSION";
     Button startButton, stopButton;
     TextView textView;
     UsbManager usbManager;
@@ -45,74 +40,36 @@ public class MainActivity extends Activity {
     UsbSerialInterface.UsbReadCallback mCallback = new UsbSerialInterface.UsbReadCallback() { //Defining a Callback which triggers whenever data is read.
         @Override
         public void onReceivedData(byte[] arg0) {
-            String data = null;
+            String data;
+            String padNo = "";
+            String power = "";
             try {
                 data = new String(arg0, "UTF-8");
-                data.concat("/n");
-                tvAppend(textView, data);
+                if (data.length() > 0) {
+                    padNo = data.substring(0, 1);
+                    power = data.substring(1);
+                }
+
+                tvAppend(textView, padNo);
+                tvAppend(textView, power);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-
-
         }
-    };
-    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() { //Broadcast Receiver to automatically start and stop the Serial connection.
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(ACTION_USB_PERMISSION)) {
-                boolean granted = intent.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
-                if (granted) {
-                    connection = usbManager.openDevice(device);
-                    serialPort = UsbSerialDevice.createUsbSerialDevice(device, connection);
-                    if (serialPort != null) {
-                        if (serialPort.open()) { //Set Serial Connection Parameters.
-                            serialPort.setBaudRate(9600);
-                            serialPort.setDataBits(UsbSerialInterface.DATA_BITS_8);
-                            serialPort.setStopBits(UsbSerialInterface.STOP_BITS_1);
-                            serialPort.setParity(UsbSerialInterface.PARITY_NONE);
-                            serialPort.setFlowControl(UsbSerialInterface.FLOW_CONTROL_OFF);
-                            serialPort.read(mCallback);
-                            tvAppend(textView,"Serial Connection Opened!\n");
-
-                        } else {
-                            Log.d("SERIAL", "PORT NOT OPEN");
-                        }
-                    } else {
-                        Log.d("SERIAL", "PORT IS NULL");
-                    }
-                } else {
-                    Log.d("SERIAL", "PERM NOT GRANTED");
-                }
-            } else if (intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)) {
-                onClickStart(startButton);
-            } else if (intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_DETACHED)) {
-                onClickStop(stopButton);
-
-            }
-        }
-
-        ;
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        usbManager = (UsbManager) getSystemService(this.USB_SERVICE);
+
+        usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
         startButton = (Button) findViewById(R.id.startButton);
         stopButton = (Button) findViewById(R.id.stopButton);
         textView = (TextView) findViewById(R.id.textView);
 
         soundPool = new SoundPool(MAX_STREAMS, AudioManager.STREAM_MUSIC, 0);
         soundId0 = soundPool.load(this, R.raw.clap0, 1);
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_USB_PERMISSION);
-        filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
-        filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
-        registerReceiver(broadcastReceiver, filter);
-
 
     }
 
@@ -124,41 +81,44 @@ public class MainActivity extends Activity {
             boolean keep = true;
             for (Map.Entry<String, UsbDevice> entry : usbDevices.entrySet()) {
                 device = entry.getValue();
-                int deviceVID = device.getVendorId();
-                if (deviceVID == 0x2341)//Arduino Vendor ID
+                if (device.getVendorId() == 0x2341)//Arduino Vendor ID
                 {
-                    PendingIntent pi = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
-                    usbManager.requestPermission(device, pi);
-                    keep = false;
-                } else {
-                    connection = null;
-                    device = null;
+                    connection = usbManager.openDevice(device);
+                    serialPort = UsbSerialDevice.createUsbSerialDevice(device, connection);
+                    if (serialPort != null) {
+                        if (serialPort.open()) { //Set Serial Connection Parameters.
+                            serialPort.setBaudRate(9600);
+                            //serialPort.setDataBits(UsbSerialInterface.DATA_BITS_8);
+                            //serialPort.setStopBits(UsbSerialInterface.STOP_BITS_1);
+                            //serialPort.setParity(UsbSerialInterface.PARITY_NONE);
+                            //serialPort.setFlowControl(UsbSerialInterface.FLOW_CONTROL_OFF);
+                            serialPort.read(mCallback);
+                            Toast.makeText(getApplicationContext(), "Serial Connection Opened",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        keep = false;
+                    } else {
+                        connection = null;
+                        device = null;
+                    }
+                    if (!keep)
+                        break;
                 }
-
-                if (!keep)
-                    break;
             }
         }
-
-
     }
 
     public void onClickStop(View view) {
         serialPort.close();
-        tvAppend(textView,"\nSerial Connection Closed! \n");
-
+        Toast.makeText(getApplicationContext(), "Serial Connection Closed",
+                Toast.LENGTH_SHORT).show();
     }
 
     private void tvAppend(TextView tv, CharSequence text) {
         final TextView ftv = tv;
         final CharSequence ftext = text;
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ftv.append(ftext);
-            }
-        });
+        runOnUiThread(() -> ftv.append(ftext));
     }
 
 

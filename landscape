@@ -249,7 +249,7 @@ vec3 Shade(vec3 p, vec3 n, int s, int indiceObj)
    float fog = 0.7*float(s)/(float(Steps-1));
    c = (1.0-fog)*c+fog*vec3(1.0,1.0,1.0);
     
-    //Couleurs souhaitées en haut et bas de montagne
+    //Couleurs souhaitÃ©es en haut et bas de montagne
     
     vec3 c_bas = vec3(43.0/255.0,21.0/255.0,3.0/255.0);
     vec3 c_haut = vec3(160.0/255.0,143.0/255.0,101.0/255.0);

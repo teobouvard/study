@@ -15,7 +15,7 @@ for i = 1:iterations
     D = vecteurU*vecteurV;
     B = lambda*(N/D);
     
-    %déflation de la plus grande valeur propre
+    %dÃ©flation de la plus grande valeur propre
     A = A - B;
 end
 

@@ -1,6 +1,6 @@
 function [ valeurPropreMax, vecteurPropreMax, vecteurPropreTMax ] = EigenValues( A )
 
-%erreur max sur pour le test de colinéarité
+%erreur max sur pour le test de colinÃ©aritÃ©
 epsilon = 10^-8;
 
 [m,n] = size(A);
@@ -11,10 +11,10 @@ Y = rand(m,1);
 P = rand(1,m);
 Q = rand(1,m);
 
-%méthode des puissances itérées avec test de colinéarité seulement une fois
-%sur deux endomorphismes successifs afin de s'affranchir des problèmes liés
-%aux valeurs propres négatives
-while(abs(dot(X,Y) - norm(X)*norm(Y)) > epsilon) %test de colinéarité
+%mÃ©thode des puissances itÃ©rÃ©es avec test de colinÃ©aritÃ© seulement une fois
+%sur deux endomorphismes successifs afin de s'affranchir des problÃ¨mes liÃ©s
+%aux valeurs propres nÃ©gatives
+while(abs(dot(X,Y) - norm(X)*norm(Y)) > epsilon) %test de colinÃ©aritÃ©
         X = Y/norm(Y);
         Y1 = A*X;
         Y1 = Y1/norm(Y1);
@@ -22,7 +22,7 @@ while(abs(dot(X,Y) - norm(X)*norm(Y)) > epsilon) %test de colinéarité
 
 end
 
-%méthode des puissances itérées
+%mÃ©thode des puissances itÃ©rÃ©es
 while(abs(dot(P,Q) - norm(P)*norm(Q)) > epsilon)
         P = Q/norm(Q);
         Q1 = P*A;

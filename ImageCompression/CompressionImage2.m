@@ -6,19 +6,19 @@ warning('off', 'Images:initSize:adjustingMag');
 inputImage = imread('imageMystere2.jpg');
 inputImage = im2double(inputImage);
 
-%décomposition de l'image en 3 matrices RGB
+%dÃ©composition de l'image en 3 matrices RGB
 inputImageRed = inputImage(:,:,1);
 inputImageGreen = inputImage(:,:,2);
 inputImageBlue = inputImage(:,:,3);
 
-%décomposition en valeur singulières de chaque couche, en supprimant les
-%zéros de la matrice diagonale ('econ')
+%dÃ©composition en valeur singuliÃ¨res de chaque couche, en supprimant les
+%zÃ©ros de la matrice diagonale ('econ')
 [URed, DRed, VRed] = svd(inputImageRed,'econ');
 [UGreen, DGreen, VGreen] = svd(inputImageGreen,'econ');
 [UBlue, DBlue, VBlue] = svd(inputImageBlue,'econ');
 
-%mise à zéro des valeurs singulières de rang supérieur à la qualité
-%demandée
+%mise Ã  zÃ©ro des valeurs singuliÃ¨res de rang supÃ©rieur Ã  la qualitÃ©
+%demandÃ©e
 NbValSing = size(DRed);
 
 
@@ -36,10 +36,10 @@ outputImageRed = URed*DRed*VRed';
 outputImageGreen = UGreen*DGreen*VGreen';
 outputImageBlue = UBlue*DBlue*VBlue';
 
-%reconsitution de l'image de sortie par concaténation des RGB
+%reconsitution de l'image de sortie par concatÃ©nation des RGB
 outputImage = cat(3, outputImageRed, outputImageGreen, outputImageBlue);
 
-%affichage de l'image compressée
+%affichage de l'image compressÃ©e
 imshow(outputImage);
 
 

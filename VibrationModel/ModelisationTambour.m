@@ -9,7 +9,7 @@ surfaceT = zeros(15,40);
 %initialisation du laplacien (m*n = 600)
 laplacien = -4*eye(m*n);
 
-laplacien(1,1) = altitudeFixe; %point fixe en haut à gauche
+laplacien(1,1) = altitudeFixe; %point fixe en haut Ã  gauche
 
 for i = 15*m+1:m:n*m %semi-bord haut
     laplacien(i,i) = altitudeFixe;
@@ -27,7 +27,7 @@ for i = (25*m)+6:(25*m)+10 %barre fixe 2
     laplacien(i,i) = altitudeFixe;
 end
 
-%discrétisation du laplacien
+%discrÃ©tisation du laplacien
 
 %point normaux
 for i = m+1:m*(n-1)
@@ -59,12 +59,12 @@ invLaplacien = inv(laplacien);
 
 [ valeursPropres , vecteursPropres ] = Deflation(invLaplacien, valPropreChoisie);
 
-%attribution des valeurs propres réelles
+%attribution des valeurs propres rÃ©elles
 for i = 1:valPropreChoisie
     valeursPropres(i,1) = (-1/valeursPropres(i,1));
 end
 
-%on attribue à chaque maille la composante du vecteur propre associé
+%on attribue Ã  chaque maille la composante du vecteur propre associÃ©
 vectorT = vecteursPropres(:,valPropreChoisie);
 
 surfaceT = reshape(vectorT,m,n);

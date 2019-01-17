@@ -1,14 +1,20 @@
-function [compteur1, compteur2] = patternMatching2()
+function [] = patternMatching2
+
 warning('off', 'Images:initSize:adjustingMag');
 close all;
 
-compteur1 = 0;
-compteur2 = 0;
+%initialisation du seuil de corrélation 
 threshold = 0.95;
 
+%lecture de l'image de jeu et transformation en version fréquentielle
 tableau = imread('puissance6.png');
 [l_tableau,c_tableau,~] = size(tableau);
 tableau_frequency = fft2(tableau);
+
+
+%lecture des patterns issus de l'image du jeu
+%les patterns sont retournés afin d'utiliser le résultat 
+%de la convolution comme étant un calcul de corrélation
 
 pattern1h = rgb2gray(imread('pattern1h.png'));
 pattern1h = rot90(pattern1h,2);
@@ -27,6 +33,8 @@ pattern2v = rot90(pattern2v,2);
 pattern2v_frequency = fft2(pattern2v,l_tableau,c_tableau);
 
 
+%calculs de convolution en version fréquentielle
+%puis reconversion en version spatiale
 matching_frequency_1h = pattern1h_frequency .* tableau_frequency;
 matching_1h = ifft2(matching_frequency_1h);
 
@@ -39,32 +47,40 @@ matching_2h = ifft2(matching_frequency_2h);
 matching_frequency_2v = pattern2v_frequency .* tableau_frequency;
 matching_2v = ifft2(matching_frequency_2v);
 
-
+%extraction des maxima de corrélation 
 matching_max_1h = max(max(matching_1h));
 matching_max_1v = max(max(matching_1v));
 matching_max_2h = max(max(matching_2h));
 matching_max_2v = max(max(matching_2v));
 
-
-D1_h = matching_1h > threshold*matching_max_1h; % Use a threshold that's a little less than max.
+%matrices binaires correspondant aux points supérieurs au seuil de corrélation
+D1_h = matching_1h > threshold*matching_max_1h;
 D1_v = matching_1v > threshold*matching_max_1v;
 D1 = D1_h + D1_v;
-D1 = D1 > 0.5;
-compteur1 = nnz(D1);
+compteur1 = nnz(D1_h)+nnz(D1_v);
 
-D2_h = matching_2h > threshold*matching_max_2h; % Use a threshold that's a little less than max.
+D2_h = matching_2h > threshold*matching_max_2h;
 D2_v = matching_2v > threshold*matching_max_2v;
 D2 = D2_h + D2_v;
-D2 = D2 > 0.5;
-compteur2 = nnz(D2);
+compteur2 = nnz(D2_h)+nnz(D2_v);
 
-disks = strel('disk',5);
+%éléments structurels repérant les corrélations
+disks = strel('disk',4);
+squares = strel('disk',4);
 mask1 = imdilate(D1,disks);
+mask2 = imdilate(D2, squares);
 
+%fusion des différentes couches
+tableau1 = imfuse(mask1,tableau);
+tableau2 = imfuse(mask2,tableau);
+tableau = imfuse(tableau1,tableau2);
 
-figure
+%écriture du fichier image
+imwrite(tableau,'correlation.png');
 
-tableau = imfuse(mask1,tableau);
-imshow(tableau) % Display pixels with values over the threshold.
+%affichage
+message = sprintf('Compteur 1 = %d\nCompteur 2 = %d', compteur1,compteur2);
 
-
+%figure 
+%imshow(tableau) ;
+%text(1050,512,message, 'FontSize', 20, 'FontWeight', 'bold');

@@ -1,21 +1,13 @@
-function passeBasGaussien(img)
+function filtrageTest(k)
 
-    close all;
-
-    %lecture des images test
-    if img == 0
-    im = imread('imtest01.png');
-    else
-    im = imread('imtest02.png');
-    end
-
+    im = rgb2gray(imread('Stephane_Bres.jpg'));
     [l,c,~]=size(im);
 
     %creation d'un mapping couleur linéaire sur chaque flux RGB
-    map=([0:255]'/255)*[1 1 1];
+        map=([0:255]'/255)*[1 1 1];
 
     %calcul du spectre frequentiel 
-    spectre_freq = fftshift(fft2(im));
+        spectre_freq = fftshift(fft2(im));
 
     %création d'une version affichable de la représentation fréquentielle
     spectre_freq_aff = (log(abs(spectre_freq))+1);
@@ -25,7 +17,7 @@ function passeBasGaussien(img)
 
     for n = 0.1:0.1:5
 
-        k = -power(10,-n)
+        k = -power(10,-n);
 
         for u = 1:l
             for v = 1:c
@@ -47,15 +39,13 @@ function passeBasGaussien(img)
 
         %affichage
         subplot(2,2,1);
-        image(im);
-        colormap(map);
+        imshow(im);
 
         subplot(2,2,2);
         imagesc(spectre_freq_aff);
 
         subplot(2,2,3);
         image(abs(im_filtre));
-        colormap(map);
 
         subplot(2,2,4);
         imagesc(spectre_filtre_aff);
@@ -64,6 +54,5 @@ function passeBasGaussien(img)
 
     end
 
-    close all;
 end
 

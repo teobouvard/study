@@ -81,6 +81,6 @@ imwrite(tableau,'correlation.png');
 %affichage
 message = sprintf('Compteur 1 = %d\nCompteur 2 = %d', compteur1,compteur2);
 
-%figure 
-%imshow(tableau) ;
-%text(1050,512,message, 'FontSize', 20, 'FontWeight', 'bold');
+figure 
+imshow(tableau) ;
+text(1050,512,message, 'FontSize', 20, 'FontWeight', 'bold');

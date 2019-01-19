@@ -1,4 +1,4 @@
-function PasseBasBinaire
+function passeBasBinaire
 
 k = 1000;
 

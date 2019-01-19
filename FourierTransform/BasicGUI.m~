@@ -37,12 +37,12 @@ te = 1/fe;
 handles.xt = linspace(a,b-te,N);    % N intervalles -> il faut s'arrêter à b-T
 handles.xf = linspace(-fe/2,fe/2-1/(b-a),N);    %idem
 
-pulse = 2*pi*(1200);   %oméga = 2*PI*f
+pulse = 2*pi*(10);   %oméga = 2*PI*f
 deltaT = 0;         %décalage temporel du Dirac
 deltaF = 5;         %décalage fréquentiel pour aliasing
 
 
-%échantillonnage des différentes fonctions
+%définition des différentes fonctions
 
 %constante
 handles.constant = ones(1,N); 
@@ -68,13 +68,13 @@ end
 
 %rectangle(0.1)
 handles.rectangle = zeros(1,N);
-for n=floor(N/2-0.001*N):floor(N/2+0.001*N)+1
+for n=floor(N/2-0.1*N):floor(N/2+0.1*N)+1
     handles.rectangle(1,n)= 1;
 end
 
 %exponentielle décroissante
 for n=1:N
-    handles.gaussienne(1,n)= exp(-pi*((n-1)*te + a)^2);
+    handles.expdecr(1,n)= exp(-pi*((n-1)*te + a)^2);
 end
 
 %créneau
@@ -121,10 +121,10 @@ switch str{val}
         handles.currentData = handles.dirac;
     case 'Expontielle complexe'
         handles.currentData = handles.expcmp;
-    case  'Rectangle de pas 0.1'
+    case  'Rectangle de pas 0.2'
         handles.currentData = handles.rectangle;
-    case  'Gaussienne'
-        handles.currentData = handles.gaussienne;
+    case  'Exponentielle décroissante'
+        handles.currentData = handles.expdecr;
     case 'Signal créneau'
         handles.currentData = handles.creneau;
     case 'Aliasing'
@@ -140,37 +140,29 @@ function draw_Callback(hObject, eventdata, handles)
     axes(handles.fig1);
     plot(handles.xt,real(handles.currentData));
     handles.F = tfour(handles.currentData);
-    
     if handles.RB1.Value == 1
-        
         minp = min(min(real(handles.F)),min(imag(handles.F)));
         maxp = max(max(real(handles.F)),max(imag(handles.F)));
-        
         axes(handles.fig2);
         plot(handles.xf,real(handles.F));
         ylim([minp-0.1*(maxp-minp),maxp+0.1*(maxp-minp)]);
-        
         axes(handles.fig3);
         plot(handles.xf,imag(handles.F));
         ylim([minp-0.1*(maxp-minp),maxp+0.1*(maxp-minp)]);
-        
     elseif handles.RB2.Value == 1
-        
-        minp = min(abs(handles.F));
-        maxp = max(abs(handles.F));
-        
+        minp = min(abs(handles.F))
+        maxp = max(abs(handles.F))
         axes(handles.fig2);
         plot(handles.xf,abs(handles.F));
         ylim([minp-0.1*(maxp-minp)-0.1,maxp+0.1*(maxp-minp)+0.1]);
-        
         axes(handles.fig3);
         plot(handles.xf,angle(handles.F));
         ylim([-pi-0.5,pi+0.5]);
-        
     end
 
     axes(handles.fig4);
     plot(handles.xt,real(tfourinv(handles.F)));
+
 
     guidata(hObject, handles);
     
@@ -185,6 +177,7 @@ function MenuFonction_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
 
 function figure1_SizeChangedFcn(hObject, eventdata, handles)
 

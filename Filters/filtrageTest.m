@@ -1,4 +1,4 @@
-function filtrageTest(k)
+function filtrageTest
 
     im = rgb2gray(imread('Stephane_Bres.jpg'));
     [l,c,~]=size(im);

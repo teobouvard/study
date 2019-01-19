@@ -1,4 +1,4 @@
-function [] = ModulationAmplitudeMinimalReel(typeSpectre)
+function Modulation
 
 close all;
 
@@ -45,54 +45,27 @@ for n=1:N
     d2(1,n) = c(1,n)*cos(2*pi*f2*t);
 end
 
-figure('units','normalized');
+figure('units','normalized','outerposition',[0 0 1 1]);
 
-%Amplitude/Phase
-if (typeSpectre==0)
-    subplot(3,2,1);
-    plot(xf,real(tfour(s1)));
-    title('spectre(s1)')
-    
-    subplot(3,2,2);
-    plot(xf,real(tfour(s2)));
-    title('spectre(s2)')
-    
-    subplot(3,2,[3,4]);
-    plot(xf,real(tfour(c)));
-    title('spectre(c)')
-        
-    subplot(3,2,5);
-    plot(xf,real(tfour(d1)));
-    title('spectre(d1)')
-    
-    subplot(3,2,6);
-    plot(xf,real(tfour(d2)));
-    title('spectre(d2)')
-    
-end
+%Partie Réelle
+subplot(3,2,1);
+plot(xf,real(tfour(s1)));
+title('spectre (s1)')
 
-%Partie Réelle/Imaginaire
-if (typeSpectre==1)
-    subplot(3,2,1);
-    plot(xf,abs(tfour(s1)));
-    title('module(s1)')
-    
-    subplot(3,2,2);
-    plot(xf,abs(tfour(s2)));
-    title('module(s2)')
-    
-    subplot(3,2,[3,4]);
-    plot(xf,abs(tfour(c)));
-    title('module(c)')
-    
-    subplot(3,2,5);
-    plot(xf,abs(tfour(d1)));
-    title('module(d1)')
+subplot(3,2,2);
+plot(xf,real(tfour(s2)));
+title('spectre (s2)')
 
-    subplot(3,2,6);
-    plot(xf,abs(tfour(d2)));
-    title('module(d2)')
-   
-end
+subplot(3,2,[3,4]);
+plot(xf,real(tfour(c)));
+title('spectre (c)')
 
+subplot(3,2,5);
+plot(xf,real(tfour(d1)));
+title('spectre (d1)')
+
+subplot(3,2,6);
+plot(xf,real(tfour(d2)));
+title('spectre (d2)')
+    
 end

@@ -1,20 +1,31 @@
 function [] = ModulationAmplitudeMinimal(typeSpectre)
 
 close all;
-set(0,'DefaultFigureWindowStyle','docked')
 
+%bornes temporelles
 a = - 5;
 b = 5;
+
+%nombre d'échantillons
 N = 16384;
+
+%fréquence d'échantillonage
 fe = N/(b-a);
+
+%période d'échantillonnage
 te = 1/fe;
 
-xt = linspace(a,b-te,N);    % N intervalles -> il faut s'arrêter à b-T
-xf = linspace(-fe/2,fe/2-1/(b-a),N);    %idem
+%temps en abscisse :N intervalles -> il faut s'arrêter à b-te
+xt = linspace(a,b-te,N);
 
+%fréquence en abscisse :N intervalles -> il faut s'arrêter à b-te
+xf = linspace(-fe/2,fe/2-1/(b-a),N);
+
+%fréquence des deux signaux à transmettre
 f1 = 10;
 f2 = 20;
 
+%initialisation des signaux pour avoir une taille fixe avant la boucle
 s1 = zeros(1,N);
 s2 = zeros(1,N);
 c = zeros(1,N);
@@ -22,6 +33,7 @@ d1 = zeros(1,N);
 d2 = zeros(1,N);
 
 for n=1:N
+    
     t = (n-1)*te + a;
     s1(1,n)= cos(2*pi*2*t) + cos(2*pi*4*t) + cos(2*pi*6*t) + cos(2*pi*8*t) + cos(2*pi*10*t);
     s2(1,n)= 5*cos(2*pi*2*t) + 4*cos(2*pi*4*t) + 3*cos(2*pi*6*t) + 2*cos(2*pi*8*t) + cos(2*pi*10*t);

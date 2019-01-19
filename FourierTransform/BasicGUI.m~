@@ -37,12 +37,12 @@ te = 1/fe;
 handles.xt = linspace(a,b-te,N);    % N intervalles -> il faut s'arrêter à b-T
 handles.xf = linspace(-fe/2,fe/2-1/(b-a),N);    %idem
 
-pulse = 2*pi*(10);   %oméga = 2*PI*f
+handles.pulse = 2*pi*(10);   %oméga = 2*PI*f
 deltaT = 0;         %décalage temporel du Dirac
 deltaF = 5;         %décalage fréquentiel pour aliasing
 
 
-%définition des différentes fonctions
+%échantillonnage des différentes fonctions
 
 %constante
 handles.constant = ones(1,N); 
@@ -68,13 +68,13 @@ end
 
 %rectangle(0.1)
 handles.rectangle = zeros(1,N);
-for n=floor(N/2-0.1*N):floor(N/2+0.1*N)+1
+for n=floor(N/2-0.01*N):floor(N/2+0.01*N)+1
     handles.rectangle(1,n)= 1;
 end
 
 %exponentielle décroissante
 for n=1:N
-    handles.expdecr(1,n)= exp(-pi*((n-1)*te + a)^2);
+    handles.gaussienne(1,n)= exp(-pi*((n-1)*te + a)^2);
 end
 
 %créneau
@@ -121,10 +121,10 @@ switch str{val}
         handles.currentData = handles.dirac;
     case 'Expontielle complexe'
         handles.currentData = handles.expcmp;
-    case  'Rectangle de pas 0.2'
+    case  'Rectangle de pas 0.1'
         handles.currentData = handles.rectangle;
-    case  'Exponentielle décroissante'
-        handles.currentData = handles.expdecr;
+    case  'Gaussienne'
+        handles.currentData = handles.gaussienne;
     case 'Signal créneau'
         handles.currentData = handles.creneau;
     case 'Aliasing'
@@ -140,44 +140,46 @@ function draw_Callback(hObject, eventdata, handles)
     axes(handles.fig1);
     plot(handles.xt,real(handles.currentData));
     handles.F = tfour(handles.currentData);
+    
     if handles.RB1.Value == 1
+        
         minp = min(min(real(handles.F)),min(imag(handles.F)));
         maxp = max(max(real(handles.F)),max(imag(handles.F)));
+        
         axes(handles.fig2);
         plot(handles.xf,real(handles.F));
         ylim([minp-0.1*(maxp-minp),maxp+0.1*(maxp-minp)]);
+        
         axes(handles.fig3);
         plot(handles.xf,imag(handles.F));
         ylim([minp-0.1*(maxp-minp),maxp+0.1*(maxp-minp)]);
+        
     elseif handles.RB2.Value == 1
-        minp = min(abs(handles.F))
-        maxp = max(abs(handles.F))
+        
+        minp = min(abs(handles.F));
+        maxp = max(abs(handles.F));
+        
         axes(handles.fig2);
         plot(handles.xf,abs(handles.F));
         ylim([minp-0.1*(maxp-minp)-0.1,maxp+0.1*(maxp-minp)+0.1]);
+        
         axes(handles.fig3);
         plot(handles.xf,angle(handles.F));
         ylim([-pi-0.5,pi+0.5]);
+        
     end
 
     axes(handles.fig4);
     plot(handles.xt,real(tfourinv(handles.F)));
 
-
     guidata(hObject, handles);
     
-    % --- Executes during object creation, after setting all properties.
+% --- Executes during object creation, after setting all properties.
 function MenuFonction_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to MenuFonction (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
 
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
 
 function figure1_SizeChangedFcn(hObject, eventdata, handles)
 
@@ -186,3 +188,21 @@ function RB1_Callback(hObject, eventdata, handles)
 
 % --- Executes on button press in RB2.
 function RB2_Callback(hObject, eventdata, handles)
+
+
+% --- Executes on slider movement.
+function slider1_Callback(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider1_CreateFcn(hObject, eventdata, handles)
+
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end

@@ -37,8 +37,8 @@ te = 1/fe;
 handles.xt = linspace(a,b-te,N);    % N intervalles -> il faut s'arrêter à b-T
 handles.xf = linspace(-fe/2,fe/2-1/(b-a),N);    %idem
 
-pulse = 2*pi*(1200);   %oméga = 2*PI*f
-deltaT = 0;         %décalage temporel du Dirac
+pulse = 2*pi*(10);   %oméga = 2*PI*f
+handles.deltaT = 0;         %décalage temporel du Dirac
 deltaF = 5;         %décalage fréquentiel pour aliasing
 
 
@@ -59,7 +59,7 @@ end
 
 %dirac en deltaT
 handles.dirac = zeros(1,N);
-handles.dirac(1,(N/2+1)-deltaT)=1;
+handles.dirac(1,(N/2+1)-handles.deltaT) = 1;
 
 %exponentielle complexe
 for n=1:N
@@ -68,7 +68,7 @@ end
 
 %rectangle(0.1)
 handles.rectangle = zeros(1,N);
-for n=floor(N/2-0.001*N):floor(N/2+0.001*N)+1
+for n=floor(N/2-0.01*N):floor(N/2+0.01*N)+1
     handles.rectangle(1,n)= 1;
 end
 
@@ -174,14 +174,9 @@ function draw_Callback(hObject, eventdata, handles)
 
     guidata(hObject, handles);
     
-    % --- Executes during object creation, after setting all properties.
+% --- Executes during object creation, after setting all properties.
 function MenuFonction_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to MenuFonction (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
 
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
@@ -193,3 +188,21 @@ function RB1_Callback(hObject, eventdata, handles)
 
 % --- Executes on button press in RB2.
 function RB2_Callback(hObject, eventdata, handles)
+
+
+% --- Executes on slider movement.
+function slider1_Callback(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider1_CreateFcn(hObject, eventdata, handles)
+
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end

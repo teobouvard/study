@@ -16,7 +16,7 @@ fe = N/(b-a);
 te = 1/fe;
 
 %fréquence de coupure du filtre passe bas
-f_coupure = 12*20;
+f_coupure = ;
 
 %temps en abscisse : N intervalles -> il faut s'arrêter à b-te
 xt = linspace(a,b-te,N);
@@ -51,14 +51,9 @@ for n=1:N
     
 end
 
-%filtrage passe bas pour récupérer le signal d'origine
 e1 = real(tfour(d1));
 e1(1,1:N/2 - f_coupure) = 0;
 e1(1,N/2 + f_coupure:N) = 0;
-
-e2 = real(tfour(d2));
-e2(1,1:N/2 - f_coupure) = 0;
-e2(1,N/2 + f_coupure:N) = 0;
 
 figure('units','normalized','outerposition',[0 0 1 1]);
 
@@ -89,7 +84,7 @@ plot(xf,e1);
 title('spectre (e1)')
 
 subplot(4,2,8);
-plot(xf,e2);
+plot(xf,real(tfour(d2)));
 title('spectre (e2)')
 
 

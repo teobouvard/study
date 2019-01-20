@@ -19,7 +19,6 @@ else
 end
 % End initialization code - DO NOT EDIT
 
-
 % --- Executes just before BasicGUI is made visible.
 function BasicGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
@@ -37,7 +36,7 @@ te = 1/fe;
 handles.xt = linspace(a,b-te,N);    % N intervalles -> il faut s'arrêter à b-T
 handles.xf = linspace(-fe/2,fe/2-1/(b-a),N);    %idem
 
-pulse = 2*pi*(400);  %oméga = 2*PI*f
+pulse = 2*pi*(100);  %oméga = 2*PI*f
 deltaT = 0;         %décalage temporel du Dirac
 deltaF = 6;         %décalage fréquentiel pour aliasing
 

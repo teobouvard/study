@@ -33,12 +33,13 @@ N = 16384;
 fe = N/(b-a);
 te = 1/fe;
 
-handles.xt = linspace(a,b-te,N);    % N intervalles -> il faut s'arrêter à b-T
+% N intervalles -> il faut s'arrêter à b-te
+handles.xt = linspace(a,b-te,N);
 handles.xf = linspace(-fe/2,fe/2-1/(b-a),N);    %idem
 
-pulse = 2*pi*(1);  %oméga = 2*PI*f
-deltaT = 0;         %décalage temporel du Dirac
-deltaF = 6;         %décalage fréquentiel pour aliasing
+pulse = 2*pi*(1);                %oméga = 2*PI*f
+deltaT = floor(0.01*fe);         %décalage temporel du Dirac (1 sec = fe)
+deltaF = 6;                      %décalage fréquentiel pour aliasing
 
 
 %échantillonnage des différentes fonctions

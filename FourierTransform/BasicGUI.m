@@ -36,7 +36,7 @@ te = 1/fe;
 handles.xt = linspace(a,b-te,N);    % N intervalles -> il faut s'arrêter à b-T
 handles.xf = linspace(-fe/2,fe/2-1/(b-a),N);    %idem
 
-pulse = 2*pi*(100);  %oméga = 2*PI*f
+pulse = 2*pi*(1);  %oméga = 2*PI*f
 deltaT = 0;         %décalage temporel du Dirac
 deltaF = 6;         %décalage fréquentiel pour aliasing
 
@@ -63,6 +63,7 @@ handles.dirac(1,(N/2+1)-deltaT) = 1;
 %exponentielle complexe
 for n=1:N
     handles.expcmp(1,n)= exp(1i*(pulse*((n-1)*te + a)));
+    %handles.expcmp(1,n)= cos(pulse*((n-1)*te + a)) + 1i*sin(pulse*((n-1)*te + a));
 end
 
 %rectangle(0.1)

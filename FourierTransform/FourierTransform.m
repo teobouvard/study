@@ -9,7 +9,7 @@ function [] = FourierTransform(i,type)
     xt = linspace(a,b-te,N);    % N intervalles -> il faut s'arrêter à b-T
     xf = linspace(-fe/2,fe/2-1/(b-a),N);    %idem
 
-    pulse = 2*pi*(1/10);   %oméga = 2*PI*f
+    pulse = 2*pi*(10);   %oméga = 2*PI*f
     deltaT = 0;         %décalage temporel du Dirac
     deltaF = 5;         %décalage fréquentiel pour aliasing
 
@@ -30,7 +30,7 @@ function [] = FourierTransform(i,type)
             f(1,(N/2+1)-deltaT)=1;  %dirac en deltaT
         case 4
             for n=1:N
-                f(1,n)= exp(i*(pulse*((n-1)*te + a)));  %exponentielle complexe
+                f(1,n)= exp(1i*(pulse*((n-1)*te + a)));  %exponentielle complexe
             end
         case 5
             for n=floor(N/2-0.1*N):floor(N/2+0.1*N)+1   %rectangle(0.1)

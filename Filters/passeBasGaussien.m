@@ -50,18 +50,21 @@ function passeBasGaussien(img)
         %affichage
         subplot(2,2,1);
         image(im);
+        title('Image originale')
         colormap(map);
 
         subplot(2,2,2);
         imagesc(spectre_freq_aff);
+        title('Spectre original')
 
         subplot(2,2,3);
         image(abs(im_filtre));
+        title('Image filtrée')
         colormap(map);
 
         subplot(2,2,4);
         imagesc(spectre_filtre_aff);
-
+        title('Spectre filtré')
         waitforbuttonpress;
 
     end

@@ -79,8 +79,7 @@ tableau = imfuse(tableau1,tableau2);
 imwrite(tableau,'correlation.png');
 
 %affichage
-message = sprintf('Compteur 1 = %d\nCompteur 2 = %d', compteur1,compteur2);
-
-figure 
+message = sprintf('Compteur rond = %d\nCompteur tick = %d', compteur1,compteur2);
+set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 imshow(tableau) ;
 text(1050,512,message, 'FontSize', 20, 'FontWeight', 'bold');

@@ -22,6 +22,8 @@ function passeBasGaussien(img)
 
     %initialisation du filtre
     gaussMatrix = zeros(l,c);
+    
+    figure('units','normalized','outerposition',[0 0 1 1]);
 
     for n = 0.1:0.1:5
 

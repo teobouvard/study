@@ -9,7 +9,7 @@ function [] = FourierTransform(i,type)
     xt = linspace(a,b-te,N);    % N intervalles -> il faut s'arrêter à b-T
     xf = linspace(-fe/2,fe/2-1/(b-a),N);    %idem
 
-    pulse = 2*pi*(10);   %oméga = 2*PI*f
+    pulse = 2*pi*(200);   %oméga = 2*PI*f
     deltaT = 0;         %décalage temporel du Dirac
     deltaF = 5;         %décalage fréquentiel pour aliasing
 

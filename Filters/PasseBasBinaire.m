@@ -1,4 +1,4 @@
-function passeBasBinaire(img)
+function PasseBasBinaire(img)
 
     close all;
 
@@ -22,10 +22,12 @@ function passeBasBinaire(img)
 
     %initialisation du filtre
     binaryFilter = zeros(l,c);
+    
+    figure('units','normalized','outerposition',[0 0 1 1]);
 
     for r = 1:2:180
         
-        r
+        ratio = r/180
         
         for u = 1:l
             for v = 1:c

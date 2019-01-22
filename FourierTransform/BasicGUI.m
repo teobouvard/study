@@ -29,7 +29,7 @@ function BasicGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 
 a = - 5;
 b = 5;
-N = 16384;
+N = 16386;
 fe = N/(b-a);
 te = 1/fe;
 
@@ -37,8 +37,8 @@ te = 1/fe;
 handles.xt = linspace(a,b-te,N);
 handles.xf = linspace(-fe/2,fe/2-1/(b-a),N);    %idem
 
-pulse = 2*pi*(1);                %oméga = 2*PI*f
-deltaT = floor(0.01*fe);         %décalage temporel du Dirac (1 sec = fe)
+pulse = 2*pi*(400);                %oméga = 2*PI*f
+deltaT = floor(0.0*fe);         %décalage temporel du Dirac (1 sec = fe)
 deltaF = 6;                      %décalage fréquentiel pour aliasing
 
 
@@ -67,7 +67,7 @@ for n=1:N
     %handles.expcmp(1,n)= cos(pulse*((n-1)*te + a)) + 1i*sin(pulse*((n-1)*te + a));
 end
 
-%rectangle(0.1)
+%rectangle(0.2)
 handles.rectangle = zeros(1,N);
 for n=floor(N/2-0.01*N)+2:floor(N/2+0.01*N)+1
     handles.rectangle(1,n)= 1;
@@ -80,16 +80,18 @@ end
 
 %créneau
 handles.creneau = zeros(1,N);
-act = -0.4;
-for o=1:3
-    for n=floor(N/2+act*N):floor(N/2+(act+0.2)*N)+1 
-        handles.creneau(1,n)= 1;
+%act = -0.4;
+
+for n=floor(0.01*N)+20:2*floor(0.02*N):N-0.02*N
+    for o=n:n+floor(0.02*N)-1
+    handles.creneau(1,o)= 1;
     end
-    act = act + 0.3;
 end
+%act = act + 0.3;
+
 
 for n=1:N
-    handles.aliasing(1,n)= sin(pulse*((n-1)*te + a)) + sin((pulse+deltaF)*((n-1)*te + a)) + sin((pulse+2*deltaF)*((n-1)*te + a)) + sin((pulse+3*deltaF)*((n-1)*te + a));
+    handles.aliasing(1,n)= sin(pulse*((n-1)*te + a)) + sin((pulse+deltaF)*((n-1)*te + a)) + sin((pulse+2*deltaF)*((n-1)*te + a)) + 2*sin((pulse+3*deltaF)*((n-1)*te + a));
 end
 
 handles.currentData = handles.constant;
@@ -122,7 +124,7 @@ switch str{val}
         handles.currentData = handles.dirac;
     case 'Expontielle complexe'
         handles.currentData = handles.expcmp;
-    case  'Rectangle de pas 0.1'
+    case  'Rectangle de pas 0.2'
         handles.currentData = handles.rectangle;
     case  'Gaussienne'
         handles.currentData = handles.gaussienne;
@@ -141,6 +143,7 @@ function draw_Callback(hObject, eventdata, handles)
     axes(handles.fig1);
     
     plot(handles.xt,real(handles.currentData));
+    title('Echantillonage temporel');
     
     handles.F = tfour(handles.currentData);
     
@@ -151,10 +154,12 @@ function draw_Callback(hObject, eventdata, handles)
         
         axes(handles.fig2);
         plot(handles.xf,real(handles.F));
+        title('Partie réelle de la transformée de Fourier')
         ylim([minp-0.1*(maxp-minp),maxp+0.1*(maxp-minp)]);
         
         axes(handles.fig3);
         plot(handles.xf,imag(handles.F));
+        title('Partie imaginaire de la transformée de Fourier')
         ylim([minp-0.1*(maxp-minp),maxp+0.1*(maxp-minp)]);
         
     elseif handles.RB2.Value == 1
@@ -164,17 +169,19 @@ function draw_Callback(hObject, eventdata, handles)
         
         axes(handles.fig2);
         plot(handles.xf,abs(handles.F));
+        title('Module de la transformée de Fourier')
         ylim([minp-0.1*(maxp-minp)-0.1,maxp+0.1*(maxp-minp)+0.1]);
         
         axes(handles.fig3);
         plot(handles.xf,angle(handles.F));
+        title('Argument de la transformée de Fourier')
         ylim([-pi-0.5,pi+0.5]);
         
     end
 
     axes(handles.fig4);
     plot(handles.xt,real(tfourinv(handles.F)));
-
+    title('Transformée inverse de Fourier')
     guidata(hObject, handles);
     
 % --- Executes during object creation, after setting all properties.

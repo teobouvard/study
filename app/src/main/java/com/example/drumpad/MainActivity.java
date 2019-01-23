@@ -8,6 +8,7 @@ import android.hardware.usb.UsbManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -41,17 +42,20 @@ public class MainActivity extends Activity {
         @Override
         public void onReceivedData(byte[] arg0) {
             String data;
-            String padNo = "";
-            String power = "";
+            int padNo = -1;
+            float power = -1;
             try {
                 data = new String(arg0, "UTF-8");
-                if (data.length() > 0) {
-                    padNo = data.substring(0, 1);
-                    power = data.substring(1);
+                /*if (data.length() > 1) {
+                    Log.d("tag", data);
+                    padNo = Integer.parseInt(data.substring(0, 1));
+                    power = Integer.parseInt(data.substring(1));
                 }
+                //tvAppend(textView, padNo);
+                //tvAppend(textView, power);
+                */
+                button0Click(0, 1);
 
-                tvAppend(textView, padNo);
-                tvAppend(textView, power);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -69,7 +73,7 @@ public class MainActivity extends Activity {
         textView = (TextView) findViewById(R.id.textView);
 
         soundPool = new SoundPool(MAX_STREAMS, AudioManager.STREAM_MUSIC, 0);
-        soundId0 = soundPool.load(this, R.raw.clap0, 1);
+        soundId0 = soundPool.load(this, R.raw.clapslapper, 1);
 
     }
 
@@ -91,7 +95,7 @@ public class MainActivity extends Activity {
                             //serialPort.setDataBits(UsbSerialInterface.DATA_BITS_8);
                             //serialPort.setStopBits(UsbSerialInterface.STOP_BITS_1);
                             //serialPort.setParity(UsbSerialInterface.PARITY_NONE);
-                            //serialPort.setFlowControl(UsbSerialInterface.FLOW_CONTROL_OFF);
+                            serialPort.setFlowControl(UsbSerialInterface.FLOW_CONTROL_RTS_CTS);
                             serialPort.read(mCallback);
                             Toast.makeText(getApplicationContext(), "Serial Connection Opened",
                                     Toast.LENGTH_SHORT).show();
@@ -122,8 +126,16 @@ public class MainActivity extends Activity {
     }
 
 
-    public void button0Click(View view){
-        this.soundPool.play(this.soundId0,1, 1, 1, 0, 1f);
+    public void button0Click(int buttonNumber, float volume) {
+
+        //int buttonNumber  = Integer.parseInt(v.getTag().toString());
+
+        switch (buttonNumber) {
+            case 0:
+                this.soundPool.play(this.soundId0, 1, 1, 1, 0, 1f);
+                break;
+        }
+
     }
 
 /*

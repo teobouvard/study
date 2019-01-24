@@ -29,7 +29,7 @@ function BasicGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 
 a = - 5;
 b = 5;
-N = 16386;
+N = 16384;
 fe = N/(b-a);
 te = 1/fe;
 
@@ -37,9 +37,9 @@ te = 1/fe;
 handles.xt = linspace(a,b-te,N);
 handles.xf = linspace(-fe/2,fe/2-1/(b-a),N);    %idem
 
-pulse = 2*pi*(400);                %oméga = 2*PI*f
+pulse = 2*pi*(50);                %oméga = 2*PI*f
 deltaT = floor(0.0*fe);         %décalage temporel du Dirac (1 sec = fe)
-deltaF = 6;                      %décalage fréquentiel pour aliasing
+deltaF = 2*pi*5;                      %décalage fréquentiel pour aliasing
 
 
 %échantillonnage des différentes fonctions
@@ -64,7 +64,6 @@ handles.dirac(1,(N/2+1)-deltaT) = 1;
 %exponentielle complexe
 for n=1:N
     handles.expcmp(1,n)= exp(1i*(pulse*((n-1)*te + a)));
-    %handles.expcmp(1,n)= cos(pulse*((n-1)*te + a)) + 1i*sin(pulse*((n-1)*te + a));
 end
 
 %rectangle(0.2)
@@ -87,7 +86,6 @@ for n=floor(0.01*N)+20:2*floor(0.02*N):N-0.02*N
     handles.creneau(1,o)= 1;
     end
 end
-%act = act + 0.3;
 
 
 for n=1:N

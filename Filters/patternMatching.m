@@ -16,6 +16,10 @@ tableau_frequency = fft2(tableau);
 %les patterns sont retournés afin d'utiliser le résultat 
 %de la convolution comme étant un calcul de corrélation
 
+%afin d'obtenir plus de souplesse, il faudrait créer des patterns
+%théoriques idéaux afin de ne pas obtenir un max de matching trop
+%singulier (par seuillage par exemple)
+
 pattern1h = rgb2gray(imread('pattern1h.png'));
 pattern1h = rot90(pattern1h,2);
 pattern1h_frequency = fft2(pattern1h,l_tableau,c_tableau);

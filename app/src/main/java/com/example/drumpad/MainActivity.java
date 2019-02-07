@@ -42,20 +42,8 @@ public class MainActivity extends Activity {
         @Override
         public void onReceivedData(byte[] arg0) {
             String data;
-            int padNo = -1;
-            float power = -1;
             try {
                 data = new String(arg0, "UTF-8");
-                /*if (data.length() > 1) {
-                    Log.d("tag", data);
-                    padNo = Integer.parseInt(data.substring(0, 1));
-                    power = Integer.parseInt(data.substring(1));
-                }
-                //tvAppend(textView, padNo);
-                //tvAppend(textView, power);
-                */
-                button0Click(0, 1);
-
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }

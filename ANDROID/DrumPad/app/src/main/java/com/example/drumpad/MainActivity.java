@@ -6,7 +6,9 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
+import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.felhr.usbserial.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 
 public class MainActivity extends Activity {
@@ -39,6 +42,12 @@ public class MainActivity extends Activity {
     UsbSerialDevice serialPort;
     UsbDeviceConnection connection;
 
+    Vector<Integer> data;
+
+    ToneGenerator toneGen1;
+
+    MediaPlayer mp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +60,14 @@ public class MainActivity extends Activity {
         textView = (TextView) findViewById(R.id.textView);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
 
-        //soundPool = new SoundPool(MAX_STREAMS, AudioManager.STREAM_MUSIC, 0);
-        //soundId0 = soundPool.load(this, R.raw.clapslapper, 1);
+        data = new Vector<>();
 
+        soundPool = new SoundPool(MAX_STREAMS, AudioManager.STREAM_MUSIC, 0);
+        soundId0 = soundPool.load(this, R.raw.hihatacoustic01, 1);
+
+        //toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC,100);
+
+        mp = MediaPlayer.create(this, R.raw.clap0);
     }
 
 
@@ -61,13 +75,55 @@ public class MainActivity extends Activity {
         @Override
         public void onReceivedData(byte[] arg0) {
             try {
-                int tmp = Integer.parseInt(new String(arg0));
+                /*int tmp = Integer.parseInt(new String(arg0));
                 int pad = tmp/10;
                 int power = tmp%10;
+                button0Click(pad, power);
                 String affichage = "Pad : " + pad + " ; Power : " + power + "\n";
-                tvAppend(textView,affichage);
+                tvAppend(textView,affichage);*/
+
+                String received = new String(arg0);
+                if(received.length() == 2){
+                    int tmp = Integer.parseInt(new String(arg0));
+                    int pad = tmp/10;
+                    int power = tmp%10;
+                    button0Click(pad,power);
+                    //toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,150);
+                }
+                else if(received.length() == 1) {
+                    data.add(Integer.parseInt(received));
+                    if (data.size() == 2 ){
+                        button0Click(data.elementAt(0), data.elementAt(1));
+                        //tvAppend(textView,"\a");
+                        //ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC,100);
+                        //toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,150);
+                        data.clear();
+                    }
+                }
+                else{
+                    tvAppend(textView,"No data");
+                }
+
+                /*tvAppend(textView,received);
+                tvAppend(textView, "\n");
+                char[] schar = received.toCharArray();
+                for(int i = 0; i < received.length() ; i++) {
+                    //tvAppend(textView,String.valueOf(schar[i]));
+                    if (schar[i] != ';') {
+                        data.add(Integer.parseInt(received));
+                        tvAppend(textView, "vector input : "+ schar[i] + "\n");
+                    } else {
+                        button0Click(data.elementAt(0), data.elementAt(1));
+                        tvAppend(textView, "data 0 : "+ data.elementAt(0) + "\n");
+                        tvAppend(textView, "data 1 : "+ data.elementAt(1) + "\n");
+                        data.clear();
+
+                    }
+                }*/
+
+                //tvAppend(textView, "\n");
             } catch (Exception e) {
-                e.printStackTrace();
+                tvAppend(textView, "ERROR : " + e.getMessage());
             }
         }
     };
@@ -122,18 +178,20 @@ public class MainActivity extends Activity {
         runOnUiThread(() -> ftv.append(ftext));
     }
 
-/*
+
     public void button0Click(int buttonNumber, float volume) {
 
-        //int buttonNumber  = Integer.parseInt(v.getTag().toString());
-
-        switch (buttonNumber) {
+        /*switch (buttonNumber) {
             case 0:
                 this.soundPool.play(this.soundId0, 1, 1, 1, 0, 1f);
                 break;
-        }
-    }
+        }*/
 
+        mp.start();
+        //mp.release();
+
+    }
+/*
     public void button1Click(View view){
         this.soundPool.play(this.soundId1,1, 1, 1, 0, 1f);
     }

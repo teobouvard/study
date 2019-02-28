@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DrumPad</string>
+    <string name="btnID1">Boutton 1</string>
+    <string name="btnID2">Boutton 2</string>
 </resources>

@@ -15,17 +15,17 @@ public class Configuration {
     }
 
 
-    public ChangerConfig(String instrument){
+    public void ChangerConfig(String instrument){
 
     }
 
 
 
-    public ChangerBoutton(String son, String id){
+    public void ChangerBoutton(String son, String id){
         configChangee = true;
     }
 
-    public SauverConfig(String name){
-        
+    public void SauverConfig(String name){
+
     }
 }

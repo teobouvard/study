@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setupButtons() {
         final Boutton boutton = new Boutton(this,"buttonTest","clapslapper",1);
+        //final Boutton bouttn = new Boutton(this,"buttonTest2","kickvinyl01",1);
 
         boutton.getButton().setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -36,6 +37,19 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
+       /* bouttn.getButton().setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getActionMasked()==ACTION_DOWN){
+                    bouttn.stopPlaying();
+                    bouttn.setPlayerSound();
+                    bouttn.getMediaPlayer().start();
+                }
+                return false;
+            }
+        });*/
     }
 
 }

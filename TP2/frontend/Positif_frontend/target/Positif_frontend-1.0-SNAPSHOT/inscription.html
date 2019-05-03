@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Positif</title>
+        <meta charset="UTF-8">
+
+        <!-- Librairie Javascript: jQuery (v3.3.1) -->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+        <style>
+            /* Feuille de Style CSS (dans la page) */
+            button.joli-bouton { padding: 3px 10px; border-radius: 5px; border-width: 3px; cursor: pointer; }
+        </style>
+    </head>
+    <body>
+
+        <h1 style="text-align:center"> <b> AstroNet </b> </h1>
+        <p style="text-align:center"> Inscription </p>
+        
+        <div style="text-align:center"> 
+            
+            <input type="text" id="champ-login" name="login" placeholder="Identifiant" /><br>
+            <input type="password" id="champ-password" name="password" placeholder="Mot de passe" /><br>
+            <select id="civilite">
+                <option value="" disabled selected>Civilité</option>
+                <option value="homme">Mr</option>
+                <option value="femme">Mme</option>
+            </select><br>
+            <input type="text" id="champ-nom" name="nom" placeholder="Nom" /><br>
+            <input type="text" id="champ-prenom" name="prenom" placeholder="Prénom" /><br>
+            Date de naissance &nbsp<input type="date" id="champ-dateNaissance" name="dateNaissance"><br>
+            <input type="text" id="champ-tel" name="telephone" placeholder="Numéro de téléphone" /><br>
+            <input type="text" id="champ-adressePostale" name="adressePostale" placeholder="Adresse Postale" /><br>
+            <input type="text" id="champ-adresseMail" name="adresseMail" placeholder="Adresse Mail" /><br>
+            <button id="bouton-inscription" class="joli-bouton">S'inscrire</button>
+            <button id="bouton-annuler" class="joli-bouton">Annuler</button>
+            
+        </div>
+
+        <script>
+
+            function inscription() {
+
+                var champLogin = $('#champ-login').val();
+                var champPassword = $('#champ-password').val();
+                var champCivilite = $('#civilite').val();
+                var champNom = $('#champ-nom').val();
+                var champPrenom = $('#champ-prenom').val();
+                var champDate = $('#champ-dateNaissance').val();
+                var champTel = $('#champ-tel').val();
+                var champPostal = $('#champ-adressePostale').val();
+                var champMail = $('#champ-adresseMail').val();
+                
+                // Requête AJAX
+                $.ajax({
+
+                    url: './ActionServlet', // URL
+                    method: 'POST', // Méthode
+                    data: {// Paramètres
+                        todo: 'inscrire',
+                        login: champLogin,
+                        password: champPassword,
+                        civilite: champCivilite,
+                        nom: champNom,
+                        prenom: champPrenom,
+                        dateNaissance: champDate,
+                        telephone: champTel,
+                        poste: champPostal,
+                        mail: champMail
+                    },
+                    dataType: 'json'        // Type de retour attendu
+
+                }).done(function (response) {  // Appel OK => "response" contient le resultat JSON
+
+                    // ici votre code...
+                    // 
+                    // si connexion ok, aller sur la page suivante :
+                    //window.location = "maPageSuivante.html";
+                    // si connexion pas ok afficher un texte dans la div #message :
+                    $('#message').html(response.message);
+
+                }).fail(function (error) { // Appel KO => erreur a gérer
+
+                    // Popup avec message d'erreur :
+                    alert('Erreur lors de l\'appel: HTTP Code ' + error.status + ' ~ ' + error.statusText + ' ~ ' + error.getResponseHeader('Content-Type'));
+                    // Message d'erreur dans la div #message :
+                    $('#message').html('Erreur lors de l\'appel: HTTP Code ' + error.status + ' ~ ' + error.statusText + ' ~ ' + error.getResponseHeader('Content-Type'));
+
+                });
+            }
+
+            $(document).ready(function () {
+
+                console.log('Page chargee => Debut du Script');
+
+                // ajout d'un "handler" sur le clic du bouton de connexion
+                $('#bouton-inscription').on('click', function () {
+
+                    // affichage pour debugage dans la console javascript du navigateur
+                    console.log('Click sur le bouton "S\'inscrire"');
+
+                    // appel de la fonction connexion
+                    inscription();
+
+                });
+
+                // ajout d'un "handler" sur le clic du bouton d'inscription
+                $('#bouton-annuler').on('click', function () {
+
+                    // affichage pour debugage dans la console javascript du navigateur
+                    console.log('Click sur le bouton "Annuler"');
+
+                    // appel de la fonction connexion
+                    window.location = "index.html";
+
+                });
+
+            });
+
+        </script>
+    </body>
+</html>

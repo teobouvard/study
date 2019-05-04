@@ -7,21 +7,23 @@
         <!-- Librairie Javascript: jQuery (v3.3.1) -->
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
-        <style>
+        <link rel="stylesheet" type="text/CSS" href="stylesheet.css">
+
+        <!-- <style>    
             /* Feuille de Style CSS (dans la page) */
             #message { margin: 25px; padding: 10px; }
             button.joli-bouton { padding: 3px 10px; border-radius: 5px; border-width: 3px; cursor: pointer; }
-        </style>
+        </style> -->
     </head>
     <body>
 
         <h1 style="text-align:center"> <b> AstroNet </b> </h1>
         <p style="text-align:center"> Authentification </p>
         <div style="text-align:center"> 
-           <input type="text" id="champ-login" name="login" placeholder="Identifiant" /><br>
-           <input type="password" id="champ-password" name="password" placeholder="Mot de passe" /><br>
-           <button id="bouton-connexion" class="joli-bouton">Connexion</button>
-           <button id="bouton-inscription" class="joli-bouton">Inscription</button>
+           <input type="text" class="champ" id="champ-login" name="login" placeholder="Identifiant" /><br>
+           <input type="password" class="champ" id="champ-password" name="password" placeholder="Mot de passe" /><br>
+           <button id="bouton-connexion" class="joli-bouton"> <b> Connexion </b> </button>
+           <button id="bouton-inscription" class="joli-bouton"> <b> Inscription</b> </button>
         </div>
 
         <div style="text-align:center" id="message"></div>

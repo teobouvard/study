@@ -1,0 +1,26 @@
+
+body
+{
+    background: rgb(197, 197, 197)
+}
+
+
+button.joli-bouton
+{
+    float: center;
+    padding: 20px 80px;
+    background-color: blue;
+    cursor: pointer;
+    color: white;
+    margin: 10px 10px;
+    border-width: 2px;
+    border-color: black;
+    border-bottom-style: solid;
+}
+
+input.champ
+{
+    width: 500px;
+    padding: 10px 10px;
+    margin-bottom: 25px;
+}

@@ -1,6 +1,6 @@
-action\ActionLogin.class
-serialisation\Serialisation.class
 action\Action.class
 action\ActionInscrire.class
+action\ActionLogin.class
+serialisation\Serialisation.class
 webapp\ActionServlet.class
 serialisation\SerialisationLogin.class

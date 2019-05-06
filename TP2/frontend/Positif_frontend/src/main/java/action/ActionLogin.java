@@ -1,6 +1,7 @@
 package action;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import metier.data.Client;
 import metier.data.Personne;
 import metier.service.Service;
@@ -21,6 +22,8 @@ public class ActionLogin extends Action {
         if (personne != null) {
             System.out.println("Personne trouvee");
             request.setAttribute("statut", Boolean.TRUE);
+            HttpSession session = request.getSession();
+            session.setAttribute("personne", personne);
             if (personne instanceof Client) {
                 request.setAttribute("personne", "client");
             } else {

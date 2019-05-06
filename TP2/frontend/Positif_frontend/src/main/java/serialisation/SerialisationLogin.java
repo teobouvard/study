@@ -9,10 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- *
- * @author tbouvard
- */
 public class SerialisationLogin extends Serialisation {
 
     @Override
@@ -24,9 +20,13 @@ public class SerialisationLogin extends Serialisation {
         if (statut) {
             jsonContainer.addProperty("connexion", true);
             jsonContainer.addProperty("message", "Ok");
-            
-            HttpSession session = request.getSession();
-            session.setAttribute("utilisateur", request.getParameter("login"));
+            String typePersonne = (String) request.getAttribute("personne");
+            if(typePersonne.equals("client")){
+                jsonContainer.addProperty("personne", "client");
+            }
+            else if(typePersonne.equals("employe")){
+                jsonContainer.addProperty("personne", "employe");
+            }
             
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String json = gson.toJson(jsonContainer);

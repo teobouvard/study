@@ -5,6 +5,9 @@
  */
 package webapp;
 
+import serialisation.SerialisationListerMedium;
+import action.ActionListerMediums;
+import serialisation.SerialisationInscrire;
 import action.Action;
 import action.ActionInscrire;
 import action.ActionLogin;
@@ -19,7 +22,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import serialisation.Serialisation;
+import serialisation.SerialisationClient;
 import serialisation.SerialisationLogin;
 
 /**
@@ -31,16 +36,16 @@ public class ActionServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-      super.init();
-      JpaUtil.init();
+        super.init();
+        JpaUtil.init();
     }
 
     @Override
     public void destroy() {
-      JpaUtil.destroy();
-      super.destroy();
+        JpaUtil.destroy();
+        super.destroy();
     }
-     
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -52,27 +57,42 @@ public class ActionServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String todo = request.getParameter("todo");
         Action action = null;
         Serialisation serialisation = null;
-        
-        switch(todo){
+        HttpSession session = request.getSession();
+
+        switch (todo) {
             case "connecter":
                 action = new ActionLogin();
                 serialisation = new SerialisationLogin();
                 action.executer(request);
-                serialisation.serialiser(request,response);
-            break;
-            
-            case "inscrire":
-            action = new ActionInscrire();
-            //A FAIRE
-                
-            break;
-        }  
-    }
+                serialisation.serialiser(request, response);
+                break;
 
+            case "inscrire":
+                action = new ActionInscrire();
+                serialisation = new SerialisationInscrire();
+                action.executer(request);
+                serialisation.serialiser(request, response);
+                break;
+        }
+        if (session.getAttribute("personne") != null) {
+            switch (todo) {
+                case "infos-client":
+                    serialisation = new SerialisationClient();
+                    serialisation.serialiser(request, response);
+                    break;
+                case "liste-medium":
+                    action = new ActionListerMediums();
+                    serialisation = new SerialisationListerMedium();
+                    action.executer(request);
+                    serialisation.serialiser(request, response);
+                    break;
+            }
+        }
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

@@ -6,87 +6,104 @@
 
         <!-- Librairie Javascript: jQuery (v3.3.1) -->
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <link rel="stylesheet" type="text/CSS" href="stylesheet.css">
 
-        <style>
-            /* Feuille de Style CSS (dans la page) */
-            button.joli-bouton { padding: 3px 10px; border-radius: 5px; border-width: 3px; cursor: pointer; }
-        </style>
     </head>
     <body>
 
         <h1 style="text-align:center"> <b> AstroNet </b> </h1>
         <p style="text-align:center"> Inscription </p>
-        
-        <div style="text-align:center"> 
-            
-            <input type="text" id="champ-login" name="login" placeholder="Identifiant" /><br>
-            <input type="password" id="champ-password" name="password" placeholder="Mot de passe" /><br>
-            <select id="civilite">
+
+        <div style="text-align:center" id="formulaire"> 
+
+            <select id="civilite" required>
                 <option value="" disabled selected>Civilité</option>
-                <option value="homme">Mr</option>
-                <option value="femme">Mme</option>
+                <option value="Mr">Mr</option>
+                <option value="Mme">Mme</option>
             </select><br>
-            <input type="text" id="champ-nom" name="nom" placeholder="Nom" /><br>
-            <input type="text" id="champ-prenom" name="prenom" placeholder="Prénom" /><br>
-            Date de naissance &nbsp<input type="date" id="champ-dateNaissance" name="dateNaissance"><br>
-            <input type="text" id="champ-tel" name="telephone" placeholder="Numéro de téléphone" /><br>
-            <input type="text" id="champ-adressePostale" name="adressePostale" placeholder="Adresse Postale" /><br>
-            <input type="text" id="champ-adresseMail" name="adresseMail" placeholder="Adresse Mail" /><br>
+            <input type="text" id="champ-nom" name="nom" placeholder="Nom" required/><br>
+            <input type="text" id="champ-prenom" name="prenom" placeholder="Prénom" required/><br>
+            <input type="password" id="champ-password" name="password" placeholder="Mot de passe" required/><br>
+            Date de naissance &nbsp<input type="date" id="champ-dateNaissance" name="dateNaissance" required><br>
+            <input type="text" id="champ-tel" name="telephone" placeholder="Numéro de téléphone" required/><br>
+            <input type="text" id="champ-adressePostale" name="adressePostale" placeholder="Adresse Postale" required/><br>
+            <input type="text" id="champ-adresseMail" name="adresseMail" placeholder="Adresse Mail" required/><br>
             <button id="bouton-inscription" class="joli-bouton">S'inscrire</button>
             <button id="bouton-annuler" class="joli-bouton">Annuler</button>
-            
+
         </div>
 
         <script>
 
             function inscription() {
 
-                var champLogin = $('#champ-login').val();
-                var champPassword = $('#champ-password').val();
-                var champCivilite = $('#civilite').val();
-                var champNom = $('#champ-nom').val();
-                var champPrenom = $('#champ-prenom').val();
-                var champDate = $('#champ-dateNaissance').val();
-                var champTel = $('#champ-tel').val();
-                var champPostal = $('#champ-adressePostale').val();
-                var champMail = $('#champ-adresseMail').val();
-                
-                // Requête AJAX
-                $.ajax({
+                var form = document.getElementById("formulaire");
+                if (checkform(form))
+                {
 
-                    url: './ActionServlet', // URL
-                    method: 'POST', // Méthode
-                    data: {// Paramètres
-                        todo: 'inscrire',
-                        login: champLogin,
-                        password: champPassword,
-                        civilite: champCivilite,
-                        nom: champNom,
-                        prenom: champPrenom,
-                        dateNaissance: champDate,
-                        telephone: champTel,
-                        poste: champPostal,
-                        mail: champMail
-                    },
-                    dataType: 'json'        // Type de retour attendu
+                    var champPassword = $('#champ-password').val();
+                    var champCivilite = $('#civilite').val();
+                    var champNom = $('#champ-nom').val();
+                    var champPrenom = $('#champ-prenom').val();
+                    var champDate = $('#champ-dateNaissance').val();
+                    var champTel = $('#champ-tel').val();
+                    var champPostal = $('#champ-adressePostale').val();
+                    var champMail = $('#champ-adresseMail').val();
 
-                }).done(function (response) {  // Appel OK => "response" contient le resultat JSON
 
-                    // ici votre code...
-                    // 
-                    // si connexion ok, aller sur la page suivante :
-                    //window.location = "maPageSuivante.html";
-                    // si connexion pas ok afficher un texte dans la div #message :
-                    $('#message').html(response.message);
+                    // Requête AJAX
+                    $.ajax({
 
-                }).fail(function (error) { // Appel KO => erreur a gérer
+                        url: './ActionServlet', // URL
+                        method: 'POST', // Méthode
+                        data: {// Paramètres
+                            todo: 'inscrire',
+                            password: champPassword,
+                            civilite: champCivilite,
+                            nom: champNom,
+                            prenom: champPrenom,
+                            dateNaissance: champDate,
+                            telephone: champTel,
+                            poste: champPostal,
+                            mail: champMail
+                        },
+                        dataType: 'json'        // Type de retour attendu
 
-                    // Popup avec message d'erreur :
-                    alert('Erreur lors de l\'appel: HTTP Code ' + error.status + ' ~ ' + error.statusText + ' ~ ' + error.getResponseHeader('Content-Type'));
-                    // Message d'erreur dans la div #message :
-                    $('#message').html('Erreur lors de l\'appel: HTTP Code ' + error.status + ' ~ ' + error.statusText + ' ~ ' + error.getResponseHeader('Content-Type'));
+                    }).done(function (response) {  // Appel OK => "response" contient le resultat JSON
+                        
+                        if(response.inscription){
+                            window.location="index.html";
+                        } else {
+                            alert("Erreur lors de la saise du formulaire.")
+                        }
 
-                });
+                    }).fail(function (error) { // Appel KO => erreur a gérer
+
+                        // Popup avec message d'erreur :
+                        alert('Erreur lors de l\'appel: HTTP Code ' + error.status + ' ~ ' + error.statusText + ' ~ ' + error.getResponseHeader('Content-Type'));
+                        // Message d'erreur dans la div #message :
+                        $('#message').html('Erreur lors de l\'appel: HTTP Code ' + error.status + ' ~ ' + error.statusText + ' ~ ' + error.getResponseHeader('Content-Type'));
+
+                    });
+                } else
+                {
+                    alert("Merci de remplir tous les champs");
+                }
+            }
+
+            function checkform(form) {
+                // get all the inputs within the submitted form
+                var inputs = form.getElementsByTagName("*");
+                for (var i = 0; i < inputs.length; i++) {
+                    // only validate the inputs that have the required attribute
+                    if (inputs[i].hasAttribute("required")) {
+                        if (inputs[i].value == "") {
+                            // found an empty field that is required
+                            return false;
+                        }
+                    }
+                }
+                return true;
             }
 
             $(document).ready(function () {

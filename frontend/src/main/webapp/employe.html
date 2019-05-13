@@ -28,7 +28,7 @@
 
             <div id="bouton-centre">
                 <button id="pret">Je suis prêt</button>
-                <button id="stats">Statistiques</button>
+                <button id="stats" onclick="location='statistiques.html'">Statistiques</button>
             </div><br>
 
             <div id="voyance-employe">
@@ -119,7 +119,7 @@
                         $("#animal").html(response.animal);
                     }
                     else{
-                        alert("aucune voyance en attente");
+                        $("#medium").html("Vous n'avez aucune demande de voyance en attente");
                     }
                     
                 }).fail(function (error) {

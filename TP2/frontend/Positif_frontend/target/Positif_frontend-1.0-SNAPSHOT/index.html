@@ -53,11 +53,11 @@
                     //window.location = "maPageSuivante.html";
                     // si connexion pas ok afficher un texte dans la div #message :
                     $('#message').html(response.message);
-                    if(response.personne == 'client'){
-                        window.location = "client.html?id=" + champLogin + "&" + "password=" + champPassword;
+                    if(response.personne === 'client'){
+                        window.location = "client.html";
                     }
-                    else if(response.personne == 'employe'){
-                        window.location = "employe.html?id=" + champLogin + "&" + "password=" + champPassword;
+                    else if(response.personne === 'employe'){
+                        window.location = "employe.html";   
                     }
                     
 

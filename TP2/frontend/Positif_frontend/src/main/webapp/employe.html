@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+
+    <head>
+        <title>Positif</title>
+        <meta charset="UTF-8">
+
+        <!-- Librairie Javascript: jQuery (v3.3.1) -->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <link rel="stylesheet" type="text/CSS" href="client.css">
+        <!--<link rel="stylesheet" type="text/CSS" href="stylesheet.css">-->
+
+    </head>
+
+    <body>
+        <div id="bloc-page">
+            <h1> AstroNet </h1>
+            <p id="employe">Bonjour, </p>
+            <div id="voyance-client">
+                <h2>CLIENT</h2>
+                <label id="nom-client"> </label><br>
+                <label id="prenom-client"> </label><br>
+                <label id="medium"> </label><br>
+                <label id="nom-client"> </label><br>
+                <label id="couleur"></label><br>
+                <label id="zodiaque"></label><br>
+                <label id="chinois"></label><br>
+                <label id="animal"></label><br>
+                <table id="historique">  </table>
+            </div>
+
+            <div id="bouton-centre">
+                <button id="pret">Je suis prêt</button>
+                <button id="stats">Statistiques</button>
+            </div>
+
+            <div id="voyance-employe">
+                <button id="debut-appel">Début appel</button>
+                <button id="fin-appel">Fin appel</button> <br>
+                Générateur : <br>
+                <input id="note-amour" placeholder="Note amour" type="number" max="5" min="1" required>
+                <input id="note-sante" placeholder="Note santé" type="number" max="5" min="1" required>
+                <input id="note-travail" placeholder="Note travail" type="number" max="5" min="1" required><br>
+                <button id="generer"> Générer </button><br>
+                <table id="predictions">
+                    <tr>
+                        <th>
+                            Catégorie
+                        </th>
+                        <th>
+                            Prédiction
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Amour
+                        </th>
+                        <td id="pred-amour">
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Santé
+                        </th>
+                        <td id="pred-sante">
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Travail
+                        </th>
+                        <td id="pred-travail">
+
+                        </td>
+                    </tr>
+                </table> 
+                <br>
+                <input id="commentaire" placeholder="Laisser un commentaire sur la voyance" type="text">
+                <button id="valider-voyance">Valider la voyance</button>
+            </div>
+
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                GetInfoEmploye();
+                GetVoyanceEnCours();
+            });
+
+            function GetInfoEmploye() {
+                $.ajax({
+                    url: './ActionServlet', // URL
+                    method: 'POST', // Méthode
+                    data: {// Paramètres
+                        todo: 'infos-employe'
+                    },
+                    dataType: 'json'        // Type de retour attendu
+                }).done(function (response) {
+                    $('#employe').append(response.nom+" "+response.prenom);
+                })
+            }
+            
+            function GetVoyanceEnCours()
+            {
+                $.ajax({
+                    url: './ActionServlet', // URL
+                    method: 'POST', // Méthode
+                    data: {// Paramètres
+                        todo: 'voyance-en-cours'
+                    },
+                    dataType: 'json'        // Type de retour attendu
+                }).done(function (response) {
+                   alert("ca a marche peutetre");
+                });
+            }
+
+
+        </script>
+
+    </body>
+
+</html>

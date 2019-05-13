@@ -5,6 +5,11 @@
  */
 package webapp;
 
+import serialisation.SerialisationVoyance;
+import action.ActionChercherVoyance;
+import serialisation.SerialisationEmploye;
+import serialisation.SerialisationInfosMedium;
+import action.ActionInfosMedium;
 import serialisation.SerialisationListerMedium;
 import action.ActionListerMediums;
 import serialisation.SerialisationInscrire;
@@ -26,6 +31,7 @@ import javax.servlet.http.HttpSession;
 import serialisation.Serialisation;
 import serialisation.SerialisationClient;
 import serialisation.SerialisationLogin;
+import serialisation.SerialisationListeVoyance;
 
 /**
  *
@@ -77,6 +83,9 @@ public class ActionServlet extends HttpServlet {
                 action.executer(request);
                 serialisation.serialiser(request, response);
                 break;
+            case "deconnecter":
+                session.setAttribute("personne",null);
+                break;
         }
         if (session.getAttribute("personne") != null) {
             switch (todo) {
@@ -84,9 +93,29 @@ public class ActionServlet extends HttpServlet {
                     serialisation = new SerialisationClient();
                     serialisation.serialiser(request, response);
                     break;
+                case "infos-employe":
+                    serialisation = new SerialisationEmploye();
+                    serialisation.serialiser(request, response);
+                    break;
                 case "liste-medium":
                     action = new ActionListerMediums();
                     serialisation = new SerialisationListerMedium();
+                    action.executer(request);
+                    serialisation.serialiser(request, response);
+                    break;
+                case "infos-medium":
+                    action = new ActionInfosMedium();
+                    serialisation = new SerialisationInfosMedium();
+                    action.executer(request);
+                    serialisation.serialiser(request, response);
+                    break;
+                case "historique-client":
+                    serialisation = new SerialisationListeVoyance();
+                    serialisation.serialiser(request, response);
+                    break;
+                case "voyance-en-cours":
+                    action = new ActionChercherVoyance();
+                    serialisation = new SerialisationVoyance();
                     action.executer(request);
                     serialisation.serialiser(request, response);
                     break;

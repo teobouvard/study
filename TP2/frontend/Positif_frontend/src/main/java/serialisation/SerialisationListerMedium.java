@@ -46,5 +46,4 @@ public class SerialisationListerMedium extends Serialisation {
         String json = gson.toJson(jsonContainer);
         out.println(json);
     }
-
 }

@@ -16,12 +16,8 @@ import serialisation.SerialisationInscrire;
 import action.Action;
 import action.ActionInscrire;
 import action.ActionLogin;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import dao.JpaUtil;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -33,10 +29,6 @@ import serialisation.SerialisationClient;
 import serialisation.SerialisationLogin;
 import serialisation.SerialisationListeVoyance;
 
-/**
- *
- * @author tbouvard
- */
 @WebServlet(name = "ActionServlet", urlPatterns = {"/ActionServlet"})
 public class ActionServlet extends HttpServlet {
 
@@ -84,7 +76,7 @@ public class ActionServlet extends HttpServlet {
                 serialisation.serialiser(request, response);
                 break;
             case "deconnecter":
-                session.setAttribute("personne",null);
+                session.setAttribute("personne", null);
                 break;
         }
         if (session.getAttribute("personne") != null) {

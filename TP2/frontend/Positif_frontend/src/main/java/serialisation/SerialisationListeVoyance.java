@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package serialisation;
 
 import com.google.gson.Gson;
@@ -17,10 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import metier.data.Client;
 import metier.data.Voyance;
 
-/**
- *
- * @author tbouvard
- */
 public class SerialisationListeVoyance extends Serialisation {
 
     @Override
@@ -29,9 +20,9 @@ public class SerialisationListeVoyance extends Serialisation {
         PrintWriter out = getWriterWithJsonHeader(response);
         JsonObject jsonContainer = new JsonObject();
         JsonArray listeVoyanceJson = new JsonArray();
-        
+
         for (Voyance voyance : client.getListVoyance()) {
-        
+
             JsonObject voyanceJson = new JsonObject();
             if (voyance.getDateDebut() != null) {
                 voyanceJson.addProperty("medium", voyance.getMedium().getNom());
@@ -53,5 +44,4 @@ public class SerialisationListeVoyance extends Serialisation {
         String json = gson.toJson(jsonContainer);
         out.println(json);
     }
-
 }

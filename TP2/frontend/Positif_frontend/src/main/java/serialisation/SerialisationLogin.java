@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 public class SerialisationLogin extends Serialisation {
 
@@ -27,16 +26,13 @@ public class SerialisationLogin extends Serialisation {
             else if(typePersonne.equals("employe")){
                 jsonContainer.addProperty("personne", "employe");
             }
-            
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String json = gson.toJson(jsonContainer);
-            out.println(json);
         } else {
             jsonContainer.addProperty("connexion", false);
             jsonContainer.addProperty("message", "Mot de passe ou nom d'ultilisateur invalide.");
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            
+        }
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String json = gson.toJson(jsonContainer);
             out.println(json);
-        }
     }
 }

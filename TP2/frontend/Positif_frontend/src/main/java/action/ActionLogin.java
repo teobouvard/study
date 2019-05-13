@@ -6,10 +6,6 @@ import metier.data.Client;
 import metier.data.Personne;
 import metier.service.Service;
 
-/**
- *
- * @author tbouvard
- */
 public class ActionLogin extends Action {
 
     @Override

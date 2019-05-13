@@ -21,6 +21,10 @@ public class SerialisationClient extends Serialisation {
         
         jsonContainer.addProperty("nom", client.getNom());
         jsonContainer.addProperty("prenom", client.getPrenom());
+        jsonContainer.addProperty("couleur", client.getCouleur());
+        jsonContainer.addProperty("zodiaque", client.getSigneZodiaque());
+        jsonContainer.addProperty("chinois", client.getSigneChinois());
+        jsonContainer.addProperty("animal", client.getAnimal());
         
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(jsonContainer);

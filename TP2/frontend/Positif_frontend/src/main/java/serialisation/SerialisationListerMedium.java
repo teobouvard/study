@@ -13,7 +13,6 @@ import metier.data.Astrologue;
 import metier.data.Medium;
 import metier.data.Tarologue;
 import metier.data.Voyant;
-import serialisation.Serialisation;
 
 public class SerialisationListerMedium extends Serialisation {
 

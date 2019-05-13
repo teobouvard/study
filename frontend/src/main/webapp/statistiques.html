@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Positif</title>
+        <meta charset="UTF-8">
+
+        <!-- Librairie Javascript: jQuery (v3.3.1) -->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <link rel="stylesheet" type="text/CSS" href="client.css">
+    </head>
+
+    <body>
+        <div id="bloc-page">
+            <h1> Statistiques </h1><br>
+            <div id="voyances-mediums">
+                <h2>Voyances par médium</h2>
+            </div><br>
+
+            <div id="clients-employes">
+                <h2>Clients par employés</h2>
+            </div><br>
+
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                GetInfoEmploye();
+                GetVoyanceEnCours();
+            });
+
+            function GetInfoEmploye() {
+                $.ajax({
+                    url: './ActionServlet', // URL
+                    method: 'POST', // Méthode
+                    data: {// Paramètres
+                        todo: '???'
+                    },
+                    dataType: 'json'        // Type de retour attendu
+                }).done(function (response) {
+                })
+            }
+
+        </script>
+
+    </body>
+
+</html>

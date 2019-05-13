@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+
+    <head>
+        <title>Positif</title>
+        <meta charset="UTF-8">
+
+        <!-- Librairie Javascript: jQuery (v3.3.1) -->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <link rel="stylesheet" type="text/CSS" href="client.css">
+
+    </head>
+
+    <body>
+        <div id="bloc-page">
+            <div id="left-panel">
+                <div id="description">
+                    <label id="nom-client">Nom</label><br>
+                    <label id="prenom-client">Prenom</label><br>
+                </div>
+                <div id="navigation">
+                    <button id="bouton-accueil" onclick="location.href = 'client.html';"> <b> Accueil </b> </button><br>
+                    <button id="bouton-profil" onclick="location.href = 'profil-astro.html';"> <b> Profil Astro </b></button><br>
+                    <button id="bouton-historique" disabled> <b> Historique </b> </button>
+                </div>
+                <button id="bouton-deconnecter"> <b> Se déconnecter </b> </button>
+            </div>
+
+            <div id="historique">
+                <h1>
+                    Historique des demandes
+                </h1>
+                <table id="tab-voyance">
+                </table>
+            </div>
+
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                GetInfoClient();
+                GetListVoyance();
+            });
+
+            function GetInfoClient() {
+                $.ajax({
+                    url: './ActionServlet', // URL
+                    method: 'POST', // Méthode
+                    data: {// Paramètres
+                        todo: 'infos-client'
+                    },
+                    dataType: 'json'        // Type de retour attendu
+                }).done(function (response) {
+                    $('#nom-client').html(response.nom);
+                    $('#prenom-client').html(response.prenom);
+                });
+            }
+
+            function GetListVoyance() {
+                $.ajax({
+                    url: './ActionServlet', // URL
+                    method: 'POST', // Méthode
+                    data: {// Paramètres
+                        todo: 'historique-client'
+                    },
+                    dataType: 'json'        // Type de retour attendu
+                }).done(function (response) {
+                    $.each(response.listeVoyance, function (i, voyance) {
+                        $("#tab-voyance").append("<tr> <td>"+voyance.medium+"</td>"+"<td>"+voyance.dateDebut+"</td>"+"<td>"+voyance.dateFin+"</td>"+"</tr>");
+                    });
+                });
+            }
+
+
+        </script>
+
+    </body>
+
+</html>

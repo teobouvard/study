@@ -12,7 +12,7 @@
 
     <body>
         <div id="bloc-page">
-            <h1> AstroNet </h1><br>
+            <h1> AstroNet </h1>
             <p id="employe">Bonjour, </p><br>
             <div id="voyance-client">
                 <h2>Client</h2>
@@ -27,8 +27,9 @@
             </div><br>
 
             <div id="bouton-centre">
-                <button id="pret">Je suis prêt</button>
-                <button id="stats" onclick="location='statistiques.html'">Statistiques</button>
+                <button id="pret" onclick="DemarrerVoyance()">Je suis prêt</button>
+                <button id="stats" onclick="location = 'statistiques.html'">Statistiques</button>
+                <button id="deconnecter" onclick="Deconnecter()">Se déconnecter</button>
             </div><br>
 
             <div id="voyance-employe">
@@ -41,39 +42,22 @@
                 <button id="generer-predictions"> Générer </button><br>
                 <table id="predictions">
                     <tr>
-                        <th>
-                            Catégorie
-                        </th>
-                        <th>
-                            Prédiction
-                        </th>
+                        <th>Catégorie</th>
+                        <th>Prédiction</th>
                     </tr>
                     <tr>
-                        <th>
-                            Amour
-                        </th>
-                        <td id="pred-amour">
-
-                        </td>
+                        <th>Amour</th>
+                        <td id="pred-amour"></td>
                     </tr>
                     <tr>
-                        <th>
-                            Santé
-                        </th>
-                        <td id="pred-sante">
-
-                        </td>
+                        <th>Santé</th>
+                        <td id="pred-sante"></td>
                     </tr>
                     <tr>
-                        <th>
-                            Travail
-                        </th>
-                        <td id="pred-travail">
-
-                        </td>
+                        <th>Travail</th>
+                        <td id="pred-travail"></td>
                     </tr>
-                </table> 
-                <br>
+                </table>
                 <input id="commentaire-employe" placeholder="Laisser un commentaire sur la voyance" type="text">
                 <button id="valider-voyance">Valider la voyance</button>
             </div>
@@ -109,7 +93,7 @@
                     },
                     dataType: 'json'        // Type de retour attendu
                 }).done(function (response) {
-                    if(response.statut){
+                    if (response.statut) {
                         $("#nom-client").html(response.nomClient);
                         $("#prenom-client").html(response.prenomClient);
                         $("#medium").html(response.medium);
@@ -117,13 +101,51 @@
                         $("#zodiaque").html(response.zodiaque);
                         $("#chinois").html(response.chinois);
                         $("#animal").html(response.animal);
-                    }
-                    else{
+                    } else {
                         $("#medium").html("Vous n'avez aucune demande de voyance en attente");
                     }
-                    
+
                 }).fail(function (error) {
                     alert(error.statusText);
+                });
+            }
+
+            function DemarrerVoyance()
+            {
+                $.ajax({
+                    url: './ActionServlet', // URL
+                    method: 'POST', // Méthode
+                    data: {// Paramètres
+                        todo: 'demarrer-voyance'
+                    },
+                    dataType: 'json'        // Type de retour attendu
+                }).done(function (response) {
+                    if (response.statut) {
+                        $("#pret").prop('disabled', true);
+                        $("#stats").prop('disabled', true);
+                        $("#deconnecter").prop('disabled', true);
+                        $("#fin-appel").prop('disabled', true);
+                        $("#valider-voyance").prop('disabled', true);
+                    } else {
+                        alert("Impossible de démarrer la voyance");
+                    }
+                }).fail(function (error) {
+                    alert(error.statusText);
+                });
+            }
+
+            function Deconnecter() {
+                $.ajax({
+                    url: './ActionServlet', // URL
+                    method: 'POST', // Méthode
+                    data: {// Paramètres
+                        todo: 'deconnecter'
+                    },
+                    dataType: 'html'        // Type de retour attendu
+                }).done(function () {
+                    window.location = "index.html";
+                }).fail(function (error) {
+                    alert('Erreur lors de l\'appel: HTTP Code ' + error.status + ' ~ ' + error.statusText + ' ~ ' + error.getResponseHeader('Content-Type'));
                 });
             }
 

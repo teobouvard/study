@@ -18,14 +18,15 @@ public class SerialisationClient extends Serialisation {
         JsonObject jsonContainer = new JsonObject();
         HttpSession session = request.getSession();
         Client client = (Client) session.getAttribute("personne");
-        
+
         jsonContainer.addProperty("nom", client.getNom());
         jsonContainer.addProperty("prenom", client.getPrenom());
         jsonContainer.addProperty("couleur", client.getCouleur());
         jsonContainer.addProperty("zodiaque", client.getSigneZodiaque());
         jsonContainer.addProperty("chinois", client.getSigneChinois());
         jsonContainer.addProperty("animal", client.getAnimal());
-        
+        jsonContainer.addProperty("disponible", !client.getDemandeFaite());
+
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(jsonContainer);
         out.println(json);

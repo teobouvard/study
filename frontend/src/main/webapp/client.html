@@ -8,6 +8,7 @@
         <!-- Librairie Javascript: jQuery (v3.3.1) -->
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <link rel="stylesheet" type="text/CSS" href="client.css">
+
     </head>
 
     <body>
@@ -22,7 +23,7 @@
                     <button id="bouton-profil" onclick="location = 'profil-astro.html';"><b> Profil Astro </b></button><br>
                     <button id="bouton-historique" onclick="location = 'historique.html';"><b> Historique </b></button>
                 </div>
-                <button id="bouton-deconnecter"><b> Se déconnecter </b></button>
+                <button id="bouton-deconnecter" class="joli-bouton" onclick="Deconnecter()"><b> Se déconnecter </b></button>
             </div>
 
             <div id="bloc-mediums">
@@ -31,13 +32,13 @@
             </div>
 
             <div id="bloc-infos-medium">
-                <h1 id="nom-medium"></h1>
-                <h1 id="type-medium"></h1>
-                <h1 id="description-medium"></h1>
-                <h1 id="formation-medium"></h1>
-                <h1 id="promotion-medium"></h1>
-                <h1 id="specialite-medium"></h1>
-                <button id="prendre-rdv">Prendre RDV</button>
+                <label id="nom-medium"></label><br>
+                <label id="type-medium"></label><br>
+                <label id="description-medium"></label><br>
+                <label id="formation-medium"></label><br>
+                <label id="promotion-medium"></label><br>
+                <label id="specialite-medium"></label><br>
+                <button id="prendre-rdv" onclick="PrendreRDV()">Prendre RDV</button>
             </div>
 
         </div>
@@ -47,6 +48,8 @@
                 GetInfoClient();
                 GetListMedium();
             });
+            
+            var selectedMedium = 0;
 
             function GetInfoClient() {
                 $.ajax({
@@ -59,7 +62,10 @@
                 }).done(function (response) {
                     $('#nom-client').html(response.nom);
                     $('#prenom-client').html(response.prenom);
-                })
+                    if(!response.disponible){
+                        $("#prendre-rdv").prop('disabled', true);
+                    }
+                });
             }
 
             function GetListMedium() {
@@ -72,12 +78,18 @@
                     dataType: 'json'        // Type de retour attendu
                 }).done(function (response) {
                     $.each(response.listemedium, function (i, medium) {
+                        if (i === 0) {
+                            afficherMedium(medium.id);
+                            selectedMedium = medium.id;
+                        }
                         $("#liste-medium").append("<li onclick=\"afficherMedium(" + medium.id + ");\">" + medium.nom + " " + medium.type + "</li>");
-                    })
-                })
+                    });
+                });
             }
 
             function afficherMedium(id) {
+                selectedMedium = id;
+                
                 $.ajax({
                     url: './ActionServlet', // URL
                     method: 'POST', // Méthode
@@ -90,7 +102,10 @@
                     $("#nom-medium").html(response.nom);
                     $("#type-medium").html(response.type);
                     $("#description-medium").html("Description : " + response.description);
-                    if (response.type === "Voyant") {
+                    $("#specialite-medium").empty();
+                    $("#formation-medium").empty();
+                    $("#promotion-medium").empty()
+                    if (response.type === "Voyante") {
                         $("#specialite-medium").html("Specialité : " + response.specialite);
                     } else if (response.type === "Astrologue") {
                         $("#formation-medium").html("Formation : " + response.formation);
@@ -99,8 +114,44 @@
                 });
             }
 
-        </script>
+            function PrendreRDV() {
+  
+                $.ajax({
+                    url: './ActionServlet', // URL
+                    method: 'POST', // Méthode
+                    data: {// Paramètres
+                        todo: 'prendre-rdv',
+                        medium: selectedMedium
+                    },
+                    dataType: 'json'        // Type de retour attendu
+                }).done(function (response) {
+                    if(response.statut){
+                        alert("Rendez-vous pris avec succès");
+                        $("#prendre-rdv").prop('disabled', true);
+                    } else {
+                        alert("Le medium n'est pas dispo, réessayez plus tard !");
+                    }
+                }).fail(function () {
+                    alert("Échec de la prise de rendez-vous");
+                });
+            }
 
+            function Deconnecter() {
+                $.ajax({
+                    url: './ActionServlet', // URL
+                    method: 'POST', // Méthode
+                    data: {// Paramètres
+                        todo: 'deconnecter'
+                    },
+                    dataType: 'html'        // Type de retour attendu
+                }).done(function () {
+                    window.location = "index.html";
+                }).fail(function () {
+                    alert("Échec de la déconnexion");
+                });
+            }
+
+        </script>
     </body>
 
 </html>

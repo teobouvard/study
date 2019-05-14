@@ -24,8 +24,8 @@ public class SerialisationListeVoyance extends Serialisation {
         for (Voyance voyance : client.getListVoyance()) {
 
             JsonObject voyanceJson = new JsonObject();
+            voyanceJson.addProperty("medium", voyance.getMedium().getNom());
             if (voyance.getDateDebut() != null) {
-                voyanceJson.addProperty("medium", voyance.getMedium().getNom());
                 SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy à HH:mm");
                 String dateDeb = dateFormatter.format(voyance.getDateDebut());
                 voyanceJson.addProperty("dateDebut", dateDeb);
@@ -35,8 +35,12 @@ public class SerialisationListeVoyance extends Serialisation {
                 } else {
                     voyanceJson.addProperty("dateFin", "En cours");
                 }
-                listeVoyanceJson.add(voyanceJson);
+
+            } else {
+                voyanceJson.addProperty("dateDebut", "Pas commencée");
+                voyanceJson.addProperty("dateFin", "Pas commencée");
             }
+            listeVoyanceJson.add(voyanceJson);
         }
 
         jsonContainer.add("listeVoyance", listeVoyanceJson);

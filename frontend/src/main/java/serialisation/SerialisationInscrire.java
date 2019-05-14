@@ -19,14 +19,12 @@ public class SerialisationInscrire extends Serialisation {
         if (statut) {
             jsonContainer.addProperty("inscription", true);
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String json = gson.toJson(jsonContainer);
-            out.println(json);
         } else {
             jsonContainer.addProperty("inscription", false);
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String json = gson.toJson(jsonContainer);
-            out.println(json);
         }
+        
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(jsonContainer);
+        out.println(json);
     }
 }

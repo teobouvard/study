@@ -13,20 +13,21 @@
     <body>
         <div id="bloc-page">
             <h1> Statistiques </h1><br>
-            <div id="voyances-mediums">
+            <div id="graphe-gauche">
                 <h2>Voyances par médium</h2>
+                <ul id="voyances-mediums"></ul>
             </div><br>
 
-            <div id="clients-employes">
+            <div id="graphe-droit">
                 <h2>Clients par employés</h2>
+                <ul id="clients-employes"></ul>
             </div><br>
-
+            <button onclick="location='employe.html'">Retour</button>
         </div>
 
         <script>
             $(document).ready(function () {
                 GetInfoEmploye();
-                GetVoyanceEnCours();
             });
 
             function GetInfoEmploye() {

@@ -22,15 +22,12 @@
                     <button id="bouton-profil" onclick="location = 'profil-astro.html';"> <b> Profil Astro </b></button><br>
                     <button id="bouton-historique" disabled><b> Historique </b></button>
                 </div>
-                <button id="bouton-deconnecter"> <b> Se déconnecter </b> </button>
+                <button id="bouton-deconnecter" onclick="Deconnecter()"><b> Se déconnecter </b></button>
             </div>
 
             <div id="historique">
-                <h1>
-                    Historique des demandes
-                </h1>
-                <table id="tab-voyance">
-                </table>
+                <h1>Historique des demandes</h1>
+                <table id="tab-voyance"></table>
             </div>
 
         </div>
@@ -69,8 +66,22 @@
                     });
                 });
             }
-
-
+            
+            function Deconnecter() {
+                //A faire : reset de l'attribut personne et redirection vers index.html
+                $.ajax({
+                    url: './ActionServlet', // URL
+                    method: 'POST', // Méthode
+                    data: {// Paramètres
+                        todo: 'deconnecter'
+                    },
+                    dataType: 'html'        // Type de retour attendu
+                }).done(function () {
+                    window.location = "index.html";
+                }).fail(function (error) {
+                    alert('Erreur lors de l\'appel: HTTP Code ' + error.status + ' ~ ' + error.statusText + ' ~ ' + error.getResponseHeader('Content-Type'));
+                });
+            }
         </script>
 
     </body>

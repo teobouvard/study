@@ -5,17 +5,17 @@
  */
 package webapp;
 
-import serialisation.SerialisationVoyance;
-import action.ActionChercherVoyance;
-import serialisation.SerialisationEmploye;
-import serialisation.SerialisationInfosMedium;
-import action.ActionInfosMedium;
-import serialisation.SerialisationListerMedium;
-import action.ActionListerMediums;
-import serialisation.SerialisationInscrire;
+import action.ActionDemarrerVoyance;
+import serialisation.SerialisationDemarrerVoyance;
+import serialisation.SerialisationRDV;
+import action.*;
 import action.Action;
+import action.ActionChercherVoyance;
+import action.ActionInfosMedium;
 import action.ActionInscrire;
+import action.ActionListerMediums;
 import action.ActionLogin;
+import serialisation.*;
 import dao.JpaUtil;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -24,10 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import serialisation.Serialisation;
-import serialisation.SerialisationClient;
-import serialisation.SerialisationLogin;
-import serialisation.SerialisationListeVoyance;
+import action.ActionPrendreRDV;
 
 @WebServlet(name = "ActionServlet", urlPatterns = {"/ActionServlet"})
 public class ActionServlet extends HttpServlet {
@@ -76,10 +73,16 @@ public class ActionServlet extends HttpServlet {
                 serialisation.serialiser(request, response);
                 break;
             case "deconnecter":
-                session.setAttribute("personne", null);
+                response.sendRedirect(request.getContextPath() + "/index.html");
+                session.invalidate();
+                session = null;
+                //action = new ActionDeconnecter();
+                //serialisation = new SerialisationDeconnecter();
+                //action.executer(request);
+                //serialisation.serialiser(request, response);
                 break;
         }
-        if (session.getAttribute("personne") != null) {
+        if (session != null && session.getAttribute("personne") != null) {
             switch (todo) {
                 case "infos-client":
                     serialisation = new SerialisationClient();
@@ -108,6 +111,18 @@ public class ActionServlet extends HttpServlet {
                 case "voyance-en-cours":
                     action = new ActionChercherVoyance();
                     serialisation = new SerialisationVoyance();
+                    action.executer(request);
+                    serialisation.serialiser(request, response);
+                    break;
+                case "prendre-rdv":
+                    action = new ActionPrendreRDV();
+                    serialisation = new SerialisationRDV();
+                    action.executer(request);
+                    serialisation.serialiser(request, response);
+                    break;
+                case "demarrer-voyance":
+                    action = new ActionDemarrerVoyance();
+                    serialisation = new SerialisationDemarrerVoyance();
                     action.executer(request);
                     serialisation.serialiser(request, response);
                     break;

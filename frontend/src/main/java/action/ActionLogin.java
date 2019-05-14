@@ -16,7 +16,6 @@ public class ActionLogin extends Action {
         Personne personne = Service.chercherPersonne(login, password);
 
         if (personne != null) {
-            System.out.println("Personne trouvee");
             request.setAttribute("statut", Boolean.TRUE);
             HttpSession session = request.getSession();
             session.setAttribute("personne", personne);
@@ -26,7 +25,6 @@ public class ActionLogin extends Action {
                 request.setAttribute("personne", "employe");
             }
         } else {
-            System.out.println("Personne non trouvee");
             request.setAttribute("statut", Boolean.FALSE);
         }
         return true;

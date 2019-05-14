@@ -22,23 +22,27 @@
                 <h2>Clients par employés</h2>
                 <ul id="clients-employes"></ul>
             </div><br>
-            <button onclick="location='employe.html'">Retour</button>
+            <button onclick="location = 'employe.html'">Retour</button>
         </div>
 
         <script>
-            $(document).ready(function () {
-                GetInfoEmploye();
-            });
+            $(document).ready(GetStatistiques());
 
-            function GetInfoEmploye() {
+            function GetStatistiques() {
                 $.ajax({
                     url: './ActionServlet', // URL
                     method: 'POST', // Méthode
                     data: {// Paramètres
-                        todo: '???'
+                        todo: 'statistiques'
                     },
                     dataType: 'json'        // Type de retour attendu
                 }).done(function (response) {
+                    $.each(response.listeMedium, function (i, medium) {
+                        $("#voyances-mediums").append("<li>" + medium.nom + " : " + medium.nbVoyances + " / " + response.nbVoyancesTotal + "</li>");
+                    });
+                    $.each(response.listeEmploye, function (i, employe) {
+                        $("#clients-employes").append("<li>" + employe.nom + " " + employe.prenom + " : " + employe.nbSessions + " / " + response.nbSessionsTotal + "</li>");
+                    });
                 })
             }
 

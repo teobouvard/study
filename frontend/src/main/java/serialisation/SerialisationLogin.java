@@ -15,24 +15,23 @@ public class SerialisationLogin extends Serialisation {
         PrintWriter out = getWriterWithJsonHeader(response);
         JsonObject jsonContainer = new JsonObject();
         Boolean statut = (Boolean) request.getAttribute("statut");
-        
+
         if (statut) {
             jsonContainer.addProperty("connexion", true);
             jsonContainer.addProperty("message", "Ok");
             String typePersonne = (String) request.getAttribute("personne");
-            if(typePersonne.equals("client")){
+            if (typePersonne.equals("client")) {
                 jsonContainer.addProperty("personne", "client");
-            }
-            else if(typePersonne.equals("employe")){
+            } else if (typePersonne.equals("employe")) {
                 jsonContainer.addProperty("personne", "employe");
             }
         } else {
             jsonContainer.addProperty("connexion", false);
             jsonContainer.addProperty("message", "Mot de passe ou nom d'ultilisateur invalide.");
-            
+
         }
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String json = gson.toJson(jsonContainer);
-            out.println(json);
+        String json = gson.toJson(jsonContainer);
+        out.println(json);
     }
 }

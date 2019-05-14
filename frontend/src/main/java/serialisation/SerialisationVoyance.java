@@ -18,6 +18,7 @@ public class SerialisationVoyance extends Serialisation {
     public void serialiser(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = getWriterWithJsonHeader(response);
         JsonObject jsonContainer = new JsonObject();
+        
         if (request.getAttribute("statut") == Boolean.TRUE) {
 
             jsonContainer.addProperty("statut", true);
@@ -35,6 +36,10 @@ public class SerialisationVoyance extends Serialisation {
             for (Voyance voyanceIterator : client.getListVoyance()) {
 
                 JsonObject voyanceJson = new JsonObject();
+
+                String commentaire = voyanceIterator.getCommentaire();
+                voyanceJson.addProperty("commentaire", commentaire);
+
                 if (voyanceIterator.getDateDebut() != null) {
                     voyanceJson.addProperty("medium", voyanceIterator.getMedium().getNom());
                     SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy à HH:mm");

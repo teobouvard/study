@@ -61,7 +61,7 @@
                     },
                     dataType: 'json'        // Type de retour attendu
                 }).done(function (response) {
-                    $.each(response.listeVoyance, function (i, voyance) {
+                    $.each(response.listeVoyance.slice().reverse(), function (i, voyance) {
                         $("#tab-voyance").append("<tr> <td>"+voyance.medium+"</td>"+"<td>"+voyance.dateDebut+"</td>"+"<td>"+voyance.dateFin+"</td>"+"</tr>");
                     });
                 });

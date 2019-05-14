@@ -1,20 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package webapp;
 
-import action.ActionDemarrerVoyance;
-import serialisation.SerialisationDemarrerVoyance;
-import serialisation.SerialisationRDV;
+import serialisation.SerialisationStatistiques;
+import action.ActionStatistiques;
+import action.ActionValiderVoyance;
+import serialisation.SerialisationValiderVoyance;
 import action.*;
-import action.Action;
-import action.ActionChercherVoyance;
-import action.ActionInfosMedium;
-import action.ActionInscrire;
-import action.ActionListerMediums;
-import action.ActionLogin;
 import serialisation.*;
 import dao.JpaUtil;
 import java.io.IOException;
@@ -123,6 +113,24 @@ public class ActionServlet extends HttpServlet {
                 case "demarrer-voyance":
                     action = new ActionDemarrerVoyance();
                     serialisation = new SerialisationDemarrerVoyance();
+                    action.executer(request);
+                    serialisation.serialiser(request, response);
+                    break;
+                case "generer-predictions":
+                    action = new ActionGenererPredictions();
+                    serialisation = new SerialisationGenererPredictions();
+                    action.executer(request);
+                    serialisation.serialiser(request, response);
+                    break;
+                case "valider-voyance":
+                    action = new ActionValiderVoyance();
+                    serialisation = new SerialisationValiderVoyance();
+                    action.executer(request);
+                    serialisation.serialiser(request, response);
+                    break;
+                case "statistiques":
+                    action = new ActionStatistiques();
+                    serialisation = new SerialisationStatistiques();
                     action.executer(request);
                     serialisation.serialiser(request, response);
                     break;

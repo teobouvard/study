@@ -58,6 +58,10 @@ public abstract class Medium implements Serializable {
     public void ajouterVoyance(Voyance v){
         listVoyance.add(v);
     }
+
+    public List<Voyance> getListVoyance() {
+        return listVoyance;
+    }
     
 }
 

@@ -74,3 +74,49 @@ html, body
     bottom : 5%;
     overflow: hidden;
 }
+
+#bloc-mediums
+{
+    width: 40%;
+    background-color: aqua;
+}
+
+#bloc-mediums h1
+{
+    text-align: center;
+    font-size: 64px;
+}
+
+#bloc-mediums li
+{
+    text-align: center;
+    cursor: pointer;
+}
+
+#bloc-infos-medium
+{
+    width: 30%;
+    background-color: aqua;
+}
+
+#bloc-infos-medium #nom-medium
+{
+    text-align: center;
+    width: 100%;
+    font-size: 54px;
+    display: block;
+}
+
+#bloc-infos-medium #type-medium
+{
+    text-align: center;
+    font-size: 44px;
+    display: block;
+}
+
+#bloc-infos-medium .description-medium
+{
+    text-align: left;
+    font-size: 16px;
+    display: block;
+}

@@ -32,12 +32,12 @@
             </div>
 
             <div id="bloc-infos-medium">
-                <label id="nom-medium"></label><br>
+                <label id="nom-medium" ></label><br>
                 <label id="type-medium"></label><br>
-                <label id="description-medium"></label><br>
-                <label id="formation-medium"></label><br>
-                <label id="promotion-medium"></label><br>
-                <label id="specialite-medium"></label><br>
+                <label id="description-medium" class="description-medium"></label>
+                <label id="formation-medium" class="description-medium"></label>
+                <label id="promotion-medium" class="description-medium"></label>
+                <label id="specialite-medium" class="description-medium"></label>
                 <button id="prendre-rdv" onclick="PrendreRDV()">Prendre RDV</button>
             </div>
 
@@ -106,10 +106,10 @@
                     $("#formation-medium").empty();
                     $("#promotion-medium").empty()
                     if (response.type === "Voyante") {
-                        $("#specialite-medium").html("Specialité : " + response.specialite);
+                        $("#specialite-medium").html("Specialité : " + response.specialite + "<br>");
                     } else if (response.type === "Astrologue") {
-                        $("#formation-medium").html("Formation : " + response.formation);
-                        $("#promotion-medium").html("Promotion : " + response.promotion);
+                        $("#formation-medium").html("Formation : " + response.formation + "<br>");
+                        $("#promotion-medium").html("Promotion : " + response.promotion + "<br>");
                     }
                 });
             }

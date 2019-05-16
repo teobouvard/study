@@ -7,6 +7,7 @@
 
         <!-- Librairie Javascript: jQuery (v3.3.1) -->
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://craig.global.ssl.fastly.net/js/mousetrap/mousetrap.min.js"></script>
 
         <link rel="stylesheet" type="text/CSS" href="stylesheet.css">
     </head>
@@ -16,8 +17,8 @@
         <h1 style="text-align:center"> <b> AstroNet </b> </h1>
         <p style="text-align:center"> Authentification </p>
         <div style="text-align:center"> 
-           <input type="text" class="champ" id="champ-login" name="login" placeholder="Identifiant" /><br>
-           <input type="password" class="champ" id="champ-password" name="password" placeholder="Mot de passe" /><br>
+           <input type="text" class="champ moustrap" id="champ-login" name="login" placeholder="Identifiant" /><br>
+           <input type="password" class="champ mousetrap" id="champ-password" name="password" placeholder="Mot de passe" /><br>
            <button id="bouton-connexion" class="joli-bouton" onclick="connexion()"> <b> Connexion </b> </button>
            <button id="bouton-inscription" class="joli-bouton" onclick="location='inscription.html'"> <b> Inscription</b> </button>
         </div>
@@ -66,6 +67,8 @@
                 });
             }
             
+            Mousetrap.bind('enter', connexion);
+
         </script>
     </body>
 </html>

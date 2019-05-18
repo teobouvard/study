@@ -48,8 +48,8 @@ public class Client extends Personne{
         
         AstroTest astroApi = new AstroTest();
         //Penser à remettre l'attribut date normal
-        Date dateNaiss = JSON_DATE_FORMAT.parse("1976-07-10");
-        List<String> profilAstro = astroApi.getProfil(prenom, dateNaiss);
+        //Date dateNaiss = JSON_DATE_FORMAT.parse("1976-07-10");
+        List<String> profilAstro = astroApi.getProfil(prenom, dateNaissance);
         signeZodiaque = profilAstro.get(0);
         signeChinois = profilAstro.get(1);
         couleur = profilAstro.get(2);

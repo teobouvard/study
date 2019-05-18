@@ -15,15 +15,15 @@
         <div id="bloc-page">
             <div id="left-panel">
                 <div id="description">
-                    <label id="nom-client">Nom</label><br>
-                    <label id="prenom-client">Prenom</label><br>
+                    <label id="nom-client"></label><br>
+                    <label id="prenom-client"></label><br>
                 </div>
                 <div id="navigation">
                     <button id="bouton-accueil" disabled> <b> Accueil </b> </button><br>
                     <button id="bouton-profil" onclick="location = 'profil-astro.html';"><b> Profil Astro </b></button><br>
                     <button id="bouton-historique" onclick="location = 'historique.html';"><b> Historique </b></button>
                 </div>
-                <button id="bouton-deconnecter" class="joli-bouton" onclick="Deconnecter()"><b> Se déconnecter </b></button>
+                <button id="bouton-deconnecter" onclick="Deconnecter()"><b> Se déconnecter </b></button>
             </div>
 
             <div id="bloc-mediums">
@@ -38,7 +38,7 @@
                 <label id="formation-medium" class="description-medium"></label>
                 <label id="promotion-medium" class="description-medium"></label>
                 <label id="specialite-medium" class="description-medium"></label>
-                <button id="prendre-rdv" onclick="PrendreRDV()">Prendre RDV</button>
+                <button id="prendre-rdv" class="joli-bouton" onclick="PrendreRDV()">Prendre RDV</button>
             </div>
 
         </div>

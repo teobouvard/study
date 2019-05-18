@@ -26,8 +26,8 @@
                 <button id="bouton-deconnecter" onclick="Deconnecter()"> <b> Se déconnecter </b> </button>
             </div>
 
-            <div id="profil">
-                <h1>Profil Astrologique</h1><br>
+            <div id="profil" style="background-color: aqua; width: 70%;">
+                <h1 style="text-align: center; font-size: 46px;">Profil Astrologique</h1><br>
                 <label id="couleur"></label><br>
                 <label id="zodiaque"></label><br>
                 <label id="chinois"></label><br>
@@ -53,10 +53,10 @@
                     $('#nom-client').html(response.nom);
                     $('#prenom-client').html(response.prenom);
 
-                    $('#couleur').html("Couleur : " + response.couleur);
-                    $('#zodiaque').html("Signe Zodiaque : " + response.zodiaque);
-                    $('#chinois').html("Signe Chinois : " + response.chinois);
-                    $('#animal').html("Animal : " + response.animal);
+                    $('#couleur').html("<b>Couleur : </b>" + response.couleur);
+                    $('#zodiaque').html("<b>Signe Zodiaque : </b>" + response.zodiaque);
+                    $('#chinois').html("<b>Signe Chinois : </b>" + response.chinois);
+                    $('#animal').html("<b>Animal : </b>" + response.animal);
                 });
             }
 

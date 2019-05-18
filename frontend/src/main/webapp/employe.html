@@ -18,9 +18,9 @@
         <div id="row">
             <div id="section-client">
                 <h2 style="text-align: center;">Client</h2>
-                <label id="nom-client"> </label><br>
-                <label id="prenom-client"> </label><br>
-                <label id="medium"> </label><br>
+                <label id="nom-client"> </label>
+                <label id="prenom-client"> </label> 
+                <label id="medium"> </label>
                 <label id="couleur"></label><br>
                 <label id="zodiaque"></label><br>
                 <label id="chinois"></label><br>
@@ -111,11 +111,11 @@
                 if (response.statut) {
                     $("#nom-client").html(response.nomClient);
                     $("#prenom-client").html(response.prenomClient);
-                    $("#medium").html(response.medium);
-                    $("#couleur").html(response.couleur);
-                    $("#zodiaque").html(response.zodiaque);
-                    $("#chinois").html(response.chinois);
-                    $("#animal").html(response.animal);
+                    $("#medium").html("Le medium à incarner est " + response.medium);
+                    $("#couleur").html("Couleur : " + response.couleur);
+                    $("#zodiaque").html("Signe zodiaque : " + response.zodiaque);
+                    $("#chinois").html("Signe chinois : " + response.chinois);
+                    $("#animal").html("Animal : " + response.animal);
                     $("#pret").prop('disabled', false);
 
                     $.each(response.listeVoyance.slice().reverse(), function (i, voyance) {

@@ -1,89 +1,102 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <title>Positif</title>
-        <meta charset="UTF-8">
+<head>
+    <title>Positif</title>
+    <meta charset="UTF-8">
 
-        <!-- Librairie Javascript: jQuery (v3.3.1) -->
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-        <link rel="stylesheet" type="text/CSS" href="client.css">
-    </head>
+    <!-- Librairie Javascript: jQuery (v3.3.1) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" type="text/CSS" href="client.css">
+</head>
 
-    <body>
-        <div id="bloc-page">
-            <div id="left-panel">
-                <div id="description">
-                    <label id="nom-client">Nom</label><br>
-                    <label id="prenom-client">Prenom</label><br>
-                </div>
-                <div id="navigation">
-                    <button id="bouton-accueil" onclick="location = 'client.html';"><b> Accueil </b></button><br>
-                    <button id="bouton-profil" onclick="location = 'profil-astro.html';"> <b> Profil Astro </b></button><br>
-                    <button id="bouton-historique" disabled><b> Historique </b></button>
-                </div>
-                <button id="bouton-deconnecter" onclick="Deconnecter()"><b> Se déconnecter </b></button>
+<body>
+    <div id="bloc-page">
+        <div id="left-panel">
+            <div id="description">
+                <label id="nom-client"></label><br>
+                <label id="prenom-client"></label><br>
             </div>
-
-            <div id="historique">
-                <h1>Historique des demandes</h1>
-                <table id="tab-voyance"></table>
+            <div id="navigation">
+                <button id="bouton-accueil" onclick="location = 'client.html';"><b> Accueil </b></button><br>
+                <button id="bouton-profil" onclick="location = 'profil-astro.html';"> <b> Profil Astro </b></button><br>
+                <button id="bouton-historique" disabled><b> Historique </b></button>
             </div>
-
+            <button id="bouton-deconnecter" onclick="Deconnecter()"><b> Se déconnecter </b></button>
         </div>
 
-        <script>
-            $(document).ready(function () {
-                GetInfoClient();
-                GetListVoyance();
+        <div id="historique" style="background-color: aqua; width: 70%;">
+            <h1 style="text-align: center; font-size: 46px;">Historique des demandes</h1>
+            <table id="tab-voyance">
+                <tr>
+                    <th>
+                        Médium
+                    </th>
+                    <th>
+                        Début
+                    </th>
+                    <th>
+                        Fin
+                    </th>
+                </tr>
+
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            GetInfoClient();
+            GetListVoyance();
+        });
+
+        function GetInfoClient() {
+            $.ajax({
+                url: './ActionServlet', // URL
+                method: 'POST', // Méthode
+                data: {// Paramètres
+                    todo: 'infos-client'
+                },
+                dataType: 'json'        // Type de retour attendu
+            }).done(function (response) {
+                $('#nom-client').html(response.nom);
+                $('#prenom-client').html(response.prenom);
             });
+        }
 
-            function GetInfoClient() {
-                $.ajax({
-                    url: './ActionServlet', // URL
-                    method: 'POST', // Méthode
-                    data: {// Paramètres
-                        todo: 'infos-client'
-                    },
-                    dataType: 'json'        // Type de retour attendu
-                }).done(function (response) {
-                    $('#nom-client').html(response.nom);
-                    $('#prenom-client').html(response.prenom);
+        function GetListVoyance() {
+            $.ajax({
+                url: './ActionServlet', // URL
+                method: 'POST', // Méthode
+                data: {// Paramètres
+                    todo: 'historique-client'
+                },
+                dataType: 'json'        // Type de retour attendu
+            }).done(function (response) {
+                $.each(response.listeVoyance.slice().reverse(), function (i, voyance) {
+                    $("#tab-voyance").append("<tr> <td>" + voyance.medium + "</td>" + "<td>" + voyance.dateDebut + "</td>" + "<td>" + voyance.dateFin + "</td>" + "</tr>");
                 });
-            }
+            });
+        }
 
-            function GetListVoyance() {
-                $.ajax({
-                    url: './ActionServlet', // URL
-                    method: 'POST', // Méthode
-                    data: {// Paramètres
-                        todo: 'historique-client'
-                    },
-                    dataType: 'json'        // Type de retour attendu
-                }).done(function (response) {
-                    $.each(response.listeVoyance.slice().reverse(), function (i, voyance) {
-                        $("#tab-voyance").append("<tr> <td>"+voyance.medium+"</td>"+"<td>"+voyance.dateDebut+"</td>"+"<td>"+voyance.dateFin+"</td>"+"</tr>");
-                    });
-                });
-            }
-            
-            function Deconnecter() {
-                //A faire : reset de l'attribut personne et redirection vers index.html
-                $.ajax({
-                    url: './ActionServlet', // URL
-                    method: 'POST', // Méthode
-                    data: {// Paramètres
-                        todo: 'deconnecter'
-                    },
-                    dataType: 'html'        // Type de retour attendu
-                }).done(function () {
-                    window.location = "index.html";
-                }).fail(function (error) {
-                    alert('Erreur lors de l\'appel: HTTP Code ' + error.status + ' ~ ' + error.statusText + ' ~ ' + error.getResponseHeader('Content-Type'));
-                });
-            }
-        </script>
+        function Deconnecter() {
+            //A faire : reset de l'attribut personne et redirection vers index.html
+            $.ajax({
+                url: './ActionServlet', // URL
+                method: 'POST', // Méthode
+                data: {// Paramètres
+                    todo: 'deconnecter'
+                },
+                dataType: 'html'        // Type de retour attendu
+            }).done(function () {
+                window.location = "index.html";
+            }).fail(function (error) {
+                alert('Erreur lors de l\'appel: HTTP Code ' + error.status + ' ~ ' + error.statusText + ' ~ ' + error.getResponseHeader('Content-Type'));
+            });
+        }
+    </script>
 
-    </body>
+</body>
 
 </html>

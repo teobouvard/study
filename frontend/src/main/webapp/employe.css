@@ -73,6 +73,13 @@ button.joli-bouton:disabled
 {
     width: 80%;
     margin: auto;
+    table-layout: fixed;
+}
+
+#medium
+{
+    border: solid thin black;
+    display: block;
 }
 
 #section-voyance td

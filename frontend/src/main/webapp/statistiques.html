@@ -1,53 +1,102 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <title>Positif</title>
-        <meta charset="UTF-8">
+<head>
+    <title>Positif</title>
+    <meta charset="UTF-8">
 
-        <!-- Librairie Javascript: jQuery (v3.3.1) -->
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-        <link rel="stylesheet" type="text/CSS" href="client.css">
-    </head>
+    <!-- Librairie Javascript: jQuery (v3.3.1) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <link rel="stylesheet" type="text/CSS" href="statistiques.css">
+</head>
 
-    <body>
-        <div id="bloc-page">
-            <h1> Statistiques </h1><br>
-            <div id="graphe-gauche">
-                <h2>Voyances par médium</h2>
-                <ul id="voyances-mediums"></ul>
-            </div><br>
-
-            <div id="graphe-droit">
-                <h2>Clients par employés</h2>
-                <ul id="clients-employes"></ul>
-            </div><br>
-            <button onclick="location = 'employe.html'">Retour</button>
+<body>
+    <div id="bloc-page">
+        <h1 style="text-align: center;"> Statistiques </h1><br>
+        <div id="container-chart">
+            <div id="graphe1" class="highcharts-container"></div>
+            <div id="graphe2" class="highcharts-container"></div>
         </div>
+        <button id="retour" class="joli-bouton" onclick="location = 'employe.html'">Retour</button>
+    </div>
 
-        <script>
-            $(document).ready(GetStatistiques());
+    <script>
+        $(document).ready(GetStatistiques());
 
-            function GetStatistiques() {
-                $.ajax({
-                    url: './ActionServlet', // URL
-                    method: 'POST', // Méthode
-                    data: {// Paramètres
-                        todo: 'statistiques'
+        function GetStatistiques() {
+            var proportionChartDataMed = {
+                label: 'Nombre de voyance effectuée',
+                data: []
+            };
+
+            var proportionChartDataCli = {
+                label: 'Nombre de voyance pour ce client',
+                data: []
+            };
+
+            $.ajax({
+                url: './ActionServlet', // URL
+                method: 'POST', // Méthode
+                data: {// Paramètres
+                    todo: 'statistiques'
+                },
+                dataType: 'json'        // Type de retour attendu
+            }).done(function (response) {
+                $.each(response.listeMedium, function (i, medium) {
+                    if (medium.nbVoyances != 0) {
+                        proportionChartDataMed.data.push({ name: medium.nom, y: medium.nbVoyances })
+                    }
+                });
+
+                Highcharts.chart('graphe1', {
+
+                    chart: {
+                        type: 'pie',
+                        backgroundColor: '#c5c5c5'
                     },
-                    dataType: 'json'        // Type de retour attendu
-                }).done(function (response) {
-                    $.each(response.listeMedium, function (i, medium) {
-                        $("#voyances-mediums").append("<li>" + medium.nom + " : " + medium.nbVoyances + " / " + response.nbVoyancesTotal + "</li>");
-                    });
-                    $.each(response.listeEmploye, function (i, employe) {
-                        $("#clients-employes").append("<li>" + employe.nom + " " + employe.prenom + " : " + employe.nbSessions + " / " + response.nbSessionsTotal + "</li>");
-                    });
-                })
-            }
 
-        </script>
+                    title: {
+                        text: 'Voyances par medium'
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    series: [{ name: proportionChartDataMed.label, data: proportionChartDataMed.data }]
+                });
 
-    </body>
+
+                $.each(response.listeEmploye, function (i, employe) {
+                    if (employe.nbSessions != 0) {
+                        proportionChartDataCli.data.push({ name: employe.nom + " " + employe.prenom, y: employe.nbSessions });
+                    }
+                });
+
+                Highcharts.chart('graphe2', {
+
+                    chart: {
+                        type: 'pie',
+                        backgroundColor: '#c5c5c5'
+                    },
+                    title: {
+                        text: 'Clients par employé'
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    series: [{ name: proportionChartDataCli.label, data: proportionChartDataCli.data }]
+                });
+            })
+        }
+
+    </script>
+
+</body>
 
 </html>

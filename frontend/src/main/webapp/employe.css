@@ -1,0 +1,92 @@
+
+
+body
+{
+    background: rgb(197, 197, 197)
+}
+
+#row
+{
+    display: flex;
+}
+
+#section-client
+{
+    width: 40%;
+    margin-top: 50px;
+}
+
+#boutons-centre
+{
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+button.joli-bouton:enabled
+{
+    padding: 10px 10px;
+    background-color: blue;
+    cursor: pointer;
+    color: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 200px;
+    border-width: 2px;
+    border-color: black;
+    border-bottom-style: solid;
+    transition-duration: 1s
+}
+
+
+button.joli-bouton:hover
+{
+    background-color: rgb(0, 0, 131);
+}
+
+button.joli-bouton:disabled
+{
+    padding: 10px 10px;
+    color: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 200px;
+    background-color:grey;
+    border: none;
+}
+
+#section-voyance
+{
+    width: 40%;
+}
+
+#section-voyance table, td, th
+{
+    border-collapse: collapse;
+    border: 2px solid;
+    border-color: black;
+    background-color: rgb(255, 255, 255);
+}
+
+#section-voyance table
+{
+    width: 80%;
+    margin: auto;
+}
+
+#section-voyance td
+{
+    width: 80%;
+}
+
+#commentaire-employe
+{
+    margin: 10px auto;
+    width: 80%;
+    height: 90px;
+    padding: 10px 5px;
+    box-sizing: border-box;
+    resize: none;
+    display: block;
+}

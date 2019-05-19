@@ -47,6 +47,7 @@
 
     <script>
         $(document).ready(function () {
+            VerifierConnexion();
             GetInfoClient();
             GetListVoyance();
         });
@@ -93,6 +94,27 @@
                 window.location = "index.html";
             }).fail(function (error) {
                 alert('Erreur lors de l\'appel: HTTP Code ' + error.status + ' ~ ' + error.statusText + ' ~ ' + error.getResponseHeader('Content-Type'));
+            });
+        }
+        function VerifierConnexion() {
+            $.ajax({
+                url: './ActionServlet', // URL
+                method: 'POST', // Méthode
+                data: {// Paramètres
+                    todo: 'verifier-connexion'
+                },
+                dataType: 'json'        // Type de retour attendu
+            }).done(function (response) {
+                if (response.connexion == true) {
+                    if (response.personne == 'client') {
+                    }
+                    else if (response.personne == 'employe') {
+                        window.location = 'employe.html';
+                    }
+                }
+                else {
+                    window.location = 'index.html'
+                }
             });
         }
     </script>

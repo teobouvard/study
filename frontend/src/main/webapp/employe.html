@@ -14,18 +14,43 @@
 <body>
     <div id="bloc-page">
         <h1 style="text-align: center;"> AstroNet </h1>
-        <label id="employe">Bonjour, </label>
+        <label id="employe" style="font-size: 24px;">Bonjour, </label>
         <div id="row">
             <div id="section-client">
-                <h2 style="text-align: center;">Client</h2>
-                <label id="nom-client"> </label>
-                <label id="prenom-client"> </label> 
-                <label id="medium"> </label>
+                <h2 style="text-align: center;font-size: 40px;">Client</h2>
+                <label id="nom-client"></label>
+                <label id="prenom-client"></label> <br>
+                <div style="text-align: center;">
+                    <label id="medium"></label>
+                </div>
                 <label id="couleur"></label><br>
                 <label id="zodiaque"></label><br>
                 <label id="chinois"></label><br>
                 <label id="animal"></label><br>
-                <table id="historique"></table>
+                <label id="historique-label"
+                    style="text-align: center;font-size: 36px;display: block;">Historique</label><br>
+                <table id="historique">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col style="width: 40%;">
+                    </colgroup>
+                    <tr>
+                        <th>
+                            Médium
+                        </th>
+                        <th>
+                            Début
+                        </th>
+                        <th>
+                            Fin
+                        </th>
+                        <th>
+                            Commentaire
+                        </th>
+                    </tr>
+                </table>
             </div><br>
 
             <div id="boutons-centre">
@@ -42,33 +67,37 @@
                         onclick="FinAppel()">Fin appel</button> <br>
                 </div>
                 <div style="text-align: center;">
-                        <label>Générateur :</label> <br>
-                        <input id="note-amour" placeholder="Note amour" type="number" max="5" min="1"  required>
-                        <input id="note-sante" placeholder="Note santé" type="number" max="5" min="1"  required>
-                        <input id="note-travail" placeholder="Note travail" type="number" max="5" min="1"  required>
+                    <label style="font-size: 28px;line-height: 40px;"><b>Générateur :</b></label> <br>
+                    <input id="note-amour" placeholder="Note amour" type="number" max="5" min="1" required>
+                    <input id="note-sante" placeholder="Note santé" type="number" max="5" min="1" required>
+                    <input id="note-travail" placeholder="Note travail" type="number" max="5" min="1" required>
                 </div>
                 <button id="generer-predictions" class="joli-bouton"
                     style="display: block; margin-left: auto; margin-right: auto;" onclick="GenererPredictions()">
                     Générer </button><br>
                 <table id="predictions">
+                    <colgroup>
+                        <col style="width: 25%;">
+                        <col style="width: 75%;">
+                    </colgroup>
                     <tr>
                         <th>Catégorie</th>
                         <th>Prédiction</th>
                     </tr>
                     <tr>
-                        <th>Amour</th>
+                        <td>Amour</td>
                         <td id="pred-amour"></td>
                     </tr>
                     <tr>
-                        <th>Santé</th>
+                        <td>Santé</td>
                         <td id="pred-sante"></td>
                     </tr>
                     <tr>
-                        <th>Travail</th>
+                        <td>Travail</td>
                         <td id="pred-travail"></td>
                     </tr>
                 </table>
-                <textarea id="commentaire-employe" placeholder="Laissez un commentaire sur la voyance"> </textarea> <br>
+                <textarea id="commentaire-employe" placeholder="Laissez un commentaire sur la voyance"></textarea> <br>
                 <button id="valider-voyance" class="joli-bouton"
                     style="display: block; margin-left: auto; margin-right: auto;" onclick="ValiderVoyance()">Valider la
                     voyance</button>
@@ -79,8 +108,10 @@
 
     <script>
         $(document).ready(function () {
+            VerifierConnexion();
             GetInfoEmploye();
             GetVoyanceEnCours();
+
         });
 
         var dateDebutAppel;
@@ -109,13 +140,13 @@
                 dataType: 'json'        // Type de retour attendu
             }).done(function (response) {
                 if (response.statut) {
-                    $("#nom-client").html(response.nomClient);
-                    $("#prenom-client").html(response.prenomClient);
+                    $("#nom-client").html("<b>Nom : </b>" + response.nomClient);
+                    $("#prenom-client").html("<b>Prénom : </b>" + response.prenomClient);
                     $("#medium").html("Le medium à incarner est " + response.medium);
-                    $("#couleur").html("Couleur : " + response.couleur);
-                    $("#zodiaque").html("Signe zodiaque : " + response.zodiaque);
-                    $("#chinois").html("Signe chinois : " + response.chinois);
-                    $("#animal").html("Animal : " + response.animal);
+                    $("#couleur").html("<b>Couleur : </b>" + response.couleur);
+                    $("#zodiaque").html("<b>Signe zodiaque : </b>" + response.zodiaque);
+                    $("#chinois").html("<b>Signe chinois : </b>" + response.chinois);
+                    $("#animal").html("<b>Animal : </b>" + response.animal);
                     $("#pret").prop('disabled', false);
 
                     $.each(response.listeVoyance.slice().reverse(), function (i, voyance) {
@@ -206,6 +237,9 @@
                 dataType: 'json'        // Type de retour attendu
             }).done(function (response) {
                 if (response.statut) {
+                    $("#note-amour").empty();
+                    $("#note-sante").empty();
+                    $("#note-travail").empty();
                     $("#pred-amour").empty();
                     $("#pred-sante").empty();
                     $("#pred-travail").empty();
@@ -230,23 +264,30 @@
             var noteSante = $("#note-sante").val();
             var noteTravail = $("#note-travail").val();
 
-            $.ajax({
-                url: './ActionServlet', // URL
-                method: 'POST', // Méthode
-                data: {// Paramètres
-                    todo: 'generer-predictions',
-                    noteAmour: noteAmour,
-                    noteSante: noteSante,
-                    noteTravail: noteTravail
-                },
-                dataType: 'json'        // Type de retour attendu
-            }).done(function (response) {
-                $("#pred-amour").html(response.predAmour);
-                $("#pred-sante").html(response.predSante);
-                $("#pred-travail").html(response.predTravail);
-            }).fail(function () {
-                alert("Impossible de générer les prédictions");
-            });
+            if (noteAmour > 5 || noteAmour < 1 || noteAmour == ""
+                || noteSante > 5 || noteSante < 1 || noteSante == ""
+                || noteTravail > 5 || noteTravail < 1 || noteTravail == "") {
+                alert("Veuillez entrer des notes entre 1 et 5 pour générer les prédictions");
+            }
+            else {
+                $.ajax({
+                    url: './ActionServlet', // URL
+                    method: 'POST', // Méthode
+                    data: {// Paramètres
+                        todo: 'generer-predictions',
+                        noteAmour: noteAmour,
+                        noteSante: noteSante,
+                        noteTravail: noteTravail
+                    },
+                    dataType: 'json'        // Type de retour attendu
+                }).done(function (response) {
+                    $("#pred-amour").html(response.predAmour);
+                    $("#pred-sante").html(response.predSante);
+                    $("#pred-travail").html(response.predTravail);
+                }).fail(function () {
+                    alert("Impossible de générer les prédictions");
+                });
+            }
         }
 
         function Deconnecter() {
@@ -269,6 +310,27 @@
                 return "0" + n;
             }
             return n
+        }
+        function VerifierConnexion() {
+            $.ajax({
+                url: './ActionServlet', // URL
+                method: 'POST', // Méthode
+                data: {// Paramètres
+                    todo: 'verifier-connexion'
+                },
+                dataType: 'json'        // Type de retour attendu
+            }).done(function (response) {
+                if (response.connexion == true) {
+                    if (response.personne == 'client') {
+                        window.location = 'client.html';
+                    }
+                    else if (response.personne == 'employe') {
+                    }
+                }
+                else {
+                    window.location = 'index.html'
+                }
+            });
         }
     </script>
 

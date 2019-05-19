@@ -13,7 +13,9 @@ body
 #section-client
 {
     width: 40%;
-    margin-top: 50px;
+    margin-top: 45px;
+    line-height: 40px;
+    font-size: 18px;
 }
 
 #boutons-centre
@@ -69,6 +71,12 @@ button.joli-bouton:disabled
     background-color: rgb(255, 255, 255);
 }
 
+#section-voyance tr th:first-child,
+#section-voyance tr td:first-child
+{
+    text-align: center;
+}
+
 #section-voyance table
 {
     width: 80%;
@@ -79,12 +87,8 @@ button.joli-bouton:disabled
 #medium
 {
     border: solid thin black;
-    display: block;
-}
-
-#section-voyance td
-{
-    width: 80%;
+    font-size: 18px;
+    padding: 2px 7px; 
 }
 
 #commentaire-employe
@@ -96,4 +100,20 @@ button.joli-bouton:disabled
     box-sizing: border-box;
     resize: none;
     display: block;
+}
+
+#section-client table,td,th
+{
+    border-collapse: collapse;
+    border: 2px solid;
+    border-color: black;
+    text-align: center;
+}
+
+#section-client table
+{
+    font-size: 14px;
+    margin: auto;
+    width: 95%;
+    table-layout: fixed;
 }

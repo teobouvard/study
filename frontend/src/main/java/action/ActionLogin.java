@@ -10,11 +10,18 @@ public class ActionLogin extends Action {
 
     @Override
     public boolean executer(HttpServletRequest request) {
-        Integer login = Integer.parseInt(request.getParameter("login"));
-        String password = request.getParameter("password");
+        Personne personne = null;
+        try
+        {
+            Integer login = Integer.parseInt(request.getParameter("login"));
+            String password = request.getParameter("password");
 
-        Personne personne = Service.chercherPersonne(login, password);
-
+            personne = Service.chercherPersonne(login, password);
+        }
+        catch(NumberFormatException e)
+        {
+            personne = null;
+        }
         if (personne != null) {
             request.setAttribute("statut", Boolean.TRUE);
             HttpSession session = request.getSession();

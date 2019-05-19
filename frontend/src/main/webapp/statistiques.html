@@ -22,7 +22,10 @@
     </div>
 
     <script>
-        $(document).ready(GetStatistiques());
+        $(document).ready(function () {
+            VerifierConnexion();
+            GetStatistiques();
+        });
 
         function GetStatistiques() {
             var proportionChartDataMed = {
@@ -31,7 +34,7 @@
             };
 
             var proportionChartDataCli = {
-                label: 'Nombre de voyance pour ce client',
+                label: 'Nombre de voyance pour cet employé',
                 data: []
             };
 
@@ -93,6 +96,27 @@
                     series: [{ name: proportionChartDataCli.label, data: proportionChartDataCli.data }]
                 });
             })
+        }
+        function VerifierConnexion() {
+            $.ajax({
+                url: './ActionServlet', // URL
+                method: 'POST', // Méthode
+                data: {// Paramètres
+                    todo: 'verifier-connexion'
+                },
+                dataType: 'json'        // Type de retour attendu
+            }).done(function (response) {
+                if (response.connexion == true) {
+                    if (response.personne == 'client') {
+                        window.location = 'client.html';
+                    }
+                    else if (response.personne == 'employe') {
+                    }
+                }
+                else {
+                    window.location = 'index.html'
+                }
+            });
         }
 
     </script>

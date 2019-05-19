@@ -26,7 +26,7 @@ public class ActionGenererPredictions extends Action {
 
         List<String> listePredictions = null;
         try {
-            listePredictions = donnerPrediction(client, noteAmour, noteTravail, noteSante);
+            listePredictions = donnerPrediction(client, noteAmour ,noteSante, noteTravail );
         } catch (IOException ex) {
             Logger.getLogger(ActionGenererPredictions.class.getName()).log(Level.SEVERE, null, ex);
         }

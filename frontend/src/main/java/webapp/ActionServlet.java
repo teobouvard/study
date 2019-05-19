@@ -52,15 +52,11 @@ public class ActionServlet extends HttpServlet {
             case "connecter":
                 action = new ActionLogin();
                 serialisation = new SerialisationLogin();
-                action.executer(request);
-                serialisation.serialiser(request, response);
                 break;
 
             case "inscrire":
                 action = new ActionInscrire();
                 serialisation = new SerialisationInscrire();
-                action.executer(request);
-                serialisation.serialiser(request, response);
                 break;
             case "deconnecter":
                 response.sendRedirect(request.getContextPath() + "/index.html");
@@ -71,70 +67,62 @@ public class ActionServlet extends HttpServlet {
                 //action.executer(request);
                 //serialisation.serialiser(request, response);
                 break;
+            case "verifier-connexion":
+                serialisation = new SerialisationVerifierConnexion();
+                break;
         }
         if (session != null && session.getAttribute("personne") != null) {
             switch (todo) {
                 case "infos-client":
                     serialisation = new SerialisationClient();
-                    serialisation.serialiser(request, response);
                     break;
                 case "infos-employe":
                     serialisation = new SerialisationEmploye();
-                    serialisation.serialiser(request, response);
                     break;
                 case "liste-medium":
                     action = new ActionListerMediums();
                     serialisation = new SerialisationListerMedium();
-                    action.executer(request);
-                    serialisation.serialiser(request, response);
                     break;
                 case "infos-medium":
                     action = new ActionInfosMedium();
                     serialisation = new SerialisationInfosMedium();
-                    action.executer(request);
-                    serialisation.serialiser(request, response);
                     break;
                 case "historique-client":
                     serialisation = new SerialisationListeVoyance();
-                    serialisation.serialiser(request, response);
                     break;
                 case "voyance-en-cours":
                     action = new ActionChercherVoyance();
                     serialisation = new SerialisationVoyance();
-                    action.executer(request);
-                    serialisation.serialiser(request, response);
                     break;
                 case "prendre-rdv":
                     action = new ActionPrendreRDV();
                     serialisation = new SerialisationRDV();
-                    action.executer(request);
-                    serialisation.serialiser(request, response);
                     break;
                 case "demarrer-voyance":
                     action = new ActionDemarrerVoyance();
                     serialisation = new SerialisationDemarrerVoyance();
-                    action.executer(request);
-                    serialisation.serialiser(request, response);
                     break;
                 case "generer-predictions":
                     action = new ActionGenererPredictions();
                     serialisation = new SerialisationGenererPredictions();
-                    action.executer(request);
-                    serialisation.serialiser(request, response);
                     break;
                 case "valider-voyance":
                     action = new ActionValiderVoyance();
                     serialisation = new SerialisationValiderVoyance();
-                    action.executer(request);
-                    serialisation.serialiser(request, response);
                     break;
                 case "statistiques":
                     action = new ActionStatistiques();
                     serialisation = new SerialisationStatistiques();
-                    action.executer(request);
-                    serialisation.serialiser(request, response);
                     break;
             }
+        }
+        if(action != null)
+        {
+            action.executer(request);
+        }
+        if(serialisation != null)
+        {
+            serialisation.serialiser(request, response);
         }
     }
 

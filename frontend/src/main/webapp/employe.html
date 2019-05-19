@@ -109,6 +109,7 @@
     <script>
         $(document).ready(function () {
             VerifierConnexion();
+            $("#section-voyance").toggle(false);
             GetInfoEmploye();
             GetVoyanceEnCours();
 
@@ -149,6 +150,7 @@
                     $("#animal").html("<b>Animal : </b>" + response.animal);
                     $("#pret").prop('disabled', false);
 
+
                     $.each(response.listeVoyance.slice().reverse(), function (i, voyance) {
                         $("#historique").append("<tr> <td>" + voyance.medium + "</td>" + "<td>" + voyance.dateDebut + "</td>" + "<td>" + voyance.dateFin + "</td>" + "<td>" + voyance.commentaire + "</tr>");
                     });
@@ -162,6 +164,7 @@
                     $("#animal").empty();
                     $("#historique").empty();
                     $("#pret").prop('disabled', true);
+
                 }
                 $("#debut-appel").prop('disabled', true);
                 $("#fin-appel").prop('disabled', true);
@@ -184,6 +187,7 @@
                 dataType: 'json'        // Type de retour attendu
             }).done(function (response) {
                 if (response.statut) {
+                    $("#section-voyance").toggle(true);
                     $("#pret").prop('disabled', true);
                     $("#stats").prop('disabled', true);
                     $("#deconnecter").prop('disabled', true);
@@ -237,6 +241,7 @@
                 dataType: 'json'        // Type de retour attendu
             }).done(function (response) {
                 if (response.statut) {
+                    $("#section-voyance").toggle(false);
                     $("#note-amour").empty();
                     $("#note-sante").empty();
                     $("#note-travail").empty();

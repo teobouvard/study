@@ -1,0 +1,11 @@
+{
+    "elements": {},
+    "attributes": {
+        "selected-medium": {
+            "context": "div"
+        },
+        "medium-id": {
+            "context": "div"
+        }
+    }
+}

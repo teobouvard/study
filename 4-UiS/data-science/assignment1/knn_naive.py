@@ -8,17 +8,17 @@ K = 5
 def train_test_split(dataset, test_ratio=0.34):
 
     # suffle dataframe rows
-    suffled_dataset = dataset.sample(frac=1, random_state=RANDOM)
+    shuffled_dataset = dataset.sample(frac=1, random_state=RANDOM)
 
-    # compute n of elements in test split
+    # compute number of elements in test split
     n_test = int(len(dataset)*test_ratio)
 
     # split dataset
-    x_train = suffled_dataset[n_test:].drop(columns='class', axis=1)
-    y_train = suffled_dataset[n_test:]['class']
+    x_train = shuffled_dataset[n_test:].drop(columns='class', axis=1)
+    y_train = shuffled_dataset[n_test:]['class']
 
-    x_test = suffled_dataset[:n_test].drop(columns='class', axis=1)
-    y_test = suffled_dataset[:n_test]['class']
+    x_test = shuffled_dataset[:n_test].drop(columns='class', axis=1)
+    y_test = shuffled_dataset[:n_test]['class']
             
     return x_train, y_train, x_test, y_test
 
@@ -45,14 +45,13 @@ def predict(x_train, y_train, x_test):
         
         y_pred.append(Counter(neighbors).most_common(1)[0][0])
 
-    
     return y_pred
 
 def evaluate(predections, ground_truth):
     correctly_classified = 0
 
-    for pred, truth in zip(predections, ground_truth):
-        if pred == truth:
+    for prediction, truth in zip(predections, ground_truth):
+        if prediction == truth:
             correctly_classified += 1
 
     return correctly_classified/len(ground_truth)
@@ -67,4 +66,4 @@ if __name__ == "__main__":
 
     score = evaluate(y_pred, y_test)
 
-    print(score)
+    #print("Accuracy : {0:.4f}".format(score))

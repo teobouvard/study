@@ -10,10 +10,10 @@ def train_test_split(dataset, test_ratio=0.34):
     # suffle dataframe rows
     shuffled_dataset = dataset.sample(frac=1, random_state=RANDOM)
 
-    # compute number of elements in test split
+    # number of elements in test split
     n_test = int(len(dataset)*test_ratio)
 
-    # split dataset
+    # split the dataset
     x_train = shuffled_dataset[n_test:].drop(columns='class', axis=1)
     y_train = shuffled_dataset[n_test:]['class']
 
@@ -27,10 +27,18 @@ def predict(x_train, y_train, x_test):
     y_pred = []
 
     for unknown_flower in x_test.iterrows():
+
+        # add a new column corresponding to the norm between this flower and the unknown flower
         x_train['distance'] = x_train.apply(lambda x:np.linalg.norm(x.values-unknown_flower[1].values), axis=1)
+
+        # sort the dataframe by distance and retreive the indexes of the first K neighbors
         x_train.sort_values(by='distance', inplace=True)
         neighbors = x_train.index.values[:K]
+
+        # predict the class based on the most represented class in the neighbors
         y_pred.append(Counter(y_train[neighbors]).most_common(1)[0][0])
+
+        # remove the column to start over for the next unknown flower
         x_train.drop(columns='distance', inplace=True)
 
     return y_pred
@@ -54,4 +62,4 @@ if __name__ == "__main__":
 
     score = evaluate(y_pred, y_test)
 
-    print("Accuracy : {0:.4f}".format(score))
+    #print("Accuracy : {0:.4f}".format(score))

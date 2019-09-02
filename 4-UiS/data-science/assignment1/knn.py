@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from collections import Counter
 
 RANDOM = 42
 K = 5
@@ -22,7 +23,7 @@ def train_test_split(dataset, test_ratio=0.34):
     return x_train, y_train, x_test, y_test
 
 
-def predict_set(x_train, y_train, x_test):
+def predict(x_train, y_train, x_test):
     y_pred = []
 
     for unknown_flower in x_test.iterrows():
@@ -34,20 +35,27 @@ def predict_set(x_train, y_train, x_test):
 
         distances.sort(key=lambda x: x[1])
 
-        most_likely = {}
+        neighbors = {}
 
         for distance in distances[:K]:
-            if y_train[distance[0]] not in most_likely:
-                most_likely[y_train[distance[0]]] = 1
+            if y_train[distance[0]] not in neighbors:
+                neighbors[y_train[distance[0]]] = 1
             else :
-                most_likely[y_train[distance[0]]] += 1
-
-            print(most_likely))
-        #print(y_train[distances[0][0]])
+                neighbors[y_train[distance[0]]] += 1
+        
+        y_pred.append(Counter(neighbors).most_common(1)[0][0])
 
     
     return y_pred
 
+def evaluate(predections, ground_truth):
+    correctly_classified = 0
+
+    for pred, truth in zip(predections, ground_truth):
+        if pred == truth:
+            correctly_classified += 1
+
+    return correctly_classified/len(ground_truth)
 
 if __name__ == "__main__":
 
@@ -55,6 +63,8 @@ if __name__ == "__main__":
     
     x_train, y_train, x_test, y_test = train_test_split(dataset)
 
-    y_pred = predict_set(x_train, y_train, x_test)
+    y_pred = predict(x_train, y_train, x_test)
 
-    #print(y_pred)
+    score = evaluate(y_pred, y_test)
+
+    print(score)

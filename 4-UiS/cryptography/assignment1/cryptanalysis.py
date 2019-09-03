@@ -1,4 +1,7 @@
 MAX_KEY_LENGTH = 10
+MIN_PATTERN_LENGTH = 3
+MAX_PATTERN_LENGTH = 10
+LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 def char_frequency(s):
     ''' Returns the frequency of each letter in a string '''
@@ -13,34 +16,28 @@ def char_frequency(s):
 
     chars = {char: occurence/len(s) for char, occurence in chars.items()}
 
-    return sorted(chars.items(), key=lambda x:1/x[1])
+    return sorted(chars.items(), key=lambda x:x[1], reverse=True)
 
 def poly_decrypt(cipher, key):
     ''' Decrypts a ciphertext given its key '''
-    # make sure key and cipher are in uppercase to use ascii indexes easily
-    cipher = cipher.upper()
-    key = key.upper()
+
+    # make sure key and cipher are in uppercase and without whitespace
+    cipher = cipher.upper().replace(" ", "")
+    key = key.upper().strip().replace(" ", "")
 
     # expand the key so that it matches the length of the cipher
     expanded_key = ''.join(key[i % len(key)] for i in range(len(cipher)))
 
-    decrypted_message = ""
+    decrypted_message = ''
 
     for cipher_letter, key_letter in zip(cipher, expanded_key):
-
-        # retreive the alphabetical index of the letters and decrypt the cipher letter 
-        cipher_index = ord(cipher_letter)
-        key_index = ord(key_letter)
-
-        decrypted_index = (cipher_index - key_index) % 26
-
-        # match the decrypted index to the ascii letter
-        decrypted_message += chr(ord('A') + decrypted_index)
+        decrypted_index = (LETTERS.find(cipher_letter) - LETTERS.find(key_letter)) % 26
+        decrypted_message += LETTERS[decrypted_index]
 
     return decrypted_message
     
 def read_cipher():
-    ''' Returns the polyalphabetic ciphertext as a formatted string '''
+    ''' Returns the ciphertext as a formatted string '''
     with open('polyalphabetic_cipher.txt') as f:
         cipher = f.read()
         cipher = cipher.replace(" ", "")
@@ -48,41 +45,43 @@ def read_cipher():
     return cipher
 
 def kasiski_examination(cipher):
+    ''' Tries to guess the key length by identifying repeated substrings '''
 
-    repeated_patterns = {}
+    possible_key_lengths = []
 
-    for pattern_length in range(4, 10):
+    for pattern_length in range(MIN_PATTERN_LENGTH, MAX_PATTERN_LENGTH):
         for index in range(len(cipher)):
             substring = cipher[index:index+pattern_length]
             distance = cipher[index+pattern_length:].find(substring)
 
             if distance != -1:
-                if substring not in repeated_patterns:
-                    repeated_patterns[substring] = [2, (distance + pattern_length) % MAX_KEY_LENGTH]
-                else:
-                    repeated_patterns[substring][0] += 1
-                    repeated_patterns[substring][1] = min((distance + pattern_length) % MAX_KEY_LENGTH, repeated_patterns[substring][1])
+                possible_key_lengths.append((distance + pattern_length) % MAX_KEY_LENGTH)
 
-    return repeated_patterns
+    probable_key_lengths = {length:possible_key_lengths.count(length) for length in possible_key_lengths}
+
+    return sorted(probable_key_lengths.items(), key=lambda x:x[1], reverse=True)
+
+def attack(cipher, key_length):
+    candidates = []
+
+    for index in range(key_length):
+        frequencies = char_frequency(message[index::key_length])
+
+        for most_common in frequencies[:3]:
+            E_offset = (LETTERS.find(most_common[0]) - LETTERS.find('E')) % 26
+            candidates.append(LETTERS[E_offset])
+
+        print("key[{}] candidates : {}".format(index, candidates))
 
 if __name__ == "__main__":
 
     message = read_cipher()
 
-
     examination = kasiski_examination(message)
+    print(examination)
+    # key length is probably 8
 
-    # key length is probably eight
-    KEY_LENGTH = 8
+    attack(message, 8)
 
-    for index in range(KEY_LENGTH):
-        frequencies = char_frequency(message[index::KEY_LENGTH])
-        candidates = []
-        for most_common in frequencies[:3]:
-            offset = (ord(most_common[0]) - ord('E')) % 26
-            candidates.append(chr(ord('A') + offset))
-        print("key[{}] candidates : {}".format(index, candidates))
-
-
-    decrypted = poly_decrypt(message,"BDAAETC")
-    print(decrypted)
+    #decrypted = poly_decrypt("CSASTPKVSIQUTGQUCSAS  TPIUAQJB","ABCD")
+    #print(decrypted)

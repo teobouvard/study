@@ -23,23 +23,21 @@ def train_test_split(dataset, test_ratio=0.34):
     return x_train, y_train, x_test, y_test
 
 
-def predict(x_train, y_train, x_test):
+def predict_vectorized(x_train, y_train, x_test):
     y_pred = []
 
     for unknown_flower in x_test.iterrows():
 
         # add a new column corresponding to the norm between this flower and the unknown flower
-        x_train['distance'] = x_train.apply(lambda x:np.linalg.norm(x.values-unknown_flower[1].values), axis=1)
+        distances = pd.DataFrame()
+        distances['distance'] = x_train.apply(lambda x:np.linalg.norm(x.values-unknown_flower[1].values), axis=1)
 
         # sort the dataframe by distance and retreive the indexes of the first K neighbors
-        x_train.sort_values(by='distance', inplace=True)
-        neighbors = x_train.index.values[:K]
+        distances.sort_values(by='distance', inplace=True)
+        neighbors = distances.index.values[:K]
 
         # predict the class based on the most represented class in the neighbors
         y_pred.append(Counter(y_train[neighbors]).most_common(1)[0][0])
-
-        # remove the column to start over for the next unknown flower
-        x_train.drop(columns='distance', inplace=True)
 
     return y_pred
 
@@ -58,8 +56,9 @@ if __name__ == "__main__":
     
     x_train, y_train, x_test, y_test = train_test_split(dataset)
 
-    y_pred = predict(x_train, y_train, x_test)
+    y_pred = predict_vectorized(x_train, y_train, x_test)
 
     score = evaluate(y_pred, y_test)
 
     #print("Accuracy : {0:.4f}".format(score))
+

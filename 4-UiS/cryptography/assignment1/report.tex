@@ -4,6 +4,10 @@
 
 \usepackage{fancyhdr}
 \usepackage{lastpage}
+\usepackage[super]{natbib}
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{urlcolor=blue, colorlinks=true}
 \usepackage{pythonhighlight}
 \usepackage[left=3cm, right=3cm, bottom=3cm, top=3cm]{geometry}
 
@@ -37,7 +41,7 @@
 \end{abstract}
 
 \section{Vigenere Cipher Cracking}
-    First section
+    First section \cite{vigenere}
 
 
 
@@ -46,7 +50,12 @@
         return x
 \end{python}
 
-\section{Simplified DES implementation}
+\section{Simplified DES Implementation}
+
+% ========== Sources ========== %
+
+\bibliographystyle{unsrtnat}
+\bibliography{sources}
 
 \end{document}
 

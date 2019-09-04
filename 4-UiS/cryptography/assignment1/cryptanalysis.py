@@ -3,85 +3,132 @@ MIN_PATTERN_LENGTH = 3
 MAX_PATTERN_LENGTH = 10
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
+# KEY = BDLAEKCY
+
 def char_frequency(s):
-    ''' Returns the frequency of each letter in a string '''
+	''' Returns the frequency of each letter in a string '''
 
-    chars = {}
+	chars = {}
 
-    for letter in s:
-        if letter not in chars:
-            chars[letter] = 1
-        else:
-            chars[letter] += 1
+	for letter in s:
+		if letter not in chars:
+			chars[letter] = 1
+		else:
+			chars[letter] += 1
 
-    chars = {char: occurence/len(s) for char, occurence in chars.items()}
+	chars = {char: occurence/len(s) for char, occurence in chars.items()}
 
-    return sorted(chars.items(), key=lambda x:x[1], reverse=True)
+	return sorted(chars.items(), key=lambda x:x[1], reverse=True)
 
 def poly_decrypt(cipher, key):
-    ''' Decrypts a ciphertext given its key '''
+	''' Decrypts a ciphertext given its key '''
 
-    # make sure key and cipher are in uppercase and without whitespace
-    cipher = cipher.upper().replace(" ", "")
-    key = key.upper().strip().replace(" ", "")
+	# make sure key and cipher are in uppercase and without whitespace
+	cipher = cipher.upper().replace(" ", "")
+	key = key.upper().strip().replace(" ", "")
 
-    # expand the key so that it matches the length of the cipher
-    expanded_key = ''.join(key[i % len(key)] for i in range(len(cipher)))
+	# expand the key so that it matches the length of the cipher
+	expanded_key = ''.join(key[i % len(key)] for i in range(len(cipher)))
 
-    decrypted_message = ''
+	decrypted_message = ''
 
-    for cipher_letter, key_letter in zip(cipher, expanded_key):
-        decrypted_index = (LETTERS.find(cipher_letter) - LETTERS.find(key_letter)) % 26
-        decrypted_message += LETTERS[decrypted_index]
+	for cipher_letter, key_letter in zip(cipher, expanded_key):
+		decrypted_index = (LETTERS.find(cipher_letter) - LETTERS.find(key_letter)) % 26
+		decrypted_message += LETTERS[decrypted_index]
 
-    return decrypted_message
-    
+	return decrypted_message
+
+def poly_encrypt(message, key):
+	''' Encrypts a message given its key '''
+
+	# make sure key and message are in uppercase and without whitespace
+	message = message.upper().replace(" ", "")
+	key = key.upper().strip().replace(" ", "")
+
+	# expand the key so that it matches the length of the cipher
+	expanded_key = ''.join(key[i % len(key)] for i in range(len(message)))
+
+	encrypted_message = ''
+
+	for message_letter, key_letter in zip(message, expanded_key):
+		encrypted_index = (LETTERS.find(message_letter) + LETTERS.find(key_letter)) % 26
+		encrypted_message += LETTERS[encrypted_index]
+
+	return encrypted_message
+
 def read_cipher():
-    ''' Returns the ciphertext as a formatted string '''
-    with open('polyalphabetic_cipher.txt') as f:
-        cipher = f.read()
-        cipher = cipher.replace(" ", "")
-        cipher = cipher.replace("\n", "")
-    return cipher
+	''' Returns the ciphertext as a formatted string '''
+	with open('polyalphabetic_cipher.txt') as f:
+		cipher = f.read()
+		cipher = cipher.replace(" ", "")
+		cipher = cipher.replace("\n", "")
+	return cipher
 
 def kasiski_examination(cipher):
-    ''' Tries to guess the key length by identifying repeated substrings '''
+	''' Tries to guess the key length by identifying repeated substrings '''
 
-    possible_key_lengths = []
+	possible_key_lengths = []
 
-    for pattern_length in range(MIN_PATTERN_LENGTH, MAX_PATTERN_LENGTH):
-        for index in range(len(cipher)):
-            substring = cipher[index:index+pattern_length]
-            distance = cipher[index+pattern_length:].find(substring)
+	for pattern_length in range(MIN_PATTERN_LENGTH, MAX_PATTERN_LENGTH):
+		for index in range(len(cipher)):
+			substring = cipher[index:index+pattern_length]
+			distance = cipher[index+pattern_length:].find(substring)
 
-            if distance != -1:
-                possible_key_lengths.append((distance + pattern_length) % MAX_KEY_LENGTH)
+			if distance != -1:
+				possible_key_lengths.append((distance + pattern_length) % MAX_KEY_LENGTH)
 
-    probable_key_lengths = {length:possible_key_lengths.count(length) for length in possible_key_lengths}
+	probable_key_lengths = {length:possible_key_lengths.count(length) for length in possible_key_lengths}
 
-    return sorted(probable_key_lengths.items(), key=lambda x:x[1], reverse=True)
+	return sorted(probable_key_lengths.items(), key=lambda x:x[1], reverse=True)
 
 def attack(cipher, key_length):
-    candidates = []
+	candidates = []
 
-    for index in range(key_length):
-        frequencies = char_frequency(message[index::key_length])
+	for column in range(key_length):
+		frequencies = char_frequency(message[column::key_length])
+		column_candidates = []
 
-        for most_common in frequencies[:3]:
-            E_offset = (LETTERS.find(most_common[0]) - LETTERS.find('E')) % 26
-            candidates.append(LETTERS[E_offset])
+		for most_common in frequencies[:5]:
+			E_offset = (LETTERS.find(most_common[0]) - LETTERS.find('E')) % 26
+			column_candidates.append(LETTERS[E_offset])
+		print("key[{}] candidates : {}".format(column, column_candidates))
+		candidates.append(column_candidates)
 
-        print("key[{}] candidates : {}".format(index, candidates))
+	return candidates
+
+
+
+def key_elimination(cipher, key_length, probable_word):
+	self_encrypted_word = poly_encrypt(probable_word, probable_word)
+
+	print(self_encrypted_word)
+
+	offset_cipher = "".join(LETTERS[ (LETTERS.find(cipher[i]) - LETTERS.find(cipher[i-key_length])) % 26] for i in range(len(cipher) - key_length))
+	
+	self_encrypted_cipher = poly_encrypt(cipher, offset_cipher)
+
+	if self_encrypted_cipher.find(self_encrypted_word) != -1:
+		print('YES')
 
 if __name__ == "__main__":
 
-    message = read_cipher()
+	message = "ATTACKATDAWNRECEIVETHIS" #read_cipher()
 
-    examination = kasiski_examination(message)
-    print(examination)
-    # key length is probably 8
+	examination = kasiski_examination(message)
+	print(examination)
 
-    attack(message, 8)
+	# key length is probably 8
+	key_length = 6
 
-    #decrypted = poly_decrypt("CSASTPKVSIQUTGQUCSAS  TPIUAQJB","ABCD")
-    #print(decrypted)
+	key_elimination(message, key_length, "ATTACK")
+
+	#attack(message, key_length)
+
+	#decrypted = poly_decrypt("EIWEMAAAWQKQK","CRYPTANALISIS")
+
+	#splitted_message = [decrypted[i:i+key_length] for i in range(0, len(decrypted), key_length)]
+
+	#for split in splitted_message:
+		#print(split)
+
+	print(decrypted)

@@ -6,7 +6,7 @@ LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 # KEY = BDLAEKCY
 
 def char_frequency(s):
-	''' Returns the frequency of each letter in a string '''
+	''' Compute the frequency of each letter in a string '''
 
 	chars = {}
 
@@ -21,11 +21,11 @@ def char_frequency(s):
 	return sorted(chars.items(), key=lambda x:x[1], reverse=True)
 
 def poly_decrypt(cipher, key):
-	''' Decrypts a ciphertext given its key '''
+	''' Decrypt a ciphertext given its key '''
 
 	# make sure key and cipher are in uppercase and without whitespace
-	cipher = cipher.upper().replace(" ", "")
-	key = key.upper().strip().replace(" ", "")
+	cipher = cipher.upper().replace(' ', '')
+	key = key.upper().replace(' ', '')
 
 	# expand the key so that it matches the length of the cipher
 	expanded_key = ''.join(key[i % len(key)] for i in range(len(cipher)))
@@ -39,11 +39,11 @@ def poly_decrypt(cipher, key):
 	return decrypted_message
 
 def poly_encrypt(message, key):
-	''' Encrypts a message given its key '''
+	''' Encrypt a message given its key '''
 
 	# make sure key and message are in uppercase and without whitespace
-	message = message.upper().replace(" ", "")
-	key = key.upper().strip().replace(" ", "")
+	message = message.upper().replace(' ', '')
+	key = key.upper().replace(' ', '')
 
 	# expand the key so that it matches the length of the cipher
 	expanded_key = ''.join(key[i % len(key)] for i in range(len(message)))
@@ -60,12 +60,12 @@ def read_cipher():
 	''' Returns the ciphertext as a formatted string '''
 	with open('polyalphabetic_cipher.txt') as f:
 		cipher = f.read()
-		cipher = cipher.replace(" ", "")
-		cipher = cipher.replace("\n", "")
+		cipher = cipher.replace(' ', '')
+		cipher = cipher.replace('\n', '')
 	return cipher
 
 def kasiski_examination(cipher):
-	''' Tries to guess the key length by identifying repeated substrings '''
+	''' Sort the key length probabilities by identifying repeated substrings '''
 
 	possible_key_lengths = []
 
@@ -97,38 +97,36 @@ def attack(cipher, key_length):
 	return candidates
 
 
-
 def key_elimination(cipher, key_length, probable_word):
+
 	self_encrypted_word = poly_encrypt(probable_word, probable_word)
 
-	print(self_encrypted_word)
-
-	offset_cipher = "".join(LETTERS[ (LETTERS.find(cipher[i]) - LETTERS.find(cipher[i-key_length])) % 26] for i in range(len(cipher) - key_length))
+	offset_cipher = ''.join(LETTERS[0] for i in range(len(cipher)))
 	
-	self_encrypted_cipher = poly_encrypt(cipher, offset_cipher)
+	self_encrypted_cipher = ''.join(LETTERS[LETTERS.find(a)-LETTERS.find(b)] for a,b in zip(cipher, offset_cipher))
 
 	if self_encrypted_cipher.find(self_encrypted_word) != -1:
 		print('YES')
 
 if __name__ == "__main__":
 
-	message = "ATTACKATDAWNRECEIVETHIS" #read_cipher()
+	message = read_cipher()
 
 	examination = kasiski_examination(message)
 	print(examination)
 
 	# key length is probably 8
-	key_length = 6
+	key_length = 8
 
 	key_elimination(message, key_length, "ATTACK")
 
-	#attack(message, key_length)
+	cand = attack(message, key_length)
 
-	#decrypted = poly_decrypt("EIWEMAAAWQKQK","CRYPTANALISIS")
+	decrypted = poly_decrypt(message,"BDAAETCY")
 
-	#splitted_message = [decrypted[i:i+key_length] for i in range(0, len(decrypted), key_length)]
+	splitted_message = [decrypted[i:i+key_length] for i in range(0, len(decrypted), key_length)]
 
-	#for split in splitted_message:
-		#print(split)
+	for split in splitted_message:
+		print(split)
 
-	print(decrypted)
+	#print(decrypted)

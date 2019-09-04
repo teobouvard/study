@@ -3,7 +3,7 @@
 ## Polyalphabetic cipher cryptoanalysis
 
 
-
+,,,
 * english text
 * key length < 10
 * encrypted with polyalphabetic substition

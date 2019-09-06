@@ -1,6 +1,6 @@
 MAX_KEY_LENGTH = 10
-MIN_PATTERN_LENGTH = 3
-MAX_PATTERN_LENGTH = 10
+MIN_PATTERN_LENGTH = 5
+MAX_PATTERN_LENGTH = 15
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 # KEY = BDLAEKCY
@@ -64,6 +64,16 @@ def read_cipher():
 		cipher = cipher.replace('\n', '')
 	return cipher
 
+def get_factors(n):
+	factors = []
+	while n%2 == 0:
+		if n > MAX_KEY_LENGTH:
+			pass
+		else:
+			factors.append(int(n))
+		n = n/2
+	return factors
+
 def kasiski_examination(cipher):
 	''' Sort the key length probabilities by identifying repeated substrings '''
 
@@ -75,7 +85,7 @@ def kasiski_examination(cipher):
 			distance = cipher[index+pattern_length:].find(substring)
 
 			if distance != -1:
-				possible_key_lengths.append((distance + pattern_length) % MAX_KEY_LENGTH)
+				possible_key_lengths.extend(get_factors(distance + pattern_length))
 
 	probable_key_lengths = {length:possible_key_lengths.count(length) for length in possible_key_lengths}
 
@@ -116,17 +126,17 @@ if __name__ == "__main__":
 	print(examination)
 
 	# key length is probably 8
-	key_length = 8
+	#key_length = 8
 
-	key_elimination(message, key_length, "ATTACK")
+	#key_elimination(message, key_length, "ATTACK")
 
-	cand = attack(message, key_length)
+	#cand = attack(message, key_length)
 
-	decrypted = poly_decrypt(message,"BDAAETCY")
+	#decrypted = poly_decrypt(message,"BDAAETCY")
 
-	splitted_message = [decrypted[i:i+key_length] for i in range(0, len(decrypted), key_length)]
+	#splitted_message = [decrypted[i:i+key_length] for i in range(0, len(decrypted), key_length)]
 
-	for split in splitted_message:
-		print(split)
+	#for split in splitted_message:
+		#print(split)
 
 	#print(decrypted)

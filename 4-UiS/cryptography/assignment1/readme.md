@@ -7,6 +7,7 @@
 * english text
 * key length < 10
 * encrypted with polyalphabetic substition
+* 
 
 https://en.wikipedia.org/wiki/Letter_frequency
 

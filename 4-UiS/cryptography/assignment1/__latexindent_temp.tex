@@ -1,0 +1,81 @@
+% ========== Config ========== %
+
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[super]{natbib}
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{urlcolor=blue, colorlinks=true}
+\usepackage{pythonhighlight}
+\usepackage[left=3cm, right=3cm, bottom=3cm, top=3cm]{geometry}
+
+
+\pagestyle{fancy}
+\fancyhead[L]{DAT 510 - Security and Vunlerability in Networks}
+\fancyhead[R]{Assignment 1}
+\fancyfoot[C]{ \thepage / \pageref{LastPage} }
+\fancyfoot[L]{ T\'eo Bouvard }
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+
+% ========== Meta ========== %
+
+\title{\textbf{ Vigenere Cipher Cracking and Simplified Data Encryption Standard implementation}}
+\author{}
+\date{}
+
+
+% ========== Document ========== %
+
+\begin{document}
+
+\maketitle \thispagestyle{fancy}
+
+\begin{abstract}
+    Redact this part later
+    
+\end{abstract}
+
+\section{Vigenere Cipher Cracking}
+
+    We are given the following cipher :
+
+    \begin{python}
+        BQZRMQ KLBOXE WCCEFL DKRYYL BVEHIZ NYJQEE BDYFJO PTLOEM EHOMIC
+        UYHHTS GKNJFG EHIMKN IHCTIH VRIHAR SMGQTR QCSXXC SWTNKP TMNSW
+        AMXVCY WEOGSR FFUEEB DKQLQZ WRKUCO FTPLOT GOJZRI XEPZSE ISXTCT
+        WZRMXI RIHALE SPRFAE FVYORI HNITRG PUHITM CFCDLA HIBKLH RCDIMT
+        WQWTOR DJCNDY YWMJCN HDUWOF DPUPNG BANULZ NGYPQU LEUXOV FFDCEE
+        YHQUXO YOXQUO DDCVIR RPJCAT RAQVFS AWMJCN HTSOXQ UODDAG BANURR
+        REZJGD VJSXOO MSDNIT RGPUHN HRSSSF VFSINH MSGPCM ZJCSLY GEWGQT
+        DREASV FPXEAR IMLPZW EHQGMG WSEIXE GQKPRM XIBFWL IPCHYM OTNXYV
+        FFDCEE YHASBA TEXCJZ VTSGBA NUDYAP IUGTLD WLKVRI HWACZG PTRYCE
+        VNQCUP AOSPEU KPCSNG RIHLRI KUMGFC YTDQES DAHCKP BDUJPX KPYMBD
+        IWDQEF WSEVKT CDDWLI NEPZSE OPYIW
+    \end{python}
+
+    We know that this message has been encrypted by a polyalphabetic substitution cipher,
+    and that the encryption key is not longer than 10 characters.
+
+
+
+\begin{python}
+    def f(x):
+        return x
+\end{python}
+
+\section{Simplified DES Implementation}
+
+% ========== Sources ========== %
+
+\bibliographystyle{unsrtnat}
+\bibliography{sources}
+
+\end{document}
+
+
+

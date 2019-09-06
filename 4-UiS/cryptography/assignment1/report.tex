@@ -2,14 +2,14 @@
 
 \documentclass{article}
 
-\usepackage{fancyhdr}
-\usepackage{lastpage}
-\usepackage[super]{natbib}
-\usepackage{url}
-\usepackage{hyperref}
+\usepackage{fancyhdr} % draw header and footer separations
+\usepackage{lastpage} % get last page number
+\usepackage[super]{natbib} % format references
+\usepackage{url} % pretty wrap url
+\usepackage{hyperref} % color url
 \hypersetup{urlcolor=blue, colorlinks=true}
-\usepackage{pythonhighlight}
-\usepackage[left=3cm, right=3cm, bottom=3cm, top=3cm]{geometry}
+\usepackage{pythonhighlight} % python syntax highlighting
+\usepackage[left=3cm, right=3cm, bottom=3cm, top=3cm]{geometry} % margin settings
 
 
 \pagestyle{fancy}
@@ -24,7 +24,7 @@
 
 % ========== Meta ========== %
 
-\title{\textbf{ Vigenere Cipher Cracking and Simplified Data Encryption Standard implementation}}
+\title{\textbf{Vigenere Cipher Cracking and Simplified Data Encryption Standard implementation}}
 \author{}
 \date{}
 
@@ -36,23 +36,70 @@
 \maketitle \thispagestyle{fancy}
 
 \begin{abstract}
-    Pretty easy
+    Redact this part later
     
 \end{abstract}
 
 \section{Vigenere Cipher Cracking}
-    First section \cite{vigenere}
 
+    We are given the following cipher :
 
+    \begin{python}
+        BQZRMQ KLBOXE WCCEFL DKRYYL BVEHIZ NYJQEE BDYFJO PTLOEM EHOMIC
+        UYHHTS GKNJFG EHIMKN IHCTIH VRIHAR SMGQTR QCSXXC SWTNKP TMNSW
+        AMXVCY WEOGSR FFUEEB DKQLQZ WRKUCO FTPLOT GOJZRI XEPZSE ISXTCT
+        WZRMXI RIHALE SPRFAE FVYORI HNITRG PUHITM CFCDLA HIBKLH RCDIMT
+        WQWTOR DJCNDY YWMJCN HDUWOF DPUPNG BANULZ NGYPQU LEUXOV FFDCEE
+        YHQUXO YOXQUO DDCVIR RPJCAT RAQVFS AWMJCN HTSOXQ UODDAG BANURR
+        REZJGD VJSXOO MSDNIT RGPUHN HRSSSF VFSINH MSGPCM ZJCSLY GEWGQT
+        DREASV FPXEAR IMLPZW EHQGMG WSEIXE GQKPRM XIBFWL IPCHYM OTNXYV
+        FFDCEE YHASBA TEXCJZ VTSGBA NUDYAP IUGTLD WLKVRI HWACZG PTRYCE
+        VNQCUP AOSPEU KPCSNG RIHLRI KUMGFC YTDQES DAHCKP BDUJPX KPYMBD
+        IWDQEF WSEVKT CDDWLI NEPZSE OPYIW
+    \end{python}
 
-\begin{python}
-    def f(x):
-        return x
-\end{python}
+    
+    We know that this english message has been encrypted by a polyalphabetic substitution cipher,
+    and that the encryption key is not longer than 10 characters. \newline To break this cipher, 
+    the first approach is to try to guess the exact key length. To do so, we are looking for
+    repeating sequences, which have a high probability of corresponding to a repetition of the key. 
+    This method is called kasiski examination.\cite{vigenere}
+
+    To perform this examination, I implemented a Python method which loops through the whole cipher,
+    and searches for patterns which appear in the rest of the cipher. If an occurence of the current 
+    pattern is found, the distance between the two patterns are added to the possible keys list. Note 
+    that all the factors of 2 of the distance are also added to the list, as the key could have repeated 
+    multiple times between the two occurences of the pattern. The get factors submethod does not return factors
+    which are greater than the maximum key length.
+
+    \begin{python}
+
+def kasiski_examination(cipher):
+''' Sort the key length probabilities by identifying repeated substrings '''
+
+    possible_key_lengths = []
+
+    for pattern_length in range(MIN_PATTERN_LENGTH, MAX_PATTERN_LENGTH):
+        for index in range(len(cipher)):
+            substring = cipher[index:index+pattern_length]
+            distance = cipher[index+pattern_length:].find(substring)
+
+            if distance != -1:
+                possible_key_lengths.extend(get_factors(distance + pattern_length))
+
+    probable_key_lengths = {length:possible_key_lengths.count(length) for length in possible_key_lengths}
+
+    return sorted(probable_key_lengths.items(), key=lambda x:x[1], reverse=True)
+
+    \end{python}
+
+When executed on the given cipher with MIN\_PATTERN\_LENGTH = 5 and MAX\_PATTERN\_LENGTH = 10, we get this output.
 
 \section{Simplified DES Implementation}
 
-% ========== Sources ========== %
+\section{Conclusion}
+
+% ========== References ========== %
 
 \bibliographystyle{unsrtnat}
 \bibliography{sources}

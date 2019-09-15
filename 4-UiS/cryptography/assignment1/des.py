@@ -75,10 +75,10 @@ def encrypt(message, key):
     subkey_0, subkey_1 = subkeygen(key)
 
     cipher = initial_permutation(message)
-    cipher = fk(message, subkey_0)
-    cipher = switch(message)
-    cipher = fk(message, subkey_1)
-    cipher = inverse_initial_permutation(message)
+    cipher = fk(cipher, subkey_0)
+    cipher = switch(cipher)
+    cipher = fk(cipher, subkey_1)
+    cipher = inverse_initial_permutation(cipher)
 
     return cipher
 
@@ -110,11 +110,11 @@ def triple_decrypt(cipher, key0, key1):
 def des_bruteforce(cipher, probable_word):
 
     for key in range(1024):
-        key = format()
+        key = create_bitfield(format(key, '08b'))
         message = decrypt(cipher, key)
-        #if message.find(probable_word) != -1:
+        if message.find(probable_word) != -1:
             #print(format())
-        pass
+            pass
 
 if __name__ == "__main__":
 
@@ -123,5 +123,5 @@ if __name__ == "__main__":
 
     cipher = encrypt(example_message, example_key)
 
-    print(cipher)
+    print(''.join(cipher))
     #print(inverse_initial_permutation(create_bitfield('10111101')))

@@ -125,7 +125,7 @@ if __name__ == "__main__":
 	examination = kasiski_examination(message)
 	print(examination)
 
-	# key length is probably 8
+	#key length is probably 8
 	#key_length = 8
 
 	#key_elimination(message, key_length, "ATTACK")

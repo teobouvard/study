@@ -1,3 +1,5 @@
+# S-BOXES
+
 S0 = [[1, 0, 3, 2], [3, 2, 1, 0], [0, 2, 1, 3], [3, 1, 3, 2]]
 S1 = [[0, 1, 2, 3], [2, 0, 1, 3], [3, 0, 1, 0], [2, 1, 0, 3]]
 
@@ -70,20 +72,20 @@ def fk(bitfield, subkey):
     return xor(left, output) + right
 
 def encrypt(message, key):
-    subkey_0, subkey_1 = subkeygen(example_key)
+    subkey_0, subkey_1 = subkeygen(key)
 
-    message = initial_permutation(message)
-    message = fk(message, subkey_0)
-    message = switch(message)
-    message = fk(message, subkey_1)
-    message = inverse_initial_permutation(message)
+    cipher = initial_permutation(message)
+    cipher = fk(message, subkey_0)
+    cipher = switch(message)
+    cipher = fk(message, subkey_1)
+    cipher = inverse_initial_permutation(message)
 
-    return message
+    return cipher
 
 def decrypt(cipher, key):
-    subkey_0, subkey_1 = subkeygen(example_key)
+    subkey_0, subkey_1 = subkeygen(key)
 
-    message = initial_permutation(message)
+    message = initial_permutation(cipher)
     message = fk(message, subkey_1)
     message = switch(message)
     message = fk(message, subkey_0)
@@ -105,10 +107,19 @@ def triple_decrypt(cipher, key0, key1):
 
     return cipher
 
+def des_bruteforce(cipher, probable_word):
+
+    for key in range(1024):
+        key = format()
+        message = decrypt(cipher, key)
+        #if message.find(probable_word) != -1:
+            #print(format())
+        pass
+
 if __name__ == "__main__":
 
-    example_key = create_bitfield('1111111111')
-    example_message = create_bitfield('00000100')
+    example_key = create_bitfield('1110001110')
+    example_message = create_bitfield('10101010')
 
     cipher = encrypt(example_message, example_key)
 

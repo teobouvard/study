@@ -367,7 +367,7 @@ def decrypt_triple_sdes_cipher_parallel():
     with multiprocessing.Pool() as p:
         for message, keys in p.imap_unordered(func=parallel_triple_des_bruteforce, iterable=keys, chunksize=chunksize):
             if message.find(probable_word) != -1:
-                print('key : {} -> message : {}'.format(bitfield_to_string(keys), bin2ascii(message)))
+                print('keys : ({}, {}) -> message : {}'.format(bitfield_to_string(keys[0]), bitfield_to_string(keys[1]), bin2ascii(message)))
 
 
 if __name__ == "__main__":

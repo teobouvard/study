@@ -1,5 +1,13 @@
 from timeit import default_timer as timer
-from tqdm import tqdm
+import multiprocessing
+
+# CONSTANT CIPHERTETXTS
+with open('ctx1.txt', 'r') as f:
+    CTX1 = f.read()
+
+with open('ctx2.txt', 'r') as f:
+    CTX2 = f.read()
+
 
 # S-BOXES #
 
@@ -171,8 +179,7 @@ def des_bruteforce(cipher, probable_word):
         message = bitfield_to_string(message)
         if message.find(probable_word) != -1:
             probable_keys.append(key)
-            decrypted = decrypt_message(cipher, key)
-            print('key : {} -> message : {}'.format(key, bin2ascii(decrypted)))
+            print('key : {} -> message : {}'.format(bitfield_to_string(key), bin2ascii(message)))
     
     return probable_keys
 
@@ -195,8 +202,9 @@ def triple_des_bruteforce(cipher, probable_word):
     
     return probable_keys
 
-def parallel_des_bruteforce():
-    pass
+def parallel_des_bruteforce(key):
+    return decrypt_message(CTX1, key), key
+
 
 # ASSIGNMENT #
 
@@ -315,32 +323,40 @@ def task2():
     print('keys : {} | plaintext : {} | ciphertext : {}'.format(keys, message, ciphertext))
 
     # Triple DES decryption 2
-    keys = ('1000101110', '0110101110')
-    ciphertext = '11100110'
+    keys = ('1011101111', '0110101110')
+    ciphertext = '01010000'
     message = triple_decrypt_byte(ciphertext, keys[0], keys[1])
     print('keys : {} | plaintext : {} | ciphertext : {}'.format(keys, message, ciphertext))
 
     # Triple DES decryption 3
-    keys = ('1000101110', '0110101110')
-    ciphertext = '11100110'
+    keys = ('1111111111', '1111111111')
+    ciphertext = '00000100'
     message = triple_decrypt_byte(ciphertext, keys[0], keys[1])
     print('keys : {} | plaintext : {} | ciphertext : {}'.format(keys, message, ciphertext))
 
     # Triple DES decryption 4
-    keys = ('1000101110', '0110101110')
-    ciphertext = '11100110'
+    keys = ('0000000000', '0000000000')
+    ciphertext = '11110000'
     message = triple_decrypt_byte(ciphertext, keys[0], keys[1])
     print('keys : {} | plaintext : {} | ciphertext : {}'.format(keys, message, ciphertext))
 
 def decrypt_sdes_cipher():
-    with open('ctx1.txt', 'r') as f:
-        cipher = f.read()
+    des_bruteforce(CTX1, ascii2bin('des'))
 
-        start = timer()
-        probable_keys = des_bruteforce(cipher, ascii2bin('des'))
-        stop = timer()
+def decrypt_sdes_cipher_parallel():
+    
+    numkeys = 1024
+    chunksize = int(numkeys / (multiprocessing.cpu_count() - 2))
 
-        print('Elapsed time : {}'.format(stop-start))
+    keys = [create_bitfield(format(x, '010b')) for x in range(1024)]
+
+    probable_word = ascii2bin('des')
+
+    with multiprocessing.Pool() as p:
+        for message, key in p.imap_unordered(func=parallel_des_bruteforce, iterable=keys, chunksize=chunksize):
+            if message.find(probable_word) != -1:
+                print('key : {} -> message : {}'.format(bitfield_to_string(key), bin2ascii(message)))
+
 
 def decrypt_triple_sdes_cipher():
     with open('ctx2.txt', 'r') as f:
@@ -365,7 +381,18 @@ if __name__ == "__main__":
     print('\n', 'Triple DES encryptions and decryptions', end='\n\n')
     task2()
 
-    #decrypt_sdes_cipher()
+    print('\n', 'Cracking SDES ciphertext with only one CPU', end='\n\n')
+    start = timer()
+    decrypt_sdes_cipher()
+    stop = timer()
+    print('Elapsed time : {}'.format(stop-start))
+
+    print('\n', 'Cracking SDES ciphertext with parallelized bruteforce', end='\n\n')
+    start = timer()
+    decrypt_sdes_cipher_parallel()
+    stop = timer()
+    print('Elapsed time : {}'.format(stop-start))
+
     #decrypt_triple_sdes_cipher()
 
     #print(bitfield_to_string(cipher))

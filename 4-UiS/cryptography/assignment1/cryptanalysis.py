@@ -1,4 +1,4 @@
-MAX_KEY_LENGTH = 10
+MAX_KEY_LENGTH = 11
 MIN_PATTERN_LENGTH = 5
 MAX_PATTERN_LENGTH = 15
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -58,21 +58,17 @@ def poly_encrypt(message, key):
 
 def read_cipher():
 	''' Returns the ciphertext as a formatted string '''
+
 	with open('polyalphabetic_cipher.txt') as f:
 		cipher = f.read()
 		cipher = cipher.replace(' ', '')
 		cipher = cipher.replace('\n', '')
 	return cipher
 
-def get_factors(n):
-	factors = []
-	while n%2 == 0:
-		if n > MAX_KEY_LENGTH:
-			pass
-		else:
-			factors.append(int(n))
-		n = n/2
-	return factors
+def get_divisors(n):
+	''' Returns the divisors of n up to the max key length '''
+
+	return [x for x in range(2, MAX_KEY_LENGTH) if n%x == 0]
 
 def kasiski_examination(cipher):
 	''' Sort the key length probabilities by identifying repeated substrings '''
@@ -85,7 +81,7 @@ def kasiski_examination(cipher):
 			distance = cipher[index+pattern_length:].find(substring)
 
 			if distance != -1:
-				possible_key_lengths.extend(get_factors(distance + pattern_length))
+				possible_key_lengths.extend(get_divisors(distance + pattern_length))
 
 	probable_key_lengths = {length:possible_key_lengths.count(length) for length in possible_key_lengths}
 
@@ -106,37 +102,37 @@ def attack(cipher, key_length):
 
 	return candidates
 
+def print_columns(cipher, key):
+	decrypted = poly_decrypt(cipher, key)
+	splitted_message = [decrypted[i:i+len(key)] for i in range(0, len(decrypted), len(key))]
 
-def key_elimination(cipher, key_length, probable_word):
-
-	self_encrypted_word = poly_encrypt(probable_word, probable_word)
-
-	offset_cipher = ''.join(LETTERS[0] for i in range(len(cipher)))
-	
-	self_encrypted_cipher = ''.join(LETTERS[LETTERS.find(a)-LETTERS.find(b)] for a,b in zip(cipher, offset_cipher))
-
-	if self_encrypted_cipher.find(self_encrypted_word) != -1:
-		print('YES')
+	for split in splitted_message:
+		print(split)
 
 if __name__ == "__main__":
 
 	message = read_cipher()
 
-	examination = kasiski_examination(message)
-	print(examination)
+	print('Guessing key length by kasiski examination', end='\n\n')
+	repeats = kasiski_examination(message)
+	for distance, occurences in repeats:
+		print('key length : {} -> {} occurences'.format(distance, occurences))
+	print()
 
-	#key length is probably 8
-	#key_length = 8
+	# key length is either 2, 4 or 8 -> guessing it is 8
+	key_length = 8
 
-	#key_elimination(message, key_length, "ATTACK")
+	print('Probable key letters by frequency analysis', end='\n\n')
+	cand = attack(message, key_length)
+	print()
 
-	#cand = attack(message, key_length)
+	print('Pre decrypted message by trying most probable key "BDAAETCY"', end='\n\n')
+	print_columns(message, 'BDAAETCY')
+	print()
 
-	#decrypted = poly_decrypt(message,"BDAAETCY")
+	print('"CRYPEOLFGY" word spotted on last line of column-printed message')
+	print('Changing key[2] and key[5] to transform "CRYPEOLFGY" into "CRYPTOLOGY"')
 
-	#splitted_message = [decrypted[i:i+key_length] for i in range(0, len(decrypted), key_length)]
-
-	#for split in splitted_message:
-		#print(split)
-
-	#print(decrypted)
+	print('Decrypted message with correct key "BDLAEKCY"', end='\n\n')
+	print(poly_decrypt(message, 'BDLAEKCY'))
+	print()

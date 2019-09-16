@@ -2,10 +2,7 @@
 
 ## Polyalphabetic cipher cryptoanalysis
 
-
-https://en.wikipedia.org/wiki/Letter_frequency
-
-https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher
+The first part of the assignment is implemented in `cryptanalysis.py`. 
 
 
 ## Simplified DES implementation

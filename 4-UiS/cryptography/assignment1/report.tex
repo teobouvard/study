@@ -58,12 +58,9 @@
         IWDQEF WSEVKT CDDWLI NEPZSE OPYIW
     \end{python}
 
-    
     We know that this english message has been encrypted by a polyalphabetic substitution cipher, and that the encryption key is not longer than 10 characters. To break this cipher, the first approach is to try to guess the exact key length. To do so, we are looking for repeating sequences, which have a high probability of corresponding to a repetition of the key. This method is called kasiski examination.\cite{vigenere}
 
-    To perform this examination, I implemented a Python method which loops through the whole cipher, and searches for patterns which appear again in the rest of the cipher. If an occurence of the current pattern is found, the distance between the two patterns is added to the possible keys list. Note that all the factors of 2 of the distance are also added to the list, as the key could have repeated 
-    multiple times between the two occurences of the pattern. The get factors submethod does not return factors
-    which are greater than the maximum key length.
+    To perform this examination, I implemented a Python method which loops through the whole cipher, and searches for patterns which appear again in the rest of the cipher. If an occurence of the current pattern is found, the distance between the two patterns is added to the possible keys list. Note that all divisors of the distance are also added to the list, as the key could have repeated multiple times between the two occurences of the pattern. The get factors submethod does not return factors which are greater than the maximum key length.
 
     \begin{python}
 

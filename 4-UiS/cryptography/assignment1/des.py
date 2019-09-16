@@ -173,10 +173,10 @@ def des_bruteforce(cipher, probable_word):
 def triple_des_bruteforce(cipher, probable_word):
     probable_keys = []
 
-    for key0 in tqdm(range(1024)):
+    for key0 in range(1024):
         key0 = format(key0, '010b')
         key0 = create_bitfield(key0)
-        for key1 in tqdm(range(1024)):
+        for key1 in range(1024):
             key1 = format(key1, '010b')
             key1 = create_bitfield(key1)
 
@@ -184,8 +184,8 @@ def triple_des_bruteforce(cipher, probable_word):
             message = bitfield_to_string(message)
             if message.find(probable_word) != -1:
                 probable_keys.append((key0, key1))
-                decrypted = triple_decrypt_message(cipher, keys[0], keys[1])
-                print('keys : {} -> message : {}'.format(keys, bin2ascii(decrypted)))
+                decrypted = triple_decrypt_message(cipher, key0, key1)
+                print('keys : {} -> message : {}'.format((key0, key1), bin2ascii(decrypted)))
     
     return probable_keys
 

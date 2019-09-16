@@ -1,7 +1,19 @@
-# S-BOXES
+from timeit import default_timer as timer
+
+# S-BOXES #
 
 S0 = [[1, 0, 3, 2], [3, 2, 1, 0], [0, 2, 1, 3], [3, 1, 3, 2]]
 S1 = [[0, 1, 2, 3], [2, 0, 1, 3], [3, 0, 1, 0], [2, 1, 0, 3]]
+
+
+# ASCII UTILITY METHODS #
+
+def ascii2bin(text):
+    return ''.join(str(format(ord(character), '08b')) for character in text)
+
+def bin2ascii(binary_str):
+    assert(len(binary_str) % 8 == 0)
+    return ''.join(chr(int(binary_str[index:index+8], 2)) for index in range(0, len(binary_str), 8))
 
 
 # BITFIELD UTILITY METHODS #
@@ -19,6 +31,9 @@ def xor(a, b):
 def switch(bitfield):
     assert(len(bitfield) == 8)
     return bitfield[4:] + bitfield[:4]
+
+def bitfield_to_string(bitfield):
+    return ''.join(str(x) for x in bitfield)
 
 
 # DES ALGORITHM METHODS #
@@ -71,7 +86,7 @@ def fk(bitfield, subkey):
 
     return xor(left, output) + right
 
-def encrypt(message, key):
+def encrypt_byte(message, key):
     subkey_0, subkey_1 = subkeygen(key)
 
     cipher = initial_permutation(message)
@@ -82,7 +97,7 @@ def encrypt(message, key):
 
     return cipher
 
-def decrypt(cipher, key):
+def decrypt_byte(cipher, key):
     subkey_0, subkey_1 = subkeygen(key)
 
     message = initial_permutation(cipher)
@@ -93,35 +108,65 @@ def decrypt(cipher, key):
 
     return message
 
+def decrypt_message(cipher, key):
+    assert(len(cipher)%8 == 0)
+
+    message = []
+
+    for index in range(0, len(cipher), 8):
+        decrypted_byte = decrypt_byte(cipher[index:index+8], key)
+        message.extend(decrypted_byte)
+    
+    return bitfield_to_string(message)
+
 def triple_encrypt(message, key0, key1):
-    message = encrypt(message, key0)
-    message = decrypt(message, key1)
-    message = encrypt(message, key0)
+    message = encrypt_byte(message, key0)
+    message = decrypt_byte(message, key1)
+    message = encrypt_byte(message, key0)
 
     return message
 
 def triple_decrypt(cipher, key0, key1):
-    cipher = encrypt(cipher, key0)
-    cipher = decrypt(cipher, key1)
-    cipher = encrypt(cipher, key0)
+    cipher = decrypt_byte(cipher, key0)
+    cipher = encrypt_byte(cipher, key1)
+    cipher = decrypt_byte(cipher, key0)
 
     return cipher
 
 def des_bruteforce(cipher, probable_word):
 
+    probable_keys = []
+
     for key in range(1024):
-        key = create_bitfield(format(key, '08b'))
-        message = decrypt(cipher, key)
+        key = format(key, '010b')
+        key = create_bitfield(key)
+        message = decrypt_message(cipher, key)
+        message = bitfield_to_string(message)
         if message.find(probable_word) != -1:
-            #print(format())
-            pass
+            probable_keys.append(key)
+    
+    return probable_keys
+
+def triple_des_bruteforce():
+    pass
 
 if __name__ == "__main__":
 
     example_key = create_bitfield('1110001110')
-    example_message = create_bitfield('10101010')
+    example_byte = create_bitfield('10101010')
 
-    cipher = encrypt(example_message, example_key)
+    cipher = encrypt_byte(example_byte, example_key)
+    #print(bitfield_to_string(cipher))
 
-    print(''.join(cipher))
-    #print(inverse_initial_permutation(create_bitfield('10111101')))
+    with open('ctx1.txt', 'r') as f:
+        cipher = create_bitfield(f.read())
+
+        start = timer()
+        probable_keys = des_bruteforce(cipher, ascii2bin('des'))
+        stop = timer()
+        print('Elapsed time : {}'.format(stop-start))
+
+        for key in probable_keys:
+            decrypted = decrypt_message(cipher, key)
+            print('key : {} -> message : {}'.format(key, bin2ascii(decrypted)))
+

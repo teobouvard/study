@@ -42,31 +42,28 @@
 
 \section{Vigenere Cipher Cracking}
 
-    We are given the following cipher :
+We are given the following cipher :
 
-    \begin{python}
-        BQZRMQ KLBOXE WCCEFL DKRYYL BVEHIZ NYJQEE BDYFJO PTLOEM EHOMIC
-        UYHHTS GKNJFG EHIMKN IHCTIH VRIHAR SMGQTR QCSXXC SWTNKP TMNSW
-        AMXVCY WEOGSR FFUEEB DKQLQZ WRKUCO FTPLOT GOJZRI XEPZSE ISXTCT
-        WZRMXI RIHALE SPRFAE FVYORI HNITRG PUHITM CFCDLA HIBKLH RCDIMT
-        WQWTOR DJCNDY YWMJCN HDUWOF DPUPNG BANULZ NGYPQU LEUXOV FFDCEE
-        YHQUXO YOXQUO DDCVIR RPJCAT RAQVFS AWMJCN HTSOXQ UODDAG BANURR
-        REZJGD VJSXOO MSDNIT RGPUHN HRSSSF VFSINH MSGPCM ZJCSLY GEWGQT
-        DREASV FPXEAR IMLPZW EHQGMG WSEIXE GQKPRM XIBFWL IPCHYM OTNXYV
-        FFDCEE YHASBA TEXCJZ VTSGBA NUDYAP IUGTLD WLKVRI HWACZG PTRYCE
-        VNQCUP AOSPEU KPCSNG RIHLRI KUMGFC YTDQES DAHCKP BDUJPX KPYMBD
-        IWDQEF WSEVKT CDDWLI NEPZSE OPYIW
-    \end{python}
+\begin{verbatim}
+    BQZRMQ KLBOXE WCCEFL DKRYYL BVEHIZ NYJQEE BDYFJO PTLOEM EHOMIC
+    UYHHTS GKNJFG EHIMK NIHCTI HVRIHA RSMGQT RQCSXX CSWTNK PTMNSW
+    AMXVCY WEOGSR FFUEEB DKQLQZ WRKUCO FTPLOT GOJZRI XEPZSE ISXTCT
+    WZRMXI RIHALE SPRFAE FVYORI HNITRG PUHITM CFCDLA HIBKLH RCDIMT
+    WQWTOR DJCNDY YWMJCN HDUWOF DPUPNG BANULZ NGYPQU LEUXOV FFDCEE
+    YHQUXO YOXQUO DDCVIR RPJCAT RAQVFS AWMJCN HTSOXQ UODDAG BANURR
+    REZJGD VJSXOO MSDNIT RGPUHN HRSSSF VFSINH MSGPCM ZJCSLY GEWGQT
+    DREASV FPXEAR IMLPZW EHQGMG WSEIXE GQKPRM XIBFWL IPCHYM OTNXYV
+    FFDCEE YHASBA TEXCJZ VTSGBA NUDYAP IUGTLD WLKVRI HWACZG PTRYCE
+    VNQCUP AOSPEU KPCSNG RIHLRI KUMGFC YTDQES DAHCKP BDUJPX KPYMBD
+    IWDQEF WSEVKT CDDWLI NEPZSE OPYIW
+\end{verbatim}
 
-    We know that this english message has been encrypted by a polyalphabetic substitution cipher, and that the encryption key is not longer than 10 characters. To break this cipher, the first approach is to try to guess the exact key length. To do so, we are looking for repeating sequences, which have a high probability of corresponding to a repetition of the key. This method is called kasiski examination.\cite{vigenere}
+We know that this english message has been encrypted by a polyalphabetic substitution cipher, and that the encryption key is not longer than 10 characters. To break this cipher, one approach could be to try to guess the key length. To do so, we are looking for repeating sequences, which have a high probability of corresponding to a repetition of the key. This method is called kasiski examination.\cite{vigenere}
 
-    To perform this examination, I implemented a Python method which loops through the whole cipher, and searches for patterns which appear again in the rest of the cipher. If an occurence of the current pattern is found, the distance between the two patterns is added to the possible keys list. Note that all divisors of the distance are also added to the list, as the key could have repeated multiple times between the two occurences of the pattern. The get factors submethod does not return factors which are greater than the maximum key length.
+To perform this examination, I implemented a Python method which loops through the whole cipher, and searches for patterns which appear again in the rest of the cipher. If an occurence of the current pattern is found, the distance between the two patterns is added to the possible keys list. Note that all divisors of the distance are also added to the list, as the key could have repeated multiple times between the two occurences of the pattern. The get\_divisors() subroutine does not return divisors which are greater than the maximum key length.
 
-    \begin{python}
-
+\begin{python}
 def kasiski_examination(cipher):
-''' Sort the key length probabilities by identifying repeated substrings '''
-
     possible_key_lengths = []
 
     for pattern_length in range(MIN_PATTERN_LENGTH, MAX_PATTERN_LENGTH):
@@ -75,15 +72,93 @@ def kasiski_examination(cipher):
             distance = cipher[index+pattern_length:].find(substring)
 
             if distance != -1:
-                possible_key_lengths.extend(get_factors(distance + pattern_length))
+                possible_key_lengths.extend(get_divisors(distance + pattern_length))
 
     probable_key_lengths = {length:possible_key_lengths.count(length) for length in possible_key_lengths}
 
     return sorted(probable_key_lengths.items(), key=lambda x:x[1], reverse=True)
+\end{python}
 
-    \end{python}
+When executed on the given ciphertext, we get the following output.
 
-When executed on the given cipher with MIN\_PATTERN\_LENGTH = 5 and MAX\_PATTERN\_LENGTH = 10, we get this output.
+\begin{verbatim}
+
+key length : 2 -> 115 occurences
+key length : 4 -> 115 occurences
+key length : 8 -> 115 occurences
+key length : 3 -> 57 occurences
+key length : 6 -> 54 occurences
+key length : 7 -> 31 occurences
+key length : 9 -> 19 occurences
+key length : 5 -> 2 occurences
+key length : 10 -> 2 occurences
+
+\end{verbatim}
+
+Which implies that the key is probably of length 2, 4 or 8. Since 2 and 4 are divisors of 8, it is safe to assume that they appear so often here because the get\_divisors method returns all divisors smaller than the maximum key length. Our guess is therefore that the key is of length 8.
+Next, we perform a frequency analysis for each set of character with an equal position in the ciphertext, modulo the key length. These sets will be called columns from now on, because they each represent a column of the ciphertext when it is splitted every key length characters.
+
+This frequency analysis is implemented in the following method. 
+
+\begin{python}
+
+def frequency_analysis(cipher, key_length):
+    candidates = []
+
+    for column in range(key_length):
+        frequencies = char_frequency(message[column::key_length])
+        column_candidates = []
+
+        for most_common in frequencies[:5]:
+            E_offset = (LETTERS.find(most_common[0]) - LETTERS.find('E')) % 26
+            column_candidates.append(LETTERS[E_offset])
+        print("key[{}] candidates : {}".format(column, column_candidates))
+        candidates.append(column_candidates)
+
+    return candidates
+    
+\end{python}
+
+This method computes character frequency for each column, and returns the key character which would have encrypted this column if the most common character corresponds to the letter E.
+
+\begin{verbatim}
+    key[0] candidate : ['B']
+    key[1] candidate : ['D']
+    key[2] candidate : ['A']
+    key[3] candidate : ['A']
+    key[4] candidate : ['E']
+    key[5] candidate : ['T']
+    key[6] candidate : ['C']
+    key[7] candidate : ['Y']
+
+\end{verbatim}
+
+This gives us the following possible key : "BDAAETCY". We then try to decrypt the ciphertext with this key using the following method.
+
+\begin{python}
+def poly_decrypt(cipher, key):
+
+    # make sure key and cipher are in uppercase and without whitespace
+    cipher = cipher.upper().replace(' ', '')
+    key = key.upper().replace(' ', '')
+
+    # expand the key so that it matches the length of the cipher
+    expanded_key = ''.join(key[i \% len(key)] for i in range(len(cipher)))
+
+    decrypted_message = ''
+
+    for cipher_letter, key_letter in zip(cipher, expanded_key):
+        decrypted_index = (LETTERS.find(cipher_letter) - LETTERS.find(key_letter)) \% 26
+        decrypted_message += LETTERS[decrypted_index]
+
+    return decrypted_message
+\end{python}
+
+When using this method on the given ciphertext with the key "BDAAETCY", we get the following output.
+
+\begin{verbatim}
+    
+\end{verbatim}
 
 \section{Simplified DES Implementation}
 

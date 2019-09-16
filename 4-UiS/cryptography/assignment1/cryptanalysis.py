@@ -1,5 +1,5 @@
 MAX_KEY_LENGTH = 11
-MIN_PATTERN_LENGTH = 5
+MIN_PATTERN_LENGTH = 3
 MAX_PATTERN_LENGTH = 15
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -87,24 +87,23 @@ def kasiski_examination(cipher):
 
 	return sorted(probable_key_lengths.items(), key=lambda x:x[1], reverse=True)
 
-def attack(cipher, key_length):
+def frequency_analysis(cipher, key_length):
 	candidates = []
 
 	for column in range(key_length):
 		frequencies = char_frequency(message[column::key_length])
 		column_candidates = []
 
-		for most_common in frequencies[:5]:
+		for most_common in frequencies[:1]:
 			E_offset = (LETTERS.find(most_common[0]) - LETTERS.find('E')) % 26
 			column_candidates.append(LETTERS[E_offset])
-		print("key[{}] candidates : {}".format(column, column_candidates))
+		print("key[{}] candidate : {}".format(column, column_candidates))
 		candidates.append(column_candidates)
 
 	return candidates
 
-def print_columns(cipher, key):
-	decrypted = poly_decrypt(cipher, key)
-	splitted_message = [decrypted[i:i+len(key)] for i in range(0, len(decrypted), len(key))]
+def print_columns(message, key_length):
+	splitted_message = [message[i:i+key_length] for i in range(0, len(message), key_length)]
 
 	for split in splitted_message:
 		print(split)
@@ -123,11 +122,17 @@ if __name__ == "__main__":
 	key_length = 8
 
 	print('Probable key letters by frequency analysis', end='\n\n')
-	cand = attack(message, key_length)
+	cand = frequency_analysis(message, key_length)
 	print()
 
 	print('Pre decrypted message by trying most probable key "BDAAETCY"', end='\n\n')
-	print_columns(message, 'BDAAETCY')
+	decrypted = poly_decrypt(message, 'BDAAETCY')
+	print(decrypted)
+	print()
+
+	print('We can identify possible words, let\'s print the columns to see which part of the key are wrong')
+	print()
+	print_columns(decrypted, 8)
 	print()
 
 	print('"CRYPEOLFGY" word spotted on last line of column-printed message')
@@ -135,4 +140,3 @@ if __name__ == "__main__":
 
 	print('Decrypted message with correct key "BDLAEKCY"', end='\n\n')
 	print(poly_decrypt(message, 'BDLAEKCY'))
-	print()

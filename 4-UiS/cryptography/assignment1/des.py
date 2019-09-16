@@ -205,6 +205,8 @@ def triple_des_bruteforce(cipher, probable_word):
 def parallel_des_bruteforce(key):
     return decrypt_message(CTX1, key), key
 
+def parallel_triple_des_bruteforce(keys):
+    return triple_decrypt_message(CTX2, keys[0], keys[1]), keys
 
 # ASSIGNMENT #
 
@@ -340,17 +342,13 @@ def task2():
     message = triple_decrypt_byte(ciphertext, keys[0], keys[1])
     print('keys : {} | plaintext : {} | ciphertext : {}'.format(keys, message, ciphertext))
 
-def decrypt_sdes_cipher():
-    des_bruteforce(CTX1, ascii2bin('des'))
-
 def decrypt_sdes_cipher_parallel():
     
     numkeys = 1024
     chunksize = int(numkeys / (multiprocessing.cpu_count() - 2))
+    keys = [format(x, '010b') for x in range(1024)]
 
-    keys = [create_bitfield(format(x, '010b')) for x in range(1024)]
-
-    probable_word = ascii2bin('des')
+    probable_word = ascii2bin('security')
 
     with multiprocessing.Pool() as p:
         for message, key in p.imap_unordered(func=parallel_des_bruteforce, iterable=keys, chunksize=chunksize):
@@ -358,17 +356,19 @@ def decrypt_sdes_cipher_parallel():
                 print('key : {} -> message : {}'.format(bitfield_to_string(key), bin2ascii(message)))
 
 
-def decrypt_triple_sdes_cipher():
-    with open('ctx2.txt', 'r') as f:
-        cipher = f.read()
+def decrypt_triple_sdes_cipher_parallel():
 
-        start = timer()
-        probable_keys = triple_des_bruteforce(cipher, ascii2bin('des'))
-        #message = triple_decrypt_message(cipher,[1, 1, 1, 1, 1, 0, 1, 0, 1, 0], [0, 1, 0, 1, 0, 1, 1, 1, 1, 1])
-        #print(bin2ascii(message))
-        stop = timer()
+    numkeys = 1024 ** 2
+    chunksize = int(numkeys / (multiprocessing.cpu_count() - 2))
+    keys = [(format(x, '010b'), format(y, '010b')) for x in range(1024) for y in range(1024)]
 
-        print('Elapsed time : {}'.format(stop-start))
+    probable_word = ascii2bin('security')
+
+    with multiprocessing.Pool() as p:
+        for message, keys in p.imap_unordered(func=parallel_triple_des_bruteforce, iterable=keys, chunksize=chunksize):
+            if message.find(probable_word) != -1:
+                print('key : {} -> message : {}'.format(bitfield_to_string(keys), bin2ascii(message)))
+
 
 if __name__ == "__main__":
 
@@ -383,7 +383,7 @@ if __name__ == "__main__":
 
     print('\n', 'Cracking SDES ciphertext with only one CPU', end='\n\n')
     start = timer()
-    decrypt_sdes_cipher()
+    des_bruteforce(CTX1, ascii2bin('des'))
     stop = timer()
     print('Elapsed time : {}'.format(stop-start))
 
@@ -393,7 +393,8 @@ if __name__ == "__main__":
     stop = timer()
     print('Elapsed time : {}'.format(stop-start))
 
-    #decrypt_triple_sdes_cipher()
-
-    #print(bitfield_to_string(cipher))
-
+    print('\n', 'Cracking triple SDES ciphertext with parallelized bruteforce', end='\n\n')
+    start = timer()
+    decrypt_triple_sdes_cipher_parallel()
+    stop = timer()
+    print('Elapsed time : {}'.format(stop-start))

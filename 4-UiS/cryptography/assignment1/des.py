@@ -91,6 +91,9 @@ def fk(bitfield, subkey):
 # DES ALGORITHM METHODS #
 
 def encrypt_byte(message, key):
+    message = create_bitfield(message)
+    key = create_bitfield(key)
+
     subkey_0, subkey_1 = subkeygen(key)
 
     cipher = initial_permutation(message)
@@ -99,9 +102,12 @@ def encrypt_byte(message, key):
     cipher = fk(cipher, subkey_1)
     cipher = inverse_initial_permutation(cipher)
 
-    return cipher
+    return bitfield_to_string(cipher)
 
 def decrypt_byte(cipher, key):
+    cipher = create_bitfield(cipher)
+    key = create_bitfield(key)
+
     subkey_0, subkey_1 = subkeygen(key)
 
     message = initial_permutation(cipher)
@@ -110,18 +116,18 @@ def decrypt_byte(cipher, key):
     message = fk(message, subkey_0)
     message = inverse_initial_permutation(message)
 
-    return message
+    return bitfield_to_string(message)
 
 def decrypt_message(cipher, key):
     assert(len(cipher)%8 == 0)
 
-    message = []
+    message = ''
 
     for index in range(0, len(cipher), 8):
         decrypted_byte = decrypt_byte(cipher[index:index+8], key)
-        message.extend(decrypted_byte)
+        message += decrypted_byte
     
-    return bitfield_to_string(message)
+    return message
 
 
 # TRIPLE DES ALGORITHM METHODS #
@@ -189,12 +195,146 @@ def triple_des_bruteforce(cipher, probable_word):
     
     return probable_keys
 
+def parallel_des_bruteforce():
+    pass
 
 # ASSIGNMENT #
 
+def test_cases():
+
+    # Encryption test 1
+    message = '10101010'
+    key = '0000000000'
+    expected_cipher = '00010001'
+    assert(encrypt_byte(message, key) == expected_cipher)
+    assert(decrypt_byte(expected_cipher, key) == message)
+
+    # Encryption test 2
+    message = '10101010'
+    key = '1110001110'
+    expected_cipher = '11001010'
+    assert(encrypt_byte(message, key) == expected_cipher)
+    assert(decrypt_byte(expected_cipher, key) == message)
+    
+    # Encryption test 3
+    message = '01010101'
+    key = '1110001110'
+    expected_cipher = '01110000'
+    assert(encrypt_byte(message, key) == expected_cipher)
+    assert(decrypt_byte(expected_cipher, key) == message)
+
+    # Encryption test 3
+    message = '10101010'
+    key = '1111111111'
+    expected_cipher = '00000100'
+    assert(encrypt_byte(message, key) == expected_cipher)
+    assert(decrypt_byte(expected_cipher, key) == message)
+
+    print("All tests passed")
+
+def task1():
+
+    # DES encryption 1
+    key = '0000000000'
+    message = '00000000'
+    ciphertext = encrypt_byte(message, key)
+    print('key : {} | plaintext : {} | ciphertext : {}'.format(key, message, ciphertext))
+
+    # DES encryption 2
+    key = '0000011111'
+    message = '11111111'
+    ciphertext = encrypt_byte(message, key)
+    print('key : {} | plaintext : {} | ciphertext : {}'.format(key, message, ciphertext))
+
+    # DES encryption 3
+    key = '0010011111'
+    message = '11111100'
+    ciphertext = encrypt_byte(message, key)
+    print('key : {} | plaintext : {} | ciphertext : {}'.format(key, message, ciphertext))
+
+    # DES encryption 4
+    key = '0010011111'
+    message = '10100101'
+    ciphertext = encrypt_byte(message, key)
+    print('key : {} | plaintext : {} | ciphertext : {}'.format(key, message, ciphertext))
+
+    # DES decryption 1
+    key = '1111111111'
+    ciphertext = '00001111'
+    message = decrypt_byte(ciphertext, key)
+    print('key : {} | plaintext : {} | ciphertext : {}'.format(key, message, ciphertext))
+
+    # DES decryption 2
+    key = '0000011111'
+    ciphertext = '01000011'
+    message = decrypt_byte(ciphertext, key)
+    print('key : {} | plaintext : {} | ciphertext : {}'.format(key, message, ciphertext))
+
+    # DES decryption 3
+    key = '1000101110'
+    ciphertext = '00011100'
+    message = decrypt_byte(ciphertext, key)
+    print('key : {} | plaintext : {} | ciphertext : {}'.format(key, message, ciphertext))
+
+    # DES decryption 4
+    key = '0000011111'
+    ciphertext = '01000011'
+    message = decrypt_byte(ciphertext, key)
+    print('key : {} | plaintext : {} | ciphertext : {}'.format(key, message, ciphertext))
+
+def task2():
+
+    # Triple DES encryption 1
+    keys = ('1000101110', '0110101110')
+    message = '11010111'
+    ciphertext = triple_encrypt_byte(message, keys[0], keys[1])
+    print('keys : {} | plaintext : {} | ciphertext : {}'.format(keys, message, ciphertext))
+
+    # Triple DES encryption 2
+    keys = ('1000101110', '0110101110')
+    message = '10101010'
+    ciphertext = triple_encrypt_byte(message, keys[0], keys[1])
+    print('keys : {} | plaintext : {} | ciphertext : {}'.format(keys, message, ciphertext))
+
+    # Triple DES encryption 3
+    keys = ('1111111111', '1111111111')
+    message = '00000000'
+    ciphertext = triple_encrypt_byte(message, keys[0], keys[1])
+    print('keys : {} | plaintext : {} | ciphertext : {}'.format(keys, message, ciphertext))
+
+    # Triple DES encryption 4
+    keys = ('0000000000', '0000000000')
+    message = '01010010'
+    ciphertext = triple_encrypt_byte(message, keys[0], keys[1])
+    print('keys : {} | plaintext : {} | ciphertext : {}'.format(keys, message, ciphertext))
+
+    # Triple DES decryption 1
+    keys = ('1000101110', '0110101110')
+    ciphertext = '11100110'
+    message = triple_decrypt_byte(ciphertext, keys[0], keys[1])
+    print('keys : {} | plaintext : {} | ciphertext : {}'.format(keys, message, ciphertext))
+
+    # Triple DES decryption 2
+    keys = ('1000101110', '0110101110')
+    ciphertext = '11100110'
+    message = triple_decrypt_byte(ciphertext, keys[0], keys[1])
+    print('keys : {} | plaintext : {} | ciphertext : {}'.format(keys, message, ciphertext))
+
+    # Triple DES decryption 3
+    keys = ('1000101110', '0110101110')
+    ciphertext = '11100110'
+    message = triple_decrypt_byte(ciphertext, keys[0], keys[1])
+    print('keys : {} | plaintext : {} | ciphertext : {}'.format(keys, message, ciphertext))
+
+    # Triple DES decryption 4
+    keys = ('1000101110', '0110101110')
+    ciphertext = '11100110'
+    message = triple_decrypt_byte(ciphertext, keys[0], keys[1])
+    print('keys : {} | plaintext : {} | ciphertext : {}'.format(keys, message, ciphertext))
+
 def decrypt_sdes_cipher():
     with open('ctx1.txt', 'r') as f:
-        cipher = create_bitfield(f.read())
+        cipher = f.read()
 
         start = timer()
         probable_keys = des_bruteforce(cipher, ascii2bin('des'))
@@ -204,21 +344,29 @@ def decrypt_sdes_cipher():
 
 def decrypt_triple_sdes_cipher():
     with open('ctx2.txt', 'r') as f:
-        cipher = create_bitfield(f.read())
+        cipher = f.read()
 
         start = timer()
         probable_keys = triple_des_bruteforce(cipher, ascii2bin('des'))
+        #message = triple_decrypt_message(cipher,[1, 1, 1, 1, 1, 0, 1, 0, 1, 0], [0, 1, 0, 1, 0, 1, 1, 1, 1, 1])
+        #print(bin2ascii(message))
         stop = timer()
 
         print('Elapsed time : {}'.format(stop-start))
 
 if __name__ == "__main__":
 
-    example_key = create_bitfield('1110001110')
-    example_byte = create_bitfield('10101010')
+    print('Testing implementation correctness ...', end=' ')
+    test_cases()
+
+    print('\n', 'Simple DES encryptions and decryptions', end='\n\n')
+    task1()
+
+    print('\n', 'Triple DES encryptions and decryptions', end='\n\n')
+    task2()
 
     #decrypt_sdes_cipher()
-    decrypt_triple_sdes_cipher()
+    #decrypt_triple_sdes_cipher()
 
     #print(bitfield_to_string(cipher))
 

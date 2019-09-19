@@ -49,7 +49,7 @@ We are given the following cipher :
 \begin{verbatim}
 
     BQZRMQ KLBOXE WCCEFL DKRYYL BVEHIZ NYJQEE BDYFJO PTLOEM EHOMIC
-    UYHHTS GKNJFG EHIMK NIHCTI HVRIHA RSMGQT RQCSXX CSWTNK PTMNSW
+    UYHHTS GKNJFG EHIMK  NIHCTI HVRIHA RSMGQT RQCSXX CSWTNK PTMNSW
     AMXVCY WEOGSR FFUEEB DKQLQZ WRKUCO FTPLOT GOJZRI XEPZSE ISXTCT
     WZRMXI RIHALE SPRFAE FVYORI HNITRG PUHITM CFCDLA HIBKLH RCDIMT
     WQWTOR DJCNDY YWMJCN HDUWOF DPUPNG BANULZ NGYPQU LEUXOV FFDCEE
@@ -65,9 +65,9 @@ We are given the following cipher :
 We know that this english message has been encrypted by a polyalphabetic substitution cipher, and that the encryption key is not longer than 10 characters. To break this cipher, one approach could be to try to guess the key length. To do so, we are looking for repeating sequences, which have a high probability of corresponding to a repetition of the key. This method is called kasiski examination.\cite{vigenere}
 
 To perform this examination, I implemented a Python method which loops through the whole cipher, and searches for patterns which appear again in the rest of the cipher. If an occurence of the current pattern is found, the distance between the two patterns is added to the possible keys list. Note that all divisors of the distance are also added to the list, as the key could have repeated multiple times between the two occurences of the pattern. The get\_divisors() subroutine does not return divisors which are greater than the maximum key length.
+\bigskip
 
 \begin{python}
-
 def kasiski_examination(cipher):
     possible_key_lengths = []
 
@@ -82,9 +82,9 @@ def kasiski_examination(cipher):
     probable_key_lengths = {length:possible_key_lengths.count(length) for length in possible_key_lengths}
 
     return sorted(probable_key_lengths.items(), key=lambda x:x[1], reverse=True)
-
 \end{python}
 
+\bigskip
 When executed on the given ciphertext, we get the following output.
 
 \begin{verbatim}
@@ -104,10 +104,10 @@ When executed on the given ciphertext, we get the following output.
 Which implies that the key is probably of length 2, 4 or 8. Since 2 and 4 are divisors of 8, it is safe to assume that they appear so often here because the get\_divisors method returns all divisors smaller than the maximum key length. Our guess is therefore that the key is of length 8.
 Next, we perform a frequency analysis for each set of character with an equal position in the ciphertext, modulo the key length. These sets will be called columns from now on, because they each represent a column of the ciphertext when it is splitted every key length characters.
 
-This frequency analysis is implemented in the following method. 
+This frequency analysis is implemented in the following method.
 
+\bigskip
 \begin{python}
-
 def frequency_analysis(cipher, key_length):
     candidates = []
 
@@ -122,8 +122,8 @@ def frequency_analysis(cipher, key_length):
         candidates.append(column_candidates)
 
     return candidates
-    
 \end{python}
+\bigskip
 
 This method computes character frequency for each column, and returns the key character which would have encrypted this column if the most common character corresponds to the letter E.
 
@@ -142,6 +142,7 @@ This method computes character frequency for each column, and returns the key ch
 
 This gives us the following possible key : "BDAAETCY". We then try to decrypt the ciphertext with this key using the following method.
 
+\bigskip
 \begin{python}
 def poly_decrypt(cipher, key):
 
@@ -160,6 +161,7 @@ def poly_decrypt(cipher, key):
 
     return decrypted_message
 \end{python}
+\bigskip
 
 When using this method on the given ciphertext with the key "BDAAETCY", we can do a first decryption of the message. If we format the output by columns, we get the following output
 
@@ -179,9 +181,58 @@ When using this method on the given ciphertext with the key "BDAAETCY", we can d
     \textbf{YPEOLFGY}
 \end{alltt}
     
-This is not the original message, but we can clearly identify possible words in this text. 
+This is not the original message, but we can clearly identify possible words in this text, like CRYPTANALYSIS or CRYPTOLOGY. However, it seems that columns 2 and 5 are offset by the wrong key. To find the right key, we try matching the last 10 characters of the ciphertext (EPZSEOPYIW) to the guessed word (CRYPTOLOGY). 
+
+For the first character mismatch, we search the key such that T encrypts to E, and for the second, the key such that O encrypts to Y. By reading a Vignère table, we can see that these unkwown key parts we are looking for are L and K.
+By decrypting the ciphertext with the new key "BDLAEKCY", we get the original message.
+\bigskip
+
+\sloppy
+AN ORIGINAL MESSAGE IS KNOWN AS THE PLAINTEXT WHILE THE CODED MESSAGE IS CALLED THE CIPHERTEXT. THE PROCESS OF CONVERTING FROM PLAINTEXT TO CIPHERTEXT IS KNOWN AS ENCIPHERING OR ENCRYPTION,  RESTORING THE PLAINTEXT FROM THE CIPHERTEXT IS DECIPHERING OR DECRYPTION. THE MANY SCHEMES USED FOR ENCRYPTION CONSTITUTE THE AREA OF STUDY KNOWN AS CRYPTOGRAPHY. SUCH A SCHEME IS KNOWN AS A CRYPTOGRAPHIC SYSTEM OR A CIPHER. TECHNIQUES USED FOR DECIPHERING A MESSAGE WITHOUT ANY KNOWLEDGE OF THE ENCIPHERING DETAILS FALL INTO THE AREA OF CRYPTANALYSIS. CRYPTANALYSIS IS WHAT THE LAY PERSON CALLS BREAKING THE CODE. THE AREAS OF CRYPTOGRAPHY AND CRYPTANALYSIS TOGETHER ARE CALLED CRYPTOLOGY.
 
 \section{Simplified DES Implementation}
+
+\subsection{Test cases}
+
+The following table sums up the results of the test cases in task 1.
+
+\begin{center}
+    \begin{tabular}{|c c c|}
+        \hline
+        \textbf{Raw Key} & \textbf{Plaintext} & \textbf{Ciphertext} \\
+        \hline
+        0000000000 & 00000000 & 11110000 \\
+        0000011111 & 11111111 & 11100001 \\
+        0010011111 & 11111100 & 10011101 \\
+        0010011111 & 10100101 & 10010000 \\
+        1111111111 & 11111111 & 00001111 \\
+        0000011111 & 00000000 & 01000011 \\
+        1000101110 & 00111000 & 00011100 \\
+        0000011111 & 00000000 & 01000011 \\
+        \hline
+    \end{tabular}
+\end{center}
+
+The following table sums up the results of the test cases in task 2.
+
+\begin{center}
+    \begin{tabular}{|c c c c|}
+        \hline
+        \textbf{Raw Key 1} & \textbf{Raw Key 2} & \textbf{Plaintext} & \textbf{Ciphertext} \\
+        \hline
+        1000101110 & 0110101110 & 11010111 & 10111001 \\
+        1000101110 & 0110101110 & 10101010 & 11100100 \\
+        1111111111 & 1111111111 & 00000000 & 11101011 \\
+        0000000000 & 0000000000 & 01010010 & 10000000 \\
+        1000101110 & 0110101110 & 11111101 & 11100110 \\
+        1011101111 & 0110101110 & 01001111 & 01010000 \\
+        1111111111 & 1111111111 & 10101010 & 00000100 \\
+        0000000000 & 0000000000 & 00000000 & 11110000 \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\subsection{SDES cracking}
 
 \section{Conclusion}
 

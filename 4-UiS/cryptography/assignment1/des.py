@@ -345,7 +345,7 @@ def task2():
 def decrypt_sdes_cipher_parallel():
     
     numkeys = 1024
-    chunksize = int(numkeys / (multiprocessing.cpu_count() - 2))
+    chunksize = int(numkeys / multiprocessing.cpu_count())
     keys = [format(x, '010b') for x in range(1024)]
 
     probable_word = ascii2bin('security')
@@ -359,7 +359,7 @@ def decrypt_sdes_cipher_parallel():
 def decrypt_triple_sdes_cipher_parallel():
 
     numkeys = 1024 ** 2
-    chunksize = int(numkeys / (multiprocessing.cpu_count() - 2))
+    chunksize = int(numkeys / multiprocessing.cpu_count())
     keys = [(format(x, '010b'), format(y, '010b')) for x in range(1024) for y in range(1024)]
 
     probable_word = ascii2bin('security')
@@ -395,6 +395,7 @@ if __name__ == "__main__":
 
     print('\n', 'Cracking triple SDES ciphertext with parallelized bruteforce', end='\n\n')
     start = timer()
-    decrypt_triple_sdes_cipher_parallel()
+    print('Uncomment next line in source code to execute it. Might take some time depending on your hardware.')
+    #decrypt_triple_sdes_cipher_parallel()
     stop = timer()
     print('Elapsed time : {}'.format(stop-start))

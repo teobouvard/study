@@ -10,6 +10,8 @@
 \hypersetup{urlcolor=blue, colorlinks=true}
 \usepackage{pythonhighlight} % python syntax highlighting
 \usepackage[left=3cm, right=3cm, bottom=3cm, top=3cm]{geometry} % margin settings
+\usepackage{alltt}
+\renewcommand{\ttdefault}{txtt}
 
 
 \pagestyle{fancy}
@@ -45,6 +47,7 @@
 We are given the following cipher :
 
 \begin{verbatim}
+
     BQZRMQ KLBOXE WCCEFL DKRYYL BVEHIZ NYJQEE BDYFJO PTLOEM EHOMIC
     UYHHTS GKNJFG EHIMK NIHCTI HVRIHA RSMGQT RQCSXX CSWTNK PTMNSW
     AMXVCY WEOGSR FFUEEB DKQLQZ WRKUCO FTPLOT GOJZRI XEPZSE ISXTCT
@@ -56,6 +59,7 @@ We are given the following cipher :
     FFDCEE YHASBA TEXCJZ VTSGBA NUDYAP IUGTLD WLKVRI HWACZG PTRYCE
     VNQCUP AOSPEU KPCSNG RIHLRI KUMGFC YTDQES DAHCKP BDUJPX KPYMBD
     IWDQEF WSEVKT CDDWLI NEPZSE OPYIW
+
 \end{verbatim}
 
 We know that this english message has been encrypted by a polyalphabetic substitution cipher, and that the encryption key is not longer than 10 characters. To break this cipher, one approach could be to try to guess the key length. To do so, we are looking for repeating sequences, which have a high probability of corresponding to a repetition of the key. This method is called kasiski examination.\cite{vigenere}
@@ -63,6 +67,7 @@ We know that this english message has been encrypted by a polyalphabetic substit
 To perform this examination, I implemented a Python method which loops through the whole cipher, and searches for patterns which appear again in the rest of the cipher. If an occurence of the current pattern is found, the distance between the two patterns is added to the possible keys list. Note that all divisors of the distance are also added to the list, as the key could have repeated multiple times between the two occurences of the pattern. The get\_divisors() subroutine does not return divisors which are greater than the maximum key length.
 
 \begin{python}
+
 def kasiski_examination(cipher):
     possible_key_lengths = []
 
@@ -77,21 +82,22 @@ def kasiski_examination(cipher):
     probable_key_lengths = {length:possible_key_lengths.count(length) for length in possible_key_lengths}
 
     return sorted(probable_key_lengths.items(), key=lambda x:x[1], reverse=True)
+
 \end{python}
 
 When executed on the given ciphertext, we get the following output.
 
 \begin{verbatim}
 
-key length : 2 -> 115 occurences
-key length : 4 -> 115 occurences
-key length : 8 -> 115 occurences
-key length : 3 -> 57 occurences
-key length : 6 -> 54 occurences
-key length : 7 -> 31 occurences
-key length : 9 -> 19 occurences
-key length : 5 -> 2 occurences
-key length : 10 -> 2 occurences
+    key length : 2 -> 115 occurences
+    key length : 4 -> 115 occurences
+    key length : 8 -> 115 occurences
+    key length : 3 -> 57 occurences
+    key length : 6 -> 54 occurences
+    key length : 7 -> 31 occurences
+    key length : 9 -> 19 occurences
+    key length : 5 -> 2 occurences
+    key length : 10 -> 2 occurences
 
 \end{verbatim}
 
@@ -122,6 +128,7 @@ def frequency_analysis(cipher, key_length):
 This method computes character frequency for each column, and returns the key character which would have encrypted this column if the most common character corresponds to the letter E.
 
 \begin{verbatim}
+
     key[0] candidate : ['B']
     key[1] candidate : ['D']
     key[2] candidate : ['A']
@@ -154,11 +161,25 @@ def poly_decrypt(cipher, key):
     return decrypted_message
 \end{python}
 
-When using this method on the given ciphertext with the key "BDAAETCY", we get the following output.
+When using this method on the given ciphertext with the key "BDAAETCY", we can do a first decryption of the message. If we format the output by columns, we get the following output
 
-\begin{verbatim}
+\begin{alltt}
+    01234567
+    --------
+    ANZRIXIN
+    ALXESJAG
+    EIDKNFWN
+    ASEHEGLA
+    INEEXKWH
+    ...
+    \textbf{CRJPTRNA}
+    \textbf{LYDIS}KOG
+    ETSERRRE
+    CAWLEU\textbf{CR}
+    \textbf{YPEOLFGY}
+\end{alltt}
     
-\end{verbatim}
+This is not the original message, but we can clearly identify possible words in this text. 
 
 \section{Simplified DES Implementation}
 

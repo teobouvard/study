@@ -6,10 +6,11 @@
 \usepackage{lastpage} % get last page number
 \usepackage[super]{natbib} % format references
 \usepackage{url} % pretty wrap url
+\usepackage{indentfirst}
 \usepackage{hyperref} % color url
 \hypersetup{urlcolor=blue, colorlinks=true}
 \usepackage{pythonhighlight} % python syntax highlighting
-\usepackage[left=3cm, right=3cm, bottom=3cm, top=3cm]{geometry} % margin settings
+\usepackage[left=2cm, right=2cm, bottom=3cm, top=3cm]{geometry} % margin settings
 \usepackage{alltt}
 \renewcommand{\ttdefault}{txtt}
 
@@ -42,7 +43,7 @@
     
 \end{abstract}
 
-\section{Vigenere Cipher Cracking}
+\section{Vigenere Cipher Cracking} \label{vignere}
 
 We are given the following cipher :
 
@@ -194,7 +195,8 @@ AN ORIGINAL MESSAGE IS KNOWN AS THE PLAINTEXT WHILE THE CODED MESSAGE IS CALLED 
 
 \subsection{Test cases}
 
-The following table sums up the results of the test cases in task 1.
+
+The following table sums up the results of the test cases in task 1, using the SDES algorithm implementation.
 
 \begin{center}
     \begin{tabular}{|c c c|}
@@ -213,7 +215,7 @@ The following table sums up the results of the test cases in task 1.
     \end{tabular}
 \end{center}
 
-The following table sums up the results of the test cases in task 2.
+The following table sums up the results of the test cases in task 2, using the Triple SDES algorithm implementation.
 
 \begin{center}
     \begin{tabular}{|c c c c|}
@@ -233,6 +235,55 @@ The following table sums up the results of the test cases in task 2.
 \end{center}
 
 \subsection{SDES cracking}
+
+The Simple DES encryption algorithm is very weak, as it allows only $2^{10} = 1024$ different keys. We can find the key by bruteforce, decrypting with every possible key and identifying possible plaintext. The naive implementation of bruteforce cracking is to decrypt each key one after the other, with the following method.
+
+\bigskip
+\begin{python}
+def des_bruteforce(cipher, probable_word):
+
+probable_keys = []
+
+for key in range(1024):
+    key = format(key, '010b')
+    key = create_bitfield(key)
+    message = decrypt_message(cipher, key)
+    message = bitfield_to_string(message)
+    if message.find(probable_word) != -1:
+        probable_keys.append(key)
+        print('key : {} -> message : {}'.format(bitfield_to_string(key), bin2ascii(message)))
+
+return probable_keys
+\end{python}
+\bigskip
+
+The ciphertext decrypted in section \ref{vignere} contained almost only obvious words for a cryptography assignment, so the first probable word I used was `des'. 
+When running this bruteforce attack on CTX1.txt, we get the following output.
+
+\begin{alltt}
+    key : 1111101010 -> message : simplifieddesisnotsecureenoughtoprovideyousufficientsecurity
+    Elapsed time : 2.798s
+\end{alltt}
+
+Which gives us the key used to encrypt the message : 1111101010. We could do the same for the Triple DES algortihm, but let's first do some estimations about the time it would take to run. Bruteforcing Triple DES requires decrypting $2^{20} = 1 048 576$ different keys. If we approximate the time it takes for a single triple SDES decryption to be about 3 times longer than a simple SDES decryption, we can estimate that testing all keys linearly would be 3072 times longer than the previous bruteforce. Depending on your hardware, that could take well over an hour. What we can do is parallelize the decryptions across all CPU cores of the machine. To do so, I implemented the following method.
+
+\bigskip
+\begin{python}
+    def decrypt_triple_sdes_cipher_parallel():
+
+    numkeys = 1024 ** 2
+    chunksize = int(numkeys / multiprocessing.cpu_count())
+    keys = [(format(x, '010b'), format(y, '010b')) for x in range(1024) for y in range(1024)]
+
+    probable_word = ascii2bin('security')
+
+    with multiprocessing.Pool() as p:
+        for message, keys in p.imap_unordered(func=parallel_triple_des_bruteforce, iterable=keys, chunksize=chunksize):
+            if message.find(probable_word) != -1:
+                print('keys : ({}, {}) -> message : {}'.format(bitfield_to_string(keys[0]), bitfield_to_string(keys[1]), bin2ascii(message)))
+\end{python}
+\bigskip
+
 
 \section{Conclusion}
 

@@ -16,7 +16,7 @@
 
 
 \pagestyle{fancy}
-\fancyhead[L]{DAT 510 - Security and Vunlerability in Networks}
+\fancyhead[L]{DAT 510 - Security and Vulnerability in Networks}
 \fancyhead[R]{Assignment 1}
 \fancyfoot[C]{ \thepage / \pageref{LastPage} }
 \fancyfoot[L]{ T\'eo Bouvard }
@@ -39,7 +39,7 @@
 \maketitle \thispagestyle{fancy}
 
 \begin{abstract}
-    In this assignment, we study and implement two different cryptographic systems and examine a way to break them, using Python. We observe the effiency of statistical analysis techniques on the Vigenere cipher, and the increasing difficulty of bruteforce techniques as keys grow in size on the DES cipher. We briefly discuss optimized ways of breaking these ciphers with modern computers.
+    In this assignment, we study and implement two different cryptographic systems and examine a way to break them, using Python. We observe the efficiency of statistical analysis techniques on the Vigenere cipher, and the increasing difficulty of bruteforce techniques as keys grow in size on the DES cipher. We briefly discuss optimized ways of breaking these ciphers with modern computers.
 \end{abstract}
 
 \section{Vigenere Cipher Cracking} \label{vignere}
@@ -62,9 +62,9 @@ We are given the following cipher :
 
 \end{verbatim}
 
-We know that it is an english message which has been encrypted by a polyalphabetic substitution cipher, and that the encryption key is not longer than 10 characters. To break this cipher, one approach could be to try to find the key length. To do so, we are looking for repeating sequences, which have a high probability of corresponding to a repetition of the key. This method is called Kasiski examination.\cite{vigenere} \cite{kasiski}
+We know that it is an English message which has been encrypted by a polyalphabetic substitution cipher, and that the encryption key is not longer than 10 characters. To break this cipher, one approach could be to try to find the key length. To do so, we are looking for repeating sequences, which have a high probability of corresponding to a repetition of the key. This method is called Kasiski examination.\cite{vigenere} \cite{kasiski}
 
-To perform this examination, I implemented a Python method which loops through the whole cipher, and searches for patterns which appear again in the rest of the cipher. If an occurence of the current pattern is found, the distance between the two patterns is added to the possible key lengths list. Note that all divisors of the distance are also added to the list, as the key could have repeated multiple times between the two occurences of the pattern. The get\_divisors() subroutine does not return divisors which are greater than the maximum key length.
+To perform this examination, I implemented a Python method which loops through the whole cipher, and searches for patterns which appear again in the rest of the cipher. If an occurrence of the current pattern is found, the distance between the two patterns is added to the possible key lengths list. Note that all divisors of the distance are also added to the list, as the key could have repeated multiple times between the two occurrences of the pattern. The get\_divisors() subroutine does not return divisors which are greater than the maximum key length.
 \bigskip
 
 \begin{python}
@@ -89,19 +89,19 @@ When executed on the given ciphertext, we get the following output.
 
 \begin{verbatim}
 
-    key length : 2 -> 115 occurences
-    key length : 4 -> 115 occurences
-    key length : 8 -> 115 occurences
-    key length : 3 -> 57 occurences
-    key length : 6 -> 54 occurences
-    key length : 7 -> 31 occurences
-    key length : 9 -> 19 occurences
-    key length : 5 -> 2 occurences
-    key length : 10 -> 2 occurences
+    key length : 2 -> 115 occurrences
+    key length : 4 -> 115 occurrences
+    key length : 8 -> 115 occurrences
+    key length : 3 -> 57 occurrences
+    key length : 6 -> 54 occurrences
+    key length : 7 -> 31 occurrences
+    key length : 9 -> 19 occurrences
+    key length : 5 -> 2 occurrences
+    key length : 10 -> 2 occurrences
 
 \end{verbatim}
 
-Which implies that the key is probably of length 2, 4 or 8. Since 2 and 4 are divisors of 8, it is safe to assume that they appear so often here because the get\_divisors() method returns all divisors smaller than the maximum key length. Our guess is therefore that the key is of length 8, beacuse it has the most subpattern repetition occurences.
+Which implies that the key is probably of length 2, 4 or 8. Since 2 and 4 are divisors of 8, it is safe to assume that they appear so often here because the get\_divisors() method returns all divisors smaller than the maximum key length. Our guess is therefore that the key is of length 8, because it has the most sub-pattern repetition occurrences.
 Next, we perform a frequency analysis for each set of character with an equal position in the ciphertext, modulo the key length. These sets will be called columns from now on, because they each represent a column of the ciphertext when it is splitted every key length characters.
 
 This frequency analysis is implemented in the following method.
@@ -125,7 +125,7 @@ def frequency_analysis(cipher, key_length):
 \end{python}
 \bigskip
 
-This method computes character frequency for each column, and returns the key character which would have encrypted this column if the most common character effectively corresponds to the letter E, which is the most used letter in the english language.
+This method computes character frequency for each column, and returns the key character which would have encrypted this column if the most common character effectively corresponds to the letter E, which is the most used letter in the English language.
 
 \begin{verbatim}
 
@@ -187,7 +187,7 @@ When using this method on the given ciphertext with the key `BDAAETCY', we get a
 
 This is not the original message, but we can clearly identify possible words in this text, like CRYPTANALYSIS or CRYPTOLOGY. However, it seems that columns 2 and 5 are offset by the wrong key. To find the right key, we try matching the last 10 characters of the ciphertext (EPZSEOPYIW) to the guessed word (CRYPTOLOGY). 
 
-For the first character mismatch, we search the key such that T encrypts to E, and for the second, the key such that O encrypts to Y. By reading a Vigenere table, we can see that these unkwown key parts we are looking for are L and K.
+For the first character mismatch, we search the key such that T encrypts to E, and for the second, the key such that O encrypts to Y. By reading a Vigenere table, we can see that these unknown key parts we are looking for are L and K.
 By decrypting the ciphertext with the new key `BDLAEKCY', we get the original plaintext.
 \bigskip
 
@@ -298,7 +298,7 @@ By guessing the messages in CTX1 and CTX2 might be the same, I used `security' a
     Elapsed time : 474.742s    
 \end{alltt}
 
-The keys used to encrypt CTX2.txt are `1111101010, 0101011111'. This bruteforce process could be drastically accelerated by using a compiled language or even hardware acceleration to compute the decryptions, but in the scope of this assignement this has no practical application.
+The keys used to encrypt CTX2.txt are `1111101010, 0101011111'. This bruteforce process could be drastically accelerated by using a compiled language or even hardware acceleration to compute the decryptions, but in the scope of this assignment this has no practical application.
 
 \section{Conclusion}
 

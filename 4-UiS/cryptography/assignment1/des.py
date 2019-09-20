@@ -179,7 +179,8 @@ def des_bruteforce(cipher, probable_word):
         message = bitfield_to_string(message)
         if message.find(probable_word) != -1:
             probable_keys.append(key)
-            print('key : {} -> message : {}'.format(bitfield_to_string(key), bin2ascii(message)))
+            print('key : {}'.format(bitfield_to_string(key)))
+            print('message : {}'.format(bin2ascii(message)))
     
     return probable_keys
 
@@ -198,14 +199,15 @@ def triple_des_bruteforce(cipher, probable_word):
             if message.find(probable_word) != -1:
                 probable_keys.append((key0, key1))
                 decrypted = triple_decrypt_message(cipher, key0, key1)
-                print('keys : {} -> message : {}'.format((key0, key1), bin2ascii(decrypted)))
+                print('keys : {}'.format((key0, key1)))
+                print('message : {}'.format(bin2ascii(decrypted)))
     
     return probable_keys
 
-def parallel_des_bruteforce(key):
+def parallel_bruteforce(key):
     return decrypt_message(CTX1, key), key
 
-def parallel_triple_des_bruteforce(keys):
+def parallel_triple_bruteforce(keys):
     return triple_decrypt_message(CTX2, keys[0], keys[1]), keys
 
 # ASSIGNMENT #
@@ -351,9 +353,10 @@ def decrypt_sdes_cipher_parallel():
     probable_word = ascii2bin('security')
 
     with multiprocessing.Pool() as p:
-        for message, key in p.imap_unordered(func=parallel_des_bruteforce, iterable=keys, chunksize=chunksize):
+        for message, key in p.imap_unordered(func=parallel_bruteforce, iterable=keys, chunksize=chunksize):
             if message.find(probable_word) != -1:
-                print('key : {} -> message : {}'.format(bitfield_to_string(key), bin2ascii(message)))
+                print('key : {}'.format(bitfield_to_string(key)))
+                print('message : {}'.format(bin2ascii(message)))
 
 
 def decrypt_triple_sdes_cipher_parallel():
@@ -365,10 +368,10 @@ def decrypt_triple_sdes_cipher_parallel():
     probable_word = ascii2bin('security')
 
     with multiprocessing.Pool() as p:
-        for message, keys in p.imap_unordered(func=parallel_triple_des_bruteforce, iterable=keys, chunksize=chunksize):
+        for message, keys in p.imap_unordered(func=parallel_triple_bruteforce, iterable=keys, chunksize=chunksize):
             if message.find(probable_word) != -1:
-                print('keys : ({}, {}) -> message : {}'.format(bitfield_to_string(keys[0]), bitfield_to_string(keys[1]), bin2ascii(message)))
-
+                print('keys : ({},{})'.format(bitfield_to_string(keys[0]), bitfield_to_string(keys[1])))
+                print('message : {}'.format(bin2ascii(message)))
 
 if __name__ == "__main__":
 

@@ -29,26 +29,32 @@ def pubkeygen(prime, root, secret):
     return (root ** secret) % prime
 
 def shared_secret_key(secret, other_public_key):
-    return other_public_key ** secret
+    return other_public_key ** secret % prime
 
 ### MAIN PROGRAM ###
 
 def argument_parser():
     parser = argparse.ArgumentParser(description='Generate public keys with Diffie-Hellmann algorithm')
+    parser.add_argument('--mode', choices=['public', 'private'], required=True, help='Generate public key or private shared keys')    
     parser.add_argument('--prime', type=int, default=P, help='Prime used for key generation')
     parser.add_argument('--root', type=int, default=R, help='Primitive root used for key generation')
-    parser.add_argument('--secret', type=int, help='Private key (integer) used for key generation')
-    parser.add_argument('--write', '-w', action='store_true', help='Write public key to a file')
+    parser.add_argument('--secret', type=int, required=True, help='Private key (integer) used for key generation')
     parser.add_argument('--verbose', '-v', action='store_true', help='Display parameters used for key generation')
-    parser.add_argument('--output', type=str, default='keys/pubkey.txt', help='File to write public key, must be used with \'-w\'')
+    parser.add_argument('--output', type=str, help='File to which the public key is written')
+    parser.add_argument('--public', type=int, help='Public key to merge in shared private key generation')
 
     return parser
 
-def display(prime, root, secret, pubkey):
+def display_public(prime, root, secret, pubkey):
     print('Prime used for key generation : {}'.format(prime))
     print('Primitive root used for key generation : {}'.format(root))
     print('Private key used for key generation : {}'.format(secret))
     print('Generated public key : {}'.format(pubkey))
+
+def display_private(secret, pubkey, shared):
+    print('Private key used for shared key generation : {}'.format(secret))
+    print('Public key used for shared key generation : {}'.format(pubkey))
+    print('Generated private shared key : {}'.format(shared))
 
 if __name__ == '__main__':
 
@@ -60,7 +66,7 @@ if __name__ == '__main__':
     root = args.root
     secret = args.secret
     output = args.output
-    os.makedirs(os.path.dirname(output), exist_ok=True)
+    public = args.public
 
     # check parameters correctness
     if not is_prime(prime):
@@ -69,20 +75,37 @@ if __name__ == '__main__':
     if not is_primitive_root(root, prime):
         print('Number specified with --root is not a generator of G({})'.format(prime))
         exit()
-    if secret is None:
-        print('Please provide a private key using the --secret argument')
-        exit()
     if not 1 <= secret < prime:
         print('Private key {} must be between 1 and prime {}'.format(secret, prime))
+        exit()
+    if output is not None:
+        os.makedirs(os.path.dirname(output), exist_ok=True)
 
-    public_key = pubkeygen(prime, root, secret)
+    if args.mode == 'public':
+        public_key = pubkeygen(prime, root, secret)
 
-    # display parameters if program is run in verbose mode
-    if args.verbose:
-        display(prime, root, secret, public_key)
+        # display parameters if program is run in verbose mode or if key is not written to disk
+        if args.output is None or args.verbose:
+            display_public(prime, root, secret, public_key)
 
-    # write pubkey to file if write argument passed
-    if args.write:
-        with open(output, 'w') as f:
-            f.write(str(public_key))
-        print('Public key written to', output)
+        # write pubkey to file if write argument passed
+        if args.output:
+            with open(output, 'w') as f:
+                f.write(str(public_key))
+            print('Public key written to', output)
+    
+    elif args.mode == 'private':
+
+        if public is None:
+            print('A public key is necessary to compute the shared private key')
+            exit()
+        
+        shared = shared_secret_key(secret, public)
+
+        if args.output is None or args.verbose:
+            display_private(secret, public, shared)
+        
+        if args.output:
+            with open(output, 'w') as f:
+                f.write(str(shared))
+            print('Shared private key written to', output)

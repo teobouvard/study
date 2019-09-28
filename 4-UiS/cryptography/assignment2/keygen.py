@@ -35,7 +35,7 @@ def shared_secret_key(secret, other_public_key):
 
 def argument_parser():
     parser = argparse.ArgumentParser(description='Generate public keys with Diffie-Hellmann algorithm')
-    parser.add_argument('--mode', choices=['public', 'private'], required=True, help='Generate public key or private shared keys')    
+    parser.add_argument('--mode', choices=['generate', 'merge'], required=True, help='Generate public key or compute private shared key')    
     parser.add_argument('--prime', type=int, default=P, help='Prime used for key generation')
     parser.add_argument('--root', type=int, default=R, help='Primitive root used for key generation')
     parser.add_argument('--secret', type=int, required=True, help='Private key (integer) used for key generation')
@@ -54,7 +54,7 @@ def display_public(prime, root, secret, pubkey):
 def display_private(secret, pubkey, shared):
     print('Private key used for shared key generation : {}'.format(secret))
     print('Public key used for shared key generation : {}'.format(pubkey))
-    print('Generated private shared key : {}'.format(shared))
+    print('Computed private shared key : {}'.format(shared))
 
 if __name__ == '__main__':
 
@@ -81,7 +81,7 @@ if __name__ == '__main__':
     if output is not None:
         os.makedirs(os.path.dirname(output), exist_ok=True)
 
-    if args.mode == 'public':
+    if args.mode == 'generate':
         public_key = pubkeygen(prime, root, secret)
 
         # display parameters if program is run in verbose mode or if key is not written to disk
@@ -94,7 +94,7 @@ if __name__ == '__main__':
                 f.write(str(public_key))
             print('Public key written to', output)
     
-    elif args.mode == 'private':
+    elif args.mode == 'merge':
 
         if public is None:
             print('A public key is necessary to compute the shared private key')

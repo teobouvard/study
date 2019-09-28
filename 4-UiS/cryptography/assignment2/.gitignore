@@ -1,2 +1,4 @@
 __pycache__
 keys/
+files/decrypted_file.txt
+files/encrypted_file.bin

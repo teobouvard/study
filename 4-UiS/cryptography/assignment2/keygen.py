@@ -34,14 +34,14 @@ def shared_secret_key(secret, other_public_key):
 ### MAIN PROGRAM ###
 
 def argument_parser():
-    parser = argparse.ArgumentParser(description='Generate public keys with Diffie-Hellmann algorithm')
-    parser.add_argument('--mode', choices=['generate', 'merge'], required=True, help='Generate public key or compute private shared key')    
+    parser = argparse.ArgumentParser(description='Generate public and private keys with the Diffie-Hellmann algorithm')
+    parser.add_argument('--mode', choices=['generate', 'merge'], required=True, help='Generate a public key or compute a private shared key')    
     parser.add_argument('--prime', type=int, default=P, help='Prime used for key generation')
     parser.add_argument('--root', type=int, default=R, help='Primitive root used for key generation')
     parser.add_argument('--secret', type=int, required=True, help='Private key (integer) used for key generation')
-    parser.add_argument('--verbose', '-v', action='store_true', help='Display parameters used for key generation')
-    parser.add_argument('--output', type=str, help='File to which the public key is written')
-    parser.add_argument('--public', type=int, help='Public key to merge in shared private key generation')
+    parser.add_argument('--verbose', action='store_true', help='Display parameters used for key generation')
+    parser.add_argument('--output', type=str, help='File to which the public key is written (standard ouput if not specified)')
+    parser.add_argument('--public', type=int, help='Public key to be merged with the private key')
 
     return parser
 

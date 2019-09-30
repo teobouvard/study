@@ -1,8 +1,15 @@
 #!/bin/bash
 
-ALICE_SECRET=42
-BOB_SECRET=231
-VERBOSE="--verbose"
+ALICE_SECRET=0xF42F42F42F42F
+BOB_SECRET=0xFF9876543210FF
+VERBOSE=""
+
+printf "First, we can verify that the program works as expected by running the tests\n"
+python3 keygen.py --mode "test"
+printf "\n"
+
+
+### USECASE ###
 
 printf "A communcation channel is opened between Alice and Bob\n"
 mkfifo internet_communication

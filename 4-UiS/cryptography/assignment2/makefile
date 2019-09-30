@@ -5,3 +5,6 @@ report: clean
 	rm -rf teo_bouvard_a2
 clean:
 	rm -rf teo_bouvard_a2 teo_bouvard_a2.tar.gz
+purge:
+	rm -rf keys
+	rm files/encrypted_file.bin files/decrypted_file.txt

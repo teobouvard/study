@@ -38,6 +38,9 @@ def is_primitive_root(r, p):
     else:
         return True
 
+def auto_int(x):
+    return int(x, 0)
+
 
 ### DIFFIE HELLMANN KEY GENERATION ###
 
@@ -55,25 +58,25 @@ def shared_secret_key(secret, other_public_key):
 def argument_parser():
     parser = argparse.ArgumentParser(description='Generate public and private keys with the Diffie-Hellmann algorithm')
     parser.add_argument('--mode', choices=['generate', 'merge', 'test'], required=True, help='Generate a public key, compute a shared private key, or test program')    
-    parser.add_argument('--prime', type=int, default=P, help='Prime used for key generation')
-    parser.add_argument('--root', type=int, default=R, help='Primitive root used for key generation')
-    parser.add_argument('--secret', type=int, help='Private key (integer) used for key generation')
+    parser.add_argument('--prime', type=auto_int, default=P, help='Prime used for key generation')
+    parser.add_argument('--root', type=auto_int, default=R, help='Primitive root used for key generation')
+    parser.add_argument('--secret', type=auto_int, help='Private key (integer) used for key generation')
     parser.add_argument('--verbose', action='store_true', help='Display parameters used for key generation')
     parser.add_argument('--output', type=str, help='File to which the public key is written (standard ouput if not specified)')
-    parser.add_argument('--public', type=int, help='Public key to be merged with the private key')
+    parser.add_argument('--public', type=auto_int, help='Public key to be merged with the private key')
 
     return parser
 
 def display_public(prime, root, secret, pubkey):
-    print('Prime used for key generation : {}'.format(prime))
-    print('Primitive root used for key generation : {}'.format(root))
-    print('Private key used for key generation : {}'.format(secret))
-    print('Generated public key : {}'.format(pubkey))
+    print('Prime used for key generation : {}'.format(hex(prime)))
+    print('Primitive root used for key generation : {}'.format(hex(root)))
+    print('Private key used for key generation : {}'.format(hex(secret)))
+    print('Generated public key : {}'.format(hex(pubkey)))
 
 def display_private(secret, pubkey, shared):
-    print('Private key used for shared key generation : {}'.format(secret))
-    print('Public key used for shared key generation : {}'.format(pubkey))
-    print('Computed private shared key : {}'.format(shared))
+    print('Private key used for shared key generation : {}'.format(hex(secret)))
+    print('Public key used for shared key generation : {}'.format(hex(pubkey)))
+    print('Computed private shared key : {}'.format(hex(shared)))
 
 if __name__ == '__main__':
 
@@ -86,21 +89,20 @@ if __name__ == '__main__':
     secret = args.secret
     output = args.output
     public = args.public
-    print(args.mode)
 
     # check parameters correctness
     if not is_prime(prime):
         print('Number specified with --prime is not prime.')
-        exit()
+        exit(1)
     if not is_primitive_root(root, prime):
         print('Number specified with --root is not a generator of G({}).'.format(prime))
-        exit()
+        exit(1)
     if secret is None and args.mode != 'test':
-        print('Missing private key. Use the --secret argument.')
-        exit()
+        print('No private key and not in test mode. Use the --secret argument.')
+        exit(1)
     if args.mode != 'test' and not 1 <= secret < prime:
         print('Private key {} must be between 1 and prime {}.'.format(secret, prime))
-        exit()
+        exit(1)
     if output is not None:
         os.makedirs(os.path.dirname(output), exist_ok=True)
 
@@ -120,8 +122,8 @@ if __name__ == '__main__':
     elif args.mode == 'merge':
 
         if public is None:
-            print('A public key is necessary to compute the shared private key')
-            exit()
+            print('A public key is necessary to compute the shared private key. Use the --public argument.')
+            exit(1)
         
         shared = shared_secret_key(secret, public)
 
@@ -153,23 +155,25 @@ if __name__ == '__main__':
         ZB = shared_secret_key(test_xB, yA)
 
         if yA != test_yA:
-            print('KO')
+            print('ERROR : A public key is not equal to the test one !')
+            exit(1)
         else:
-            print('OK1')
+            print('A public key is OK')
 
         if yB != test_yB:
-            print('KO')
+            print('ERROR : B public key is not equal to the test one !')
+            exit(1)
         else:
-            print('OK2')
+            print('B public key is OK')
 
         if ZA != test_Z:
-            print('KO')
+            print('ERROR : A shared private key is not equal to the test one !')
+            exit(1)
         else:
-            print('OK3')
+            print('A shared private key is OK')
 
         if ZB != test_Z:
-            print('KO')
+            print('ERROR : B shared private key is not equal to the test one !')
+            exit(1)
         else:
-            print('OK4')
-        
-        print('OKKKK')
+            print('B shared private key is OK')

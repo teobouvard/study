@@ -2,22 +2,41 @@ import argparse
 import math
 import os
 
-### DEFAULT VALUES ###
+# if the prime used is really large, we assume the user know what he is doing 
+# and do not check for primality nor for root generation of the group
+SMALL_INT_SIZE = 10000
 
-P = 1009
-R = 263
+### GROUP USED ###
+
+## TEST VALUES ##
+
+#P = 1009
+#R = 263
+
+## 2048-bit MODP Group ##
+with open('files/2048-bit MODP Group/prime.txt', 'r') as f:
+    P = int(''.join(f.read().split()), 16)
+
+with open('files/2048-bit MODP Group/generator.txt', 'r') as f:
+    R = int(''.join(f.read().split()), 16)
 
 ### ARTIHMETIC HELPER FUNCTIONS ###
 
 def is_prime(n):
-    return not (n < 2 or any(n % x == 0 for x in range(2, int(n ** 0.5) + 1)))
+    if n < SMALL_INT_SIZE:
+        return not (n < 2 or any(n % x == 0 for x in range(2, int(math.sqrt(n)+ 1))))
+    else:
+        return True
 
 def are_coprime(a, b):
     return math.gcd(a, b) == 1
 
 def is_primitive_root(r, p):
-    powers = [r ** i % p for i in range(p-1)]
-    return len(set(powers)) == p-1
+    if p < SMALL_INT_SIZE:
+        powers = [r ** i % p for i in range(p-1)]
+        return len(set(powers)) == p-1
+    else:
+        return True
 
 
 ### DIFFIE HELLMANN KEY GENERATION ###
@@ -26,19 +45,19 @@ def pubkeygen(prime, root, secret):
     assert(is_prime(prime))
     assert(is_primitive_root(root, prime))
 
-    return (root ** secret) % prime
+    return pow(root, secret, prime)
 
 def shared_secret_key(secret, other_public_key):
-    return other_public_key ** secret % prime
+    return pow(other_public_key, secret, prime)
 
 ### MAIN PROGRAM ###
 
 def argument_parser():
     parser = argparse.ArgumentParser(description='Generate public and private keys with the Diffie-Hellmann algorithm')
-    parser.add_argument('--mode', choices=['generate', 'merge'], required=True, help='Generate a public key or compute a private shared key')    
+    parser.add_argument('--mode', choices=['generate', 'merge', 'test'], required=True, help='Generate a public key, compute a shared private key, or test program')    
     parser.add_argument('--prime', type=int, default=P, help='Prime used for key generation')
     parser.add_argument('--root', type=int, default=R, help='Primitive root used for key generation')
-    parser.add_argument('--secret', type=int, required=True, help='Private key (integer) used for key generation')
+    parser.add_argument('--secret', type=int, help='Private key (integer) used for key generation')
     parser.add_argument('--verbose', action='store_true', help='Display parameters used for key generation')
     parser.add_argument('--output', type=str, help='File to which the public key is written (standard ouput if not specified)')
     parser.add_argument('--public', type=int, help='Public key to be merged with the private key')
@@ -67,16 +86,20 @@ if __name__ == '__main__':
     secret = args.secret
     output = args.output
     public = args.public
+    print(args.mode)
 
     # check parameters correctness
     if not is_prime(prime):
-        print('Number specified with --prime is not prime')
+        print('Number specified with --prime is not prime.')
         exit()
     if not is_primitive_root(root, prime):
-        print('Number specified with --root is not a generator of G({})'.format(prime))
+        print('Number specified with --root is not a generator of G({}).'.format(prime))
         exit()
-    if not 1 <= secret < prime:
-        print('Private key {} must be between 1 and prime {}'.format(secret, prime))
+    if secret is None and args.mode != 'test':
+        print('Missing private key. Use the --secret argument.')
+        exit()
+    if args.mode != 'test' and not 1 <= secret < prime:
+        print('Private key {} must be between 1 and prime {}.'.format(secret, prime))
         exit()
     if output is not None:
         os.makedirs(os.path.dirname(output), exist_ok=True)
@@ -111,3 +134,42 @@ if __name__ == '__main__':
             with open(output, 'w') as f:
                 f.write(str(shared))
             print('Shared private key written to', output)
+
+    elif args.mode == 'test':
+        with open('files/2048-bit MODP Group/test_xA.txt', 'r') as f:
+            test_xA = int(''.join(f.read().split()), 16)
+        with open('files/2048-bit MODP Group/test_yA.txt', 'r') as f:
+            test_yA = int(''.join(f.read().split()), 16)
+        with open('files/2048-bit MODP Group/test_xB.txt', 'r') as f:
+            test_xB = int(''.join(f.read().split()), 16)
+        with open('files/2048-bit MODP Group/test_yB.txt', 'r') as f:
+            test_yB = int(''.join(f.read().split()), 16)
+        with open('files/2048-bit MODP Group/test_Z.txt', 'r') as f:
+            test_Z = int(''.join(f.read().split()), 16)
+
+        yA = pubkeygen(P, R, test_xA)
+        yB = pubkeygen(P, R, test_xB)
+        ZA = shared_secret_key(test_xA, yB)
+        ZB = shared_secret_key(test_xB, yA)
+
+        if yA != test_yA:
+            print('KO')
+        else:
+            print('OK1')
+
+        if yB != test_yB:
+            print('KO')
+        else:
+            print('OK2')
+
+        if ZA != test_Z:
+            print('KO')
+        else:
+            print('OK3')
+
+        if ZB != test_Z:
+            print('KO')
+        else:
+            print('OK4')
+        
+        print('OKKKK')

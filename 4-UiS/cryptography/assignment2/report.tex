@@ -39,7 +39,7 @@
 \maketitle \thispagestyle{fancy}
 
 \begin{abstract}
-    In this assignment, we implement a secure communication protocol consisting of three consecutive steps. First, we use Diffie-Hellman key exchange to craft a shared private key between two actors using public key cryptography. We then use an implementation of the Blum Blum Shub algorithm to generate a cryptographically secure pseudo-random shared private key, using the previously exchanged key as seed. Finally, we use the generated random key to encrypt and decrypt messages between the two actors using 128-bit AES ciphers.
+    In this assignment, we implement a secure communication protocol consisting of three consecutive steps. First, we use Diffie-Hellman\cite{stallings_2017} key exchange to craft a shared private key between two actors using public key cryptography. We then use an implementation of the Blum Blum Shub algorithm to generate a cryptographically secure pseudo-random shared private key, using the previously exchanged key as seed. Finally, we use the generated random key to encrypt and decrypt messages between the two actors using 128-bit AES ciphers.
 \end{abstract}
 
 \section{Introduction}
@@ -50,7 +50,8 @@ One answer to this first problem is to use public-key cryptography, and most spe
 
 \subsection{Diffie-Hellman}
 
-This key scheme method allows us to create a shared private key by only communicating public data. It relies on the computational difficulty of computing discrete logarithms. It has been formulated in 1976 by Whitfield Diffie and Martin Hellman. We use it to generate a first shared private key between two actors, Alice and Bob.
+This key exchange scheme allows us to create a shared private key by only communicating public data. It relies on the computational difficulty of computing discrete logarithms. It has been formulated in 1976 by Whitfield Diffie and Martin Hellman. We use it to generate a first shared private key between two actors, Alice and Bob.
+Talk about group used. (https://www.rfc-editor.org/rfc/rfc5114.html)
 
 \subsection{Blum Blum Shub}
 
@@ -61,6 +62,15 @@ This key scheme method allows us to create a shared private key by only communic
 
 
 \section{Design and Implementation}
+
+\subsection{Diffie-Hellman}
+Naive exponentiation vs pow !
+
+\subsection{Blum Blum Shub}
+
+\subsection{Advanced Encryption Standard}
+
+
 \section{Test Results}
 \section{Discussion}
 \section{Conclusion}

@@ -17,7 +17,7 @@ def generate_random(seed, size):
     bits = []
 
     for _ in range(size):
-        seed = seed ** 2 % M
+        seed = pow(seed, 2, M)
         bits.append(bin(seed)[-1])
     
     return int(''.join(bits), 2)
@@ -27,14 +27,14 @@ def generate_random(seed, size):
 def argument_parser():
     parser = argparse.ArgumentParser(description='Generate a random number using Blum Blum Shub algorithm')
     parser.add_argument('--seed', type=auto_int, required=True, help='Seed used for random number generation')
-    parser.add_argument('--size', type=int, default=DEFAULT_SIZE, help='Size in bits of the generated number')
+    parser.add_argument('--size', type=int, default=DEFAULT_SIZE, help='Size in bits of the generated number, 128 if not specified')
     parser.add_argument('--output', type=str, help='File to which the random number is written')
     parser.add_argument('--verbose', '-v', action='store_true', help='Display parameters used for key generation')
 
     return parser
 
 def display(seed, size, number):
-    print('Seed used : {}'.format(seed))
+    print('Seed used : {}'.format(hex(seed)))
     print('Number of bits generated : {}'.format(size))
     print('Random number generated: {}'.format(hex(number)))
 

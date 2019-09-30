@@ -3,13 +3,10 @@ import math
 import os
 
 # if the prime used is really large, we assume the user know what he is doing 
-# and do not check for primality nor for root generation of the group
+# and do not check for primality nor for root generation of the group (too expensive)
 SMALL_INT_SIZE = 10000
 
-### GROUP USED ###
-
 ## TEST VALUES ##
-
 #P = 1009
 #R = 263
 

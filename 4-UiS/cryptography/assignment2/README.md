@@ -1,21 +1,43 @@
-Directory structure
+# Get started
 
+```{shell}
+cd src
+pip3 install pycryptodome
+./test.sh
+./demo.sh
+```
+
+# Directory structure
 .
-├── files
-|    └── 2048-bit MODP Group
-├── keys
-|   ├── begin-with-the-crazy-ideas.textile
-|   └── on-simplicity-in-technology.markdown
-├── _includes
-|   ├── footer.html
-|   └── header.html
-├── _layouts
-|   ├── default.html
-|   └── post.html
-├── _posts
-|   ├── 2007-10-29-why-every-programmer-should-play-nethack.textile
-|   └── 2009-04-26-barcamp-boston-4-roundup.textile
-├── _data
-|   └── members.yml
-├── _site
-└── index.html
+├── README.md
+├── report.pdf
+└── src
+    ├── bbs.py
+    ├── cipher.py
+    ├── demo.sh
+    ├── files
+    │   ├── 2048-bit MODP Group
+    │   │   ├── generator.txt
+    │   │   ├── prime.txt
+    │   │   ├── test_xA.txt
+    │   │   ├── test_xB.txt
+    │   │   ├── test_yA.txt
+    │   │   ├── test_yB.txt
+    │   │   └── test_Z.txt
+    │   └── really_secret_file.txt
+    ├── keygen.py
+    └── test.sh
+
+# Files
+
+- README.md : this file
+- report.pdf : report of the assignment
+
+- src/ : source code directory
+    - bbs.py : Python implementation of the Blum Blum Shub PRNG
+    - cipher.py : Python implementation of AES encryption/decryption
+    - keygen.py : Python implementation of the Diffie-Hellman key exchange scheme
+
+- files/ : a directory containing various files used by the different tools
+    - really_secret_file.txt : the file Alice wishes to send to Bob without disclosing its contents
+    - 2048-bit MODP Group/ : 

@@ -4,11 +4,16 @@ import os
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 
+### AUTO BASE INTEGERS ###
+
+def auto_int(x):
+    return int(x, 0)
+
 ### CIPHER METHODS ###
 
 def encrypt(plaintext, key):
     cipher = AES.new(key, AES.MODE_ECB)
-    plaintext = pad(plaintext, 16)
+    plaintext = pad(plaintext, len(key))
     ciphertext = cipher.encrypt(plaintext)
     return ciphertext
 
@@ -31,7 +36,7 @@ def display(key, plaintext, ciphertext):
 def argument_parser():
     parser = argparse.ArgumentParser(description='Encrypt and decrypt data using AES')
     parser.add_argument('--mode', choices=['encrypt', 'decrypt'], required=True, help='Encrypt or decrypt data')
-    parser.add_argument('--key', type=int, required=True, help='The key used for encryption or decryption')
+    parser.add_argument('--key', type=auto_int, required=True, help='The key used for encryption or decryption')
     parser.add_argument('--input', type=str, required=True, help='Path to the file to encrypt or decrypt')
     parser.add_argument('--output', type=str, help='Path to wich the encrypted or decrypted data is written. If not specified, output is redirected to stdout')
     parser.add_argument('--verbose', action='store_true', help='Run in verbose mode')
@@ -46,7 +51,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     mode = args.mode
-    key = args.key.to_bytes(16, 'big')
+    key = args.key.to_bytes(int(args.key.bit_length()/8), 'big')
     input_file = args.input
     output_file = args.output
     verbose = args.verbose

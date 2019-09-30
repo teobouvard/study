@@ -6,6 +6,11 @@ P = 30000000091
 Q = 40000000003
 M = P*Q
 
+### AUTO BASE INTEGERS ###
+
+def auto_int(x):
+    return int(x, 0)
+
 ### PSEUDO RANDOM NUMBER GENERATION ###
 
 def generate_random(seed, size):
@@ -21,7 +26,7 @@ def generate_random(seed, size):
 
 def argument_parser():
     parser = argparse.ArgumentParser(description='Generate a random number using Blum Blum Shub algorithm')
-    parser.add_argument('--seed', type=int, required=True, help='Seed used for random number generation')
+    parser.add_argument('--seed', type=auto_int, required=True, help='Seed used for random number generation')
     parser.add_argument('--size', type=int, default=DEFAULT_SIZE, help='Size in bits of the generated number')
     parser.add_argument('--output', type=str, help='File to which the random number is written')
     parser.add_argument('--verbose', '-v', action='store_true', help='Display parameters used for key generation')
@@ -54,5 +59,5 @@ if __name__ == '__main__':
 
     if args.output is not None:
         with open(args.output, 'w') as f:
-            f.write(str(prn))
+            f.write(hex(prn))
             print('Random number written to', args.output)

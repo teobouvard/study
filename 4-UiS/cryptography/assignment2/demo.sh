@@ -53,7 +53,7 @@ printf "\n"
 
 ### TEST ###
 
-printf "We verify that both private shared keys are identical\n"
+printf "We verify that both party's shared private keys are identical\n"
 printf "Number of differences between both keys: "
 diff keys/alice_encrypted_shared_key.key keys/bob_encrypted_shared_key.key | wc -l 
 printf "\n"

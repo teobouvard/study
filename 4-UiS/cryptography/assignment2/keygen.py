@@ -116,9 +116,9 @@ if __name__ == '__main__':
         # write pubkey to file if output argument passed
         if args.output:
             with open(output, 'w') as f:
-                f.write(str(public_key))
+                f.write(hex(public_key))
             print('Public key written to', output)
-    
+
     elif args.mode == 'merge':
 
         if public is None:
@@ -134,7 +134,7 @@ if __name__ == '__main__':
         # write private key to file if output argument passed
         if args.output:
             with open(output, 'w') as f:
-                f.write(str(shared))
+                f.write(hex(shared))
             print('Shared private key written to', output)
 
     elif args.mode == 'test':

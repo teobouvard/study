@@ -1,6 +1,6 @@
 __pycache__
 keys/
-files/decrypted_file.txt
-files/encrypted_file.bin
+src/files/decrypted_file.txt
+src/files/encrypted_file.bin
 *.gz
 teo_bouvard_a2

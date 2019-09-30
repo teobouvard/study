@@ -2,12 +2,9 @@
 
 ALICE_SECRET=0xF42F42F42F42F
 BOB_SECRET=0xFF9876543210FF
-VERBOSE=""
+KEY_SIZE=256
 
-printf "First, we can verify that the program works as expected by running the tests\n"
-python3 keygen.py --mode "test"
-printf "\n"
-
+VERBOSE="--verbose"
 
 ### USECASE ###
 
@@ -30,7 +27,7 @@ python3 keygen.py --mode merge --secret $BOB_SECRET --public "$(cat internet_com
 printf "\n"
 
 printf "Bob generates a more secure shared key by using the previously computed key as as seed to a CSPRNG\n"
-python3 bbs.py --seed "$(cat keys/bob_shared_key.txt)" --output keys/bob_encrypted_shared_key.key $VERBOSE
+python3 bbs.py --seed "$(cat keys/bob_shared_key.txt)" --size $KEY_SIZE --output keys/bob_encrypted_shared_key.key $VERBOSE
 printf "\n"
 
 ### BOB SIDE ###
@@ -48,7 +45,7 @@ python3 keygen.py --mode merge --secret $ALICE_SECRET --public "$(cat internet_c
 printf "\n"
 
 printf "Alice generates a more secure shared key by using the previously computed key as as seed to a CSPRNG\n"
-python3 bbs.py --seed "$(cat keys/alice_shared_key.txt)" --output keys/alice_encrypted_shared_key.key $VERBOSE
+python3 bbs.py --seed "$(cat keys/alice_shared_key.txt)" --size $KEY_SIZE --output keys/alice_encrypted_shared_key.key $VERBOSE
 printf "\n"
 
 ### TEST ###

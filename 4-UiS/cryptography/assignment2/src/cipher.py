@@ -13,14 +13,14 @@ def auto_int(x):
 
 def encrypt(plaintext, key):
     cipher = AES.new(key, AES.MODE_ECB)
-    plaintext = pad(plaintext, len(key))
+    plaintext = pad(plaintext, 16)
     ciphertext = cipher.encrypt(plaintext)
     return ciphertext
 
 def decrypt(ciphertext, key):
     cipher = AES.new(key, AES.MODE_ECB)
     plaintext = cipher.decrypt(ciphertext)
-    return unpad(plaintext, len(key))
+    return unpad(plaintext, 16)
 
 ### DISPLAY METHODS ###
 
@@ -56,6 +56,10 @@ if __name__ == '__main__':
     output_file = args.output
     verbose = args.verbose
 
+    # arguments check
+    if 8*len(key) not in [128, 192, 256]:
+        print('Key length must be 128, 192 or 256 bits but is {} bits'.format(len(key)))
+        exit(1)
     if output_file is not None:
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
 

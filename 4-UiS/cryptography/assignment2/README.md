@@ -8,26 +8,27 @@ pip3 install pycryptodome
 ```
 
 # Directory structure
-.
-├── README.md
-├── report.pdf
-└── src
-    ├── bbs.py
-    ├── cipher.py
-    ├── demo.sh
-    ├── files
-    │   ├── 2048-bit MODP Group
-    │   │   ├── generator.txt
-    │   │   ├── prime.txt
-    │   │   ├── test_xA.txt
-    │   │   ├── test_xB.txt
-    │   │   ├── test_yA.txt
-    │   │   ├── test_yB.txt
-    │   │   └── test_Z.txt
-    │   └── really_secret_file.txt
-    ├── keygen.py
-    └── test.sh
 
+.  
+├── README.md  
+├── report.pdf  
+└── src  
+    ├── bbs.py  
+    ├── cipher.py  
+    ├── demo.sh  
+    ├── files  
+    │   ├── 2048-bit MODP Group  
+    │   │   ├── generator.txt  
+    │   │   ├── prime.txt  
+    │   │   ├── test_xA.txt  
+    │   │   ├── test_xB.txt  
+    │   │   ├── test_yA.txt  
+    │   │   ├── test_yB.txt  
+    │   │   └── test_Z.txt  
+    │   └── really_secret_file.txt  
+    ├── keygen.py  
+    └── test.sh  
+  
 # Files
 
 - README.md : this file

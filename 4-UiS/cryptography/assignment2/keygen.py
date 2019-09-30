@@ -88,7 +88,7 @@ if __name__ == '__main__':
         if args.output is None or args.verbose:
             display_public(prime, root, secret, public_key)
 
-        # write pubkey to file if write argument passed
+        # write pubkey to file if output argument passed
         if args.output:
             with open(output, 'w') as f:
                 f.write(str(public_key))
@@ -102,9 +102,11 @@ if __name__ == '__main__':
         
         shared = shared_secret_key(secret, public)
 
+        # display parameters if program is run in verbose mode or if key is not written to disk
         if args.output is None or args.verbose:
             display_private(secret, public, shared)
         
+        # write private key to file if output argument passed
         if args.output:
             with open(output, 'w') as f:
                 f.write(str(shared))

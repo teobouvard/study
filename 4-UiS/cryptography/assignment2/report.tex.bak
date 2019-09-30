@@ -39,7 +39,7 @@
 \maketitle \thispagestyle{fancy}
 
 \begin{abstract}
-    In this assignment, we implement a secure communication protocol consisting of three consecutive steps. First, we use Diffie-Hellman key exchange to craft a shared private key between two actors using public key cryptography. We then use an implementation of the Blum Blum Shub algorithm to generate a cryptographically secure pseudo-random shared private key, using the previously exchanged key as seed. Finally, we use the generated random key to encrypt and decrypt messages between the two actors using 128-bit AES ciphers.
+    We implement a secure communication protocol consisting of three diffirent steps. First we use Diffie-Hellman key exchange to craft a shared private key between two actors using public key cryptography. We then use a Cryptographically Secure Pseudo-Random Number Generator to create a more secure shared private key, using the previously exchanged key as seed. We use Blum Blum Shub to implement the CSPRNG. We finally use the generated random key to encrypt and decrypt messages between the two actors using AES ciphers.  
 \end{abstract}
 
 \section{Introduction}

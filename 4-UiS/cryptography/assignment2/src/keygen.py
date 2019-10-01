@@ -28,9 +28,6 @@ def is_prime(n):
     else:
         return True
 
-def are_coprime(a, b):
-    return math.gcd(a, b) == 1
-
 def is_primitive_root(r, p):
     if p < SMALL_INT_SIZE:
         powers = [r ** i % p for i in range(p-1)]
@@ -76,7 +73,7 @@ def display_public(prime, root, secret, pubkey):
 def display_private(secret, pubkey, shared):
     print('Private key used for shared key generation : {}'.format(hex(secret)))
     print('Public key used for shared key generation : {}'.format(hex(pubkey)))
-    print('Computed private shared key : {}'.format(hex(shared)))
+    print('Computed shared private key : {}'.format(hex(shared)))
 
 if __name__ == '__main__':
 

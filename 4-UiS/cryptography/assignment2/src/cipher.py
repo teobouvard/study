@@ -26,7 +26,7 @@ def decrypt(ciphertext, key):
 
 def display(key, plaintext, ciphertext):
     print('Key length : {} bits'.format(len(key)*8))
-    print('Key : {}\n\n'.format(key))
+    print('Key : 0x{}\n\n'.format(key.hex()))
     print('Plaintext : {}\n\n'.format(plaintext))
     print('Ciphertext : {}'.format(ciphertext))
 

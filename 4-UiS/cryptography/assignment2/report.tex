@@ -10,6 +10,7 @@
 \usepackage{hyperref} % color url
 \hypersetup{urlcolor=blue, colorlinks=true}
 \usepackage{pythonhighlight} % python syntax highlighting
+\usepackage{amsmath}
 \usepackage[left=2cm, right=2cm, bottom=3cm, top=3cm]{geometry} % margin settings
 \usepackage{alltt}
 \renewcommand{\ttdefault}{txtt}
@@ -51,10 +52,16 @@ One answer to this first problem is to use public-key cryptography, and most spe
 \subsection{Diffie-Hellman}
 
 This key exchange scheme allows us to create a shared private key by only communicating public data. It relies on the computational difficulty of computing discrete logarithms. It has been formulated in 1976 by Whitfield Diffie and Martin Hellman. We use it to generate a first shared private key between two actors, Alice and Bob.
-Talk about group used. (https://www.rfc-editor.org/rfc/rfc5114.html)
 
 \subsection{Blum Blum Shub}
 
+To increase the strength of the exchanged key, we use it as a seed to a cryptographically strong pseudo-random number generator. The chosen stream generator is Blum Blum Shub, which outputs the least significant bit of $x_{{n+1}}$ at each step of the following sequence.
+
+\begin{equation*}
+    x_{n+1}=x_{n}^{2} \bmod M
+\end{equation*}
+
+with $x_{0} = \text{seed}$ and $M$
 
 
 \subsection{Advanced Encryption Standard}
@@ -64,7 +71,9 @@ Talk about group used. (https://www.rfc-editor.org/rfc/rfc5114.html)
 \section{Design and Implementation}
 
 \subsection{Diffie-Hellman}
+Talk about group used. (https://www.rfc-editor.org/rfc/rfc5114.html)
 Naive exponentiation vs pow !
+$10^{616}$
 
 \subsection{Blum Blum Shub}
 

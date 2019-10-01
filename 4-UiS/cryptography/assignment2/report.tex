@@ -40,7 +40,7 @@
 \maketitle \thispagestyle{fancy}
 
 \begin{abstract}
-    In this assignment, we implement a secure communication protocol consisting of three consecutive steps. First, we use Diffie-Hellman\cite{stallings_2017} key exchange to craft a shared private key between two actors using public key cryptography. We then use an implementation of the Blum Blum Shub algorithm to generate a cryptographically secure pseudo-random shared private key, using the previously exchanged key as seed. Finally, we use the generated random key to encrypt and decrypt messages between the two actors using 128-bit AES ciphers.
+    In this assignment, we implement a secure communication protocol consisting of three consecutive steps. First, we use Diffie-Hellman\cite{stallings_2017} key exchange to craft a shared private key between two actors using public key cryptography. We then use an implementation of the Blum Blum Shub\cite{stallings_2017} algorithm to generate a cryptographically secure pseudo-random shared private key, using the previously exchanged key as seed. Finally, we use the generated random key to encrypt and decrypt messages between the two actors using 128-bit AES ciphers.
 \end{abstract}
 
 \section{Introduction}
@@ -59,13 +59,12 @@ To increase the strength of the exchanged key, we use it as a seed to a cryptogr
 
 \begin{equation*}
     x_{n+1}=x_{n}^{2} \bmod M
+    \quad \quad \text{with $x_{0} = \text{seed}$, $M$ the product of two large primes $p$ and $q$}
 \end{equation*}
-
-with $x_{0} = \text{seed}$ and $M$
-
 
 \subsection{Advanced Encryption Standard}
 
+To encrypt their messages, Alice and Bob can now use a symmetric cipher with their shared private key. Here, we use AES in Electronic Code Book mode, so that we do not have to send nonces and tags. Now that Alice and Bob exchanged their keys, they could use any symmetric cipher and mode of operation. We only use this mode because the cipher implementation is not part of this assignment, so we keep it simple.
 
 
 \section{Design and Implementation}
@@ -81,7 +80,12 @@ $10^{616}$
 
 
 \section{Test Results}
+
+
 \section{Discussion}
+
+Blum blum shub is slow and not practically secure (https://crypto.stackexchange.com/questions/3454/blum-blum-shub-vs-aes-ctr-or-other-csprngs)
+
 \section{Conclusion}
 
 

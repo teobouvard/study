@@ -27,7 +27,7 @@ def generate_random(seed, size):
 def argument_parser():
     parser = argparse.ArgumentParser(description='Generate a random number using Blum Blum Shub algorithm')
     parser.add_argument('--seed', type=auto_int, required=True, help='Seed used for random number generation')
-    parser.add_argument('--size', type=int, default=DEFAULT_SIZE, help='Size in bits of the generated number, 128 if not specified')
+    parser.add_argument('--size', type=int, default=DEFAULT_SIZE, help='Size in bits of the generated number, 128 if not specified (use 128, 192 or 256 for AES compatibility)')
     parser.add_argument('--output', type=str, help='File to which the random number is written')
     parser.add_argument('--verbose', action='store_true', help='Display parameters used for key generation')
 

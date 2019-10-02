@@ -53,7 +53,7 @@ Pycryptodome is a Python package implementing AES ciphers. We only use it in cip
 
 All these manuals can be found using `python3 script_name.py --help`. To see usecase usage of these tools, take a look at the commands used in demo.sh.
 
-* Diffie-Hellman manual
+## Diffie-Hellman manual
 
 ```
 $ python3 keygen.py --help
@@ -80,7 +80,7 @@ optional arguments:
                         private key
 ```
 
-* Blum Blum Shub manual
+## Blum Blum Shub manual
 
 ```
 $ python3 bbs.py --help
@@ -97,9 +97,9 @@ optional arguments:
   --verbose        Display parameters used for key generation
 ```
 
-* AES manual
+## AES manual
 
-```
+```{shell}
 $ python3 cipher.py --help
 
 usage: cipher.py [-h] --mode {encrypt,decrypt} --key KEY --input INPUT
@@ -118,3 +118,8 @@ optional arguments:
                         stdout
   --verbose             Run in verbose mode
 ```
+
+# Requirements
+
+* Python 3.6 or above
+* Pip 9.0.1 or above

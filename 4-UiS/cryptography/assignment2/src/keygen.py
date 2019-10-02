@@ -11,14 +11,14 @@ SMALL_INT_SIZE = 10000
 
 ## TEST VALUES ##
 #P = 1009
-#R = 263
+#G = 263
 
 ## 2048-bit MODP Group ##
 with open(SCRIPT_DIR + '/files/2048-bit MODP Group/prime.txt', 'r') as f:
     P = int(''.join(f.read().split()), 16)
 
 with open(SCRIPT_DIR + '/files/2048-bit MODP Group/generator.txt', 'r') as f:
-    R = int(''.join(f.read().split()), 16)
+    G = int(''.join(f.read().split()), 16)
 
 ### ARTIHMETIC HELPER FUNCTIONS ###
 
@@ -47,7 +47,7 @@ def pubkeygen(prime, root, secret):
 
     return pow(root, secret, prime)
 
-def shared_secret_key(secret, other_public_key):
+def shared_secret_key(secret, other_public_key, prime):
     return pow(other_public_key, secret, prime)
 
 ### MAIN PROGRAM ###
@@ -56,7 +56,7 @@ def argument_parser():
     parser = argparse.ArgumentParser(description='Generate public and private keys with the Diffie-Hellmann algorithm')
     parser.add_argument('--mode', choices=['generate', 'merge', 'test'], required=True, help='Generate a public key, compute a shared private key, or test program')    
     parser.add_argument('--prime', type=auto_int, default=P, help='Prime used (hex or decimal) for key generation')
-    parser.add_argument('--root', type=auto_int, default=R, help='Primitive root (hex or decimal) used for key generation')
+    parser.add_argument('--root', type=auto_int, default=G, help='Primitive root (hex or decimal) used for key generation')
     parser.add_argument('--secret', type=auto_int, help='Private key (hex or decimal) used for key generation')
     parser.add_argument('--verbose', action='store_true', help='Display parameters used for key generation')
     parser.add_argument('--output', type=str, help='File to which the public key is written (standard ouput if not specified)')
@@ -122,7 +122,7 @@ if __name__ == '__main__':
             print('A public key is necessary to compute the shared private key. Use the --public argument.')
             exit(1)
         
-        shared = shared_secret_key(secret, public)
+        shared = shared_secret_key(secret, public, prime)
 
         # display parameters if program is run in verbose mode or if key is not written to disk
         if args.output is None or args.verbose:
@@ -146,10 +146,10 @@ if __name__ == '__main__':
         with open(SCRIPT_DIR + '/files/2048-bit MODP Group/test_Z.txt', 'r') as f:
             test_Z = int(''.join(f.read().split()), 16)
 
-        yA = pubkeygen(P, R, test_xA)
-        yB = pubkeygen(P, R, test_xB)
-        ZA = shared_secret_key(test_xA, yB)
-        ZB = shared_secret_key(test_xB, yA)
+        yA = pubkeygen(P, G, test_xA)
+        yB = pubkeygen(P, G, test_xB)
+        ZA = shared_secret_key(test_xA, yB, P)
+        ZB = shared_secret_key(test_xB, yA, P)
 
         if yA != test_yA:
             print('ERROR : A public key is not equal to the test one !')

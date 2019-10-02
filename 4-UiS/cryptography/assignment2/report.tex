@@ -10,7 +10,8 @@
 \usepackage{hyperref} % color url
 \hypersetup{urlcolor=blue, colorlinks=true}
 \usepackage{pythonhighlight} % python syntax highlighting
-\usepackage{amsmath}
+\usepackage{amsmath} % equations
+\usepackage{graphicx} % images
 \usepackage[left=2cm, right=2cm, bottom=3cm, top=3cm]{geometry} % margin settings
 \usepackage{alltt}
 \renewcommand{\ttdefault}{txtt}
@@ -72,10 +73,9 @@ Using these cryptographic primitves, we implement a secure communication protoco
 
 \subsection{Diffie-Hellman}
 
-The python implementation of the Diffie-Hellman key exchange is fairly straightforward. There are two main steps in this scheme : creating a public key from our private key, and combining the other party's public key with our private key to generate the shared private key. These two steps are represented by the two main modes of operation of keygen.py : generate and merge, to be passed to the --mode argument.
+The python implementation of the Diffie-Hellman key exchange is fairly straightforward. There are two main steps in this scheme : creating a public key from our private key, and combining the other party's public key with our private key to generate the shared private key. These two steps are represented by the two main modes of operation of keygen.py : generate and merge, to be passed to the -{}-mode argument. When running the script in -{}-mode generate, the main function used is the following.
 
-When running the script in --mode generate, the main function used is the following.
-
+\bigskip
 \begin{python}
 def pubkeygen(prime, root, secret):
     assert(is_prime(prime))
@@ -83,29 +83,56 @@ def pubkeygen(prime, root, secret):
 
     return pow(root, secret, prime)
 \end{python}
+\bigskip
 
-And when used in --mode merge, the main computation is done in this function.
+And when used in -{}-mode merge, the main computation is done in this function.
 
+\bigskip
 \begin{python}
 def shared_secret_key(secret, other_public_key, prime):
     return pow(other_public_key, secret, prime)
 \end{python}
+\bigskip
 
-Note that in both functions, we use the pow() method with three arguments rather than exponentiating and then taking the modulo. This is because on large numbers, the pow method is significantly faster at computing the modulo than the raw computation of exponentiation followed by division.
+Note that in both functions, we use the pow() method with three arguments rather than exponentiating and then taking the modulo. This is because on large numbers, the pow method is significantly faster at computing the modulo than the raw computation of exponentiation followed by division. This is demonstrated in Figure \ref{fig:pow_speed}. This program is designed to accept decimal or hexadecimal representation of integers for the -{}-secret, -{}-prime, -{}-root, and -{}-public arguments.
 
-The rest of the script is dedicated to argument parsing, parameters loading and tests. The tests are run when using the script in --mode test. The test data comes from the RFC 5114\cite{rfc5114} memo which describes standard Diffie-Hellman groups and their associated test data. The default group used by the script if no --prime and --root are passed is the 2048-bit MODP Group with 256-bit Prime Order Subgroup which can be found on the memo.
-
-
+The rest of the script is mostly dedicated to argument parsing, parameters loading and tests. The tests are run when using the script in -{}-mode test. The test data comes from the RFC 5114\cite{rfc5114} memo which describes standard Diffie-Hellman groups and their associated test data. The default group used by the script if no -{}-prime and -{}-root are passed is the 2048-bit MODP Group with 256-bit Prime Order Subgroup which can be found on the memo.
+Further specification for the other command line arguments can be found in the README file.
 
 \subsection{Blum Blum Shub}
+
+
+
+\begin{python}
+def generate_random(seed, size):
+
+    bits = []
+
+    for _ in range(size):
+        seed = pow(seed, 2, M)
+        bits.append(bin(seed)[-1])
+    
+    return int(''.join(bits), 2)
+\end{python}
+
+This pseudo-random number generator
 
 \subsection{Advanced Encryption Standard}
 We only use this mode because the cipher implementation is not part of this assignment, so we keep it simple. That allow us to not have to send nonces and tags with the messages.
 
+\subsection{Putting it all together}
+
+Now that we have seen how the different primitives are implemented, we can combine them to create the secure communication protocol we were seeking. To demonstrate how this can be done, a shell script describing a usecase is given. The file demo.sh serves as an example of how these primitives can be used in a modular way. Users may chose to run the programs quietly, or in verbose mode to display the parameters used. They may chose to redirect output to files. They may chose to change the parameters of the different primitives. 
 
 \section{Test Results}
 
 pow speed comparison
+
+\begin{figure}
+    \includegraphics[]{pow_speed.png}
+    \caption{Modular exponentiation speed comparison}
+    \label{fig:pow_speed}
+\end{figure}
 
 
 \section{Discussion}

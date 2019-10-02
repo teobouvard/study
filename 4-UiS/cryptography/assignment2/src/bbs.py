@@ -58,7 +58,7 @@ if __name__ == '__main__':
         print('--size must be a positive integer')
         exit()
     if not are_coprime(seed, M):
-        print('Seed and prime are not coprime')
+        print('Seed and prime are not coprime, try another seed')
         exit()
     if args.output is not None:
         os.makedirs(os.path.dirname(output_file), exist_ok=True)

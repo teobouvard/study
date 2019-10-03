@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 clean_exit(){
     rm internet_communication

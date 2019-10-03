@@ -1,5 +1,7 @@
-from matplotlib import pyplot as plt
+import os
 import timeit
+
+from matplotlib import pyplot as plt
 
 LIMIT = 10e8
 x = 1
@@ -16,10 +18,16 @@ while x < LIMIT:
     pow_times.append(timeit.timeit('pow({}, {}, {})'.format(a, x, m), number=1))
     x *=2
 
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+ax.set_xscale('log')
+
 plt.plot(x_list, raw_times, marker='o')
 plt.plot(x_list, pow_times, marker='o')
-plt.xlabel('i')
-plt.ylabel('time (s)')
+plt.xlabel('log(i)')
+plt.xticks()
+plt.ylabel('computation time (s)')
 plt.legend(['y = x ** i mod M', 'y = pow(x, i, M)'])
-plt.savefig('pow_speed.png')
+os.makedirs('img', exist_ok=True)
+plt.savefig('img/pow_speed.png')
 plt.show()

@@ -37,7 +37,7 @@ fi
 printf "\n"
 
 printf "Bob generates a more secure shared key by using the previously computed key as as seed to a CSPRNG\n"
-if ! python3 bbs.py --seed "$(cat keys/bob_shared_key.txt)" --size $KEY_SIZE --output keys/bob_encrypted_shared_key.key $VERBOSE
+if ! python3 bbs.py --mode generate --seed "$(cat keys/bob_shared_key.txt)" --size $KEY_SIZE --output keys/bob_encrypted_shared_key.key $VERBOSE
     then clean_exit
 fi
 printf "\n"
@@ -61,7 +61,7 @@ fi
 printf "\n"
 
 printf "Alice generates a more secure shared key by using the previously computed key as as seed to a CSPRNG\n"
-if ! python3 bbs.py --seed "$(cat keys/alice_shared_key.txt)" --size $KEY_SIZE --output keys/alice_encrypted_shared_key.key $VERBOSE
+if ! python3 bbs.py --mode generate --seed "$(cat keys/alice_shared_key.txt)" --size $KEY_SIZE --output keys/alice_encrypted_shared_key.key $VERBOSE
     then clean_exit
 fi
 printf "\n"

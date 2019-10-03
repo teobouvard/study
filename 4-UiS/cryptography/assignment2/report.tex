@@ -128,7 +128,8 @@ The implementation of a symmetric cipher is not part of this assignment as it ha
 \begin{python}
 def encrypt(plaintext, key):
     cipher = AES.new(key, AES.MODE_ECB)
-    plaintext = pad(plaintext, 16)
+    if len(plaintext) % 16 != 0:
+        plaintext = pad(plaintext, 16)
     ciphertext = cipher.encrypt(plaintext)
     return ciphertext
 \end{python}
@@ -141,11 +142,13 @@ For encryption, we have to pad the plaintext to the block size (16 bytes, 128 bi
 def decrypt(ciphertext, key):
     cipher = AES.new(key, AES.MODE_ECB)
     plaintext = cipher.decrypt(ciphertext)
-    return unpad(plaintext, 16)
+    if len(ciphertext) % 16 != 0:
+        plaintext = unpad(plaintext, 16)
+    return plaintext
 \end{python}
 \bigskip
 
-Although most of the work here is done by an external library \cite{pycryptodome}
+Although most of the work here is done by an external library \cite{pycryptodome}, we can still test the implementation by using NIST test data \cite{nist:test}.
 
 \subsection{Putting it all together}
 
@@ -157,14 +160,14 @@ The other shell script provided, test.sh, allows to run the implementation tests
 
 Figure \ref{fig:pow_speed} shows the speed comparison of modular exponentiation methods. We observe exponential time complexity as the exponent gets larger using naive computation, whereas pow remains nearly constant time.
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[scale=0.7]{img/pow_speed.png}
     \caption{Modular exponentiation speed comparison}
     \label{fig:pow_speed}
 \end{figure}
 
-\begin{figure}[]
+\begin{figure}[ht]
     \centering
     \includegraphics[scale=0.4]{img/bitmap_bbs.png}
     \caption{Bitmap representation of a generated pseudo-random number}

@@ -46,6 +46,7 @@ Pycryptodome is a Python package implementing AES ciphers used it in `cipher.py`
     - `files/` : a directory containing files used by the different tools
         - `really_secret_file.txt` : the file Alice wishes to send to Bob without disclosing its contents
         - `2048-bit MODP Group/` : the elements of a Diffie-Hellman group compliant with IETF standards found in [this RFC](https://tools.ietf.org/html/rfc5114)
+        - `AES test data/` : plaintext and ciphertext equivalents from [NIST example values](https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/AES_Core_All.pdf)
     
     - `test.sh` : a shell script running implementation tests
     - `demo.sh` : a shell script providing a usecase example of how to use the tools implemented together

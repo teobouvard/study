@@ -9,6 +9,7 @@ clean:
 
 purge:
 	rm -rf src/keys
+	rm -rf src/img
 	rm src/files/encrypted_file.bin src/files/decrypted_file.txt
 
 demo:

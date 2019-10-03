@@ -97,7 +97,7 @@ def shared_secret_key(secret, other_public_key, prime):
 Note that in both functions, we use the pow() method with three arguments rather than exponentiating and then taking the modulo. This is because on large numbers, the pow method is significantly faster at computing the modulo than the raw computation of exponentiation followed by division. This is demonstrated in Figure \ref{fig:pow_speed}. This program is designed to accept decimal or hexadecimal representation of integers for the -{}-secret, -{}-prime, -{}-root, and -{}-public arguments.
 
 The rest of the script is mostly dedicated to argument parsing, parameters loading and tests. The tests are run when using the script in -{}-mode test. The test data comes from the RFC 5114\cite{rfc5114} memo which describes standard Diffie-Hellman groups and their associated test data. The default group used by the script if no -{}-prime and -{}-root are passed is the 2048-bit MODP Group with 256-bit Prime Order Subgroup which can be found on the memo.
-Further specification for the other command line arguments can be found in the README file.
+Further specification for the other command line arguments can be found in the README.pdf file.
 
 \subsection{Blum Blum Shub}
 

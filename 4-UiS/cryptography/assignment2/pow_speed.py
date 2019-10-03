@@ -24,7 +24,7 @@ ax.set_xscale('log')
 
 plt.plot(x_list, raw_times, marker='o')
 plt.plot(x_list, pow_times, marker='o')
-plt.xlabel('log(i)')
+plt.xlabel('i, log scale')
 plt.xticks()
 plt.ylabel('computation time (s)')
 plt.legend(['y = x ** i mod M', 'y = pow(x, i, M)'])

@@ -104,6 +104,7 @@ Further specification for the other command line arguments can be found in the R
 
 The main computation of the BBS algorithm is also quite simple, as bits are generated incrementally by taking the least significant bit of each modular exponentiation. The generated bits are then merged together and interpreted as a binary number.
 
+\bigskip
 \begin{python}
 def generate_random(seed, size):
 
@@ -115,12 +116,36 @@ def generate_random(seed, size):
     
     return int(''.join(bits), 2)
 \end{python}
+\bigskip
 
 Although testing for statisical randomness usually involves a series of tests \cite{rukhin2001statistical}, we can visually check for pseudo-randomness by looking at the bitmap created by the generated bits. If we do not identify any regular pattern, we can assume that the randomness is reasonable for the key to be secure enough. This bitmap test can be seen in Figure \ref{fig:bitmap_bbs}.
 
 \subsection{Advanced Encryption Standard}
 
-The implementation of a symmetric cipher is not part of this assignment as it has already been done in Assignment 1. We chose AES for its ingenuity and subsequent popularity. We use the Electronic Code Book mode of operation so that we do not have to transfer initialization vectors or nonces with the message. In a real-world application, another mode would be used as ECB is semantically insecure as a given plaintext is encrypted to the same ciphertext each time. For short text messages, this mode of operation is probably reasonable enough.
+The implementation of a symmetric cipher is not part of this assignment as it has already been done in Assignment 1. We choose AES for its ingenuity and subsequent popularity, and we use the Electronic Code Book mode of operation so that we do not have to transfer initialization vectors or nonces with the message. In a real-world application, another mode would be used as ECB is semantically insecure. Given a plaintext, ECB will always produce the same ciphertext each time. For short text messages, this mode of operation is probably reasonable enough.
+  
+\bigskip
+\begin{python}
+def encrypt(plaintext, key):
+    cipher = AES.new(key, AES.MODE_ECB)
+    plaintext = pad(plaintext, 16)
+    ciphertext = cipher.encrypt(plaintext)
+    return ciphertext
+\end{python}
+\bigskip
+
+For encryption, we have to pad the plaintext to the block size (16 bytes, 128 bits) as AES is a block cipher. During the decryption process, we unpad the decrypted ciphertext in the similar way. 
+
+\bigskip
+\begin{python}
+def decrypt(ciphertext, key):
+    cipher = AES.new(key, AES.MODE_ECB)
+    plaintext = cipher.decrypt(ciphertext)
+    return unpad(plaintext, 16)
+\end{python}
+\bigskip
+
+Although most of the work here is done by an external library \cite{pycryptodome}
 
 \subsection{Putting it all together}
 
@@ -139,10 +164,10 @@ Figure \ref{fig:pow_speed} shows the speed comparison of modular exponentiation 
     \label{fig:pow_speed}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[]
     \centering
     \includegraphics[scale=0.4]{img/bitmap_bbs.png}
-    \caption{Bitmap representation of generated PRN}
+    \caption{Bitmap representation of a generated pseudo-random number}
     \label{fig:bitmap_bbs}
 \end{figure}
 

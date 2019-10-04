@@ -219,17 +219,23 @@ Table \ref{tab:aes} shows the equivalence between NIST test data \cite{nist:test
 
 \begin{figure}[h]
     \centering
-    \begin{minipage}[t]{0.45\textwidth}
+    \begin{minipage}[t]{0.3\textwidth}
         \centering
         \frame{\includegraphics[width=\textwidth]{img/enigma.jpg}}
         \caption{Original image}
         \label{fig:original_image}
     \end{minipage}\hfill
-    \begin{minipage}[t]{0.45\textwidth}
+    \begin{minipage}[t]{0.3\textwidth}
         \centering
         \frame{\includegraphics[width=\textwidth]{img/encrypted_enigma.jpg}}
         \caption{Encrypted image using AES-ECB}
         \label{fig:encrypted_image}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.3\textwidth}
+        \centering
+        \frame{\includegraphics[width=\textwidth]{img/encrypted_enigma_cbc.jpg}}
+        \caption{Encrypted image using AES-CBC}
+        \label{fig:encrypted_image_cbc}
     \end{minipage}
 \end{figure}
 
@@ -240,16 +246,17 @@ With a 2048-bit group, the exponent could be as large as $(2^{2048}-1) \sim 10^{
 \bigskip
 
 The key generation using Diffie-Hellman with a 2048-bit group is pretty much unbreakable with the current technology as it is estimated that an academic team can break a 768-bit prime and that a nation-state can break a 1024-bit prime \cite{weakdh15}. This is arguably the most secure part of our protocol. 
-Thanks to the \verb+pow()+ method, it can efficiently produce 2048-bit keys, thus generating a $2^{2048}-1$ key space, which is computationally infeasible to bruteforce. Given a generous 1ms for each attempt, it would require $ \frac{2^{2048}}{3.154 \times 10^{10}}  \sim 10^{626}$ CPU-years to complete an exhaustive search. 
+Thanks to the \verb+pow()+ method, this tool can efficiently produce 2048-bit keys, thus generating a $2^{2048}-1$ key space, which is computationally infeasible to bruteforce. Given a generous 1ms for each attempt, it would require $ \frac{2^{2048}}{3.154 \times 10^{10}} \sim 10^{626}$ CPU-years to complete an exhaustive search. 
 Nevertheless, having to use 2048-bit keys is a constraint on the efficiency of the algorithm. According to a 2016 NIST report \cite{Barker2016}, the same security could be achieved using 255-bit keys with Elliptic Curve Diffie-Hellman. Such an implementation would be a bit more complex, but more time and memory efficient.
 
 \bigskip
 
 Concerning BBS, it is hard to conclude anything without running an extensive suite of statistical randomness tests. Visually speaking, the bitmap looks pretty random, but this is only a basic intuition and humans are known to be pretty bad at identifying randomness\cite{Warren2018}.
-In real world applications, BBS should not be used as a general purpose CSPRNG for multiple reasons. We use it here because we only need to generate a few hundred bits. First of all, BBS is excruciatingly slow, as we can only extract a few bits from each iteration. Secondly, the proof of security which comes with this algorithm is only significant for more than 5000-bits moduli\cite{BlumBlum65:online}. A efficient alternative would be to use AES in Counter mode or in Output Feedback mode, in order to convert this block cipher into a stream cipher generating pseudo-random bits.
+In real world applications, BBS should not be used as a general purpose CSPRNG for multiple reasons. We use it here because we only need to generate a few hundred bits. First of all, BBS is excruciatingly slow, as we can only extract a few bits from each iteration. Secondly, the proof of security which comes with this algorithm is only significant for more than 5000-bits moduli\cite{BlumBlum65:online}. A efficient alternative would be to use AES in Counter mode or in Output Feedback mode, in order to convert a block cipher into a stream cipher generating pseudo-random bits.
 
 \bigskip
 
+Finally, we can see why the Electronic Code Book is an insecure mode of operation for the AES cipher. In Figure \ref{fig:encrypted_image}, the white space is always encrypted to the same binary data, and is thus recognizable. But the rest of the image, because of its irregularities, is pretty much unrecognizable. This is why we assume that for short text messages, ECB is secure enough to encrypt data without an attacker being able to identify repeating patterns. If Alice and Bob wanted to send encrypted images, they would have to use another mode.
 
 ECB not secure
 https://blog.filippo.io/the-ecb-penguin/

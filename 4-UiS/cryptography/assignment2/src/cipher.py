@@ -107,29 +107,29 @@ if __name__ == '__main__':
     elif mode == 'test':
 
         # different key length tests
-        with open(SCRIPT_DIR + '/files/AES test data/128_key.txt', 'r') as f:
+        with open(SCRIPT_DIR + '/files/AES_test_data/128_key.txt', 'r') as f:
             key = ''.join(f.read().split())
             key_128 = bytes.fromhex(key)
-        with open(SCRIPT_DIR + '/files/AES test data/192_key.txt', 'r') as f:
+        with open(SCRIPT_DIR + '/files/AES_test_data/192_key.txt', 'r') as f:
             key = ''.join(f.read().split())
             key_192 = bytes.fromhex(key)
-        with open(SCRIPT_DIR + '/files/AES test data/256_key.txt', 'r') as f:
+        with open(SCRIPT_DIR + '/files/AES_test_data/256_key.txt', 'r') as f:
             key = ''.join(f.read().split())
             key_256 = bytes.fromhex(key)
 
         # same plaintext for all keys
-        with open(SCRIPT_DIR + '/files/AES test data/plaintext.txt', 'r') as f:
+        with open(SCRIPT_DIR + '/files/AES_test_data/plaintext.txt', 'r') as f:
             plaintext = ''.join(f.read().split())
             plaintext = bytes.fromhex(plaintext)
 
         # ciphertexts for each key
-        with open(SCRIPT_DIR + '/files/AES test data/128_ciphertext.txt', 'r') as f:
+        with open(SCRIPT_DIR + '/files/AES_test_data/128_ciphertext.txt', 'r') as f:
             ciphertext = ''.join(f.read().split())
             ciphertext_128 = bytes.fromhex(ciphertext)
-        with open(SCRIPT_DIR + '/files/AES test data/192_ciphertext.txt', 'r') as f:
+        with open(SCRIPT_DIR + '/files/AES_test_data/192_ciphertext.txt', 'r') as f:
             ciphertext = ''.join(f.read().split())
             ciphertext_192 = bytes.fromhex(ciphertext)
-        with open(SCRIPT_DIR + '/files/AES test data/256_ciphertext.txt', 'r') as f:
+        with open(SCRIPT_DIR + '/files/AES_test_data/256_ciphertext.txt', 'r') as f:
             ciphertext = ''.join(f.read().split())
             ciphertext_256 = bytes.fromhex(ciphertext)
         

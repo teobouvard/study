@@ -11,6 +11,7 @@
 \hypersetup{urlcolor=blue, colorlinks=true}
 \usepackage{pythonhighlight} % python syntax highlighting
 \usepackage{amsmath} % equations
+\usepackage{ amssymb } % symbols
 \usepackage{graphicx} % images
 \usepackage[left=2cm, right=2cm, bottom=3cm, top=3cm]{geometry} % margin settings
 \usepackage{alltt}
@@ -73,7 +74,7 @@ Using these cryptographic primitves, we implement a secure communication protoco
 
 \subsection{Diffie-Hellman}
 
-The python implementation of the Diffie-Hellman key exchange is fairly straightforward. There are two main steps in this scheme : creating a public key from our private key, and combining the other party's public key with our private key to generate the shared private key. These two steps are represented by the two main modes of operation of keygen.py : generate and merge, to be passed to the -{}-mode argument. When running the script in -{}-mode generate, the main function used is the following.
+The python implementation of the Diffie-Hellman key exchange is fairly straightforward. There are two main steps in this scheme : creating a public key from our private key, and combining the other party's public key with our private key to generate the shared private key. These two steps are represented by the two main modes of operation of \verb+keygen.py+ : generate and merge, to be passed to the \verb+--mode+ argument. When running the script in \verb+--mode generate+, the main function used is the following.
 
 \bigskip
 \begin{python}
@@ -85,7 +86,7 @@ def pubkeygen(prime, root, secret):
 \end{python}
 \bigskip
 
-And when used in -{}-mode merge, the main computation is done in this function.
+And when used in \verb+--mode merge+, the main computation is done in this function.
 
 \bigskip
 \begin{python}
@@ -94,11 +95,12 @@ def shared_secret_key(secret, other_public_key, prime):
 \end{python}
 \bigskip
 
-Note that in both functions, we use the pow() method with three arguments rather than exponentiating and then taking the modulo. This is because on large numbers, the pow method is significantly faster at computing the modulo than the raw computation of exponentiation followed by division. This is demonstrated in Figure \ref{fig:pow_speed}. 
-This program is designed to accept decimal or hexadecimal representation of integers for the -{}-secret, -{}-prime, -{}-root, and -{}-public arguments.
+Note that in both functions, we use the \verb+pow()+ method with three arguments rather than exponentiating and then taking the modulo. This is because on large numbers, the \verb+pow()+ method is significantly faster at computing the modulo than the raw computation of exponentiation followed by division. This is demonstrated in Figure \ref{fig:pow_speed}. 
+This program is designed to accept decimal or hexadecimal representation of integers for the \verb+-{}-secret+, \verb+--prime+, \verb+--root+, and \verb+--public+ arguments.
 
-The rest of the script is mostly dedicated to argument parsing, parameters loading and tests. The tests are run when using the script in -{}-mode test. The test data comes from the RFC 5114\cite{rfc5114} memo which describes standard Diffie-Hellman groups and their associated test data. The default group used by the script if no -{}-prime and -{}-root are passed is the 2048-bit MODP Group with 256-bit Prime Order Subgroup which can be found on the memo.
-Further specification for the other command line arguments can be found in the README.pdf file.
+The rest of the script is mostly dedicated to argument parsing, parameters loading and tests. The tests are run when using the script in \verb+--mode test+. The test data comes from the RFC 5114\cite{rfc5114} memo which describes standard Diffie-Hellman groups and their associated test data. Results of the tests can be found in Table \ref{tab:diffie}. The default group used by the script if no \verb+--prime+ and \verb+--root+ are passed is the 2048-bit MODP Group with 256-bit Prime Order Subgroup which can be found in the memo. 
+
+Further specification for the other command line arguments can be found in the \verb+README.pdf+ file.
 
 \subsection{Blum Blum Shub}
 
@@ -122,7 +124,7 @@ Although testing for statisical randomness usually involves a series of tests \c
 
 \subsection{Advanced Encryption Standard}
 
-The implementation of a symmetric cipher is not part of this assignment as it has already been done in Assignment 1. We choose AES for its ingenuity and subsequent popularity, and we use the Electronic Code Book mode of operation so that we do not have to transfer initialization vectors or nonces with the message. In a real-world application, another mode would be used as ECB is semantically insecure. Given a plaintext, ECB will always produce the same ciphertext each time. For short text messages, this mode of operation is probably reasonable enough.
+The implementation of a symmetric cipher is not part of this assignment as it has already been done in Assignment 1. We choose AES for its ingenuity and subsequent popularity, and we use the Electronic Code Book mode of operation so that we do not have to transfer initialization vectors or nonces with the message. In a real-world application, we would prefer to use another mode as ECB is semantically insecure. Given a plaintext, ECB will always produce the same ciphertext each time. For a small amount of short text messages, this mode of operation is secure enough for our protocol.
   
 \bigskip
 \begin{python}
@@ -135,48 +137,86 @@ def encrypt(plaintext, key):
 \end{python}
 \bigskip
 
-For encryption, we have to pad the plaintext to the block size (16 bytes, 128 bits) as AES is a block cipher. During the decryption process, we unpad the decrypted ciphertext in the similar way. 
+For encryption, we have to pad the plaintext if it does not fit the block size (16 bytes, 128 bits) as AES is a block cipher. During the decryption process, we unpad the decrypted ciphertext in the similar way. 
 
 \bigskip
 \begin{python}
 def decrypt(ciphertext, key):
     cipher = AES.new(key, AES.MODE_ECB)
     plaintext = cipher.decrypt(ciphertext)
-    if len(ciphertext) % 16 != 0:
+    if len(plaintext) % 16 != 0:
         plaintext = unpad(plaintext, 16)
     return plaintext
 \end{python}
 \bigskip
 
-Although most of the work here is done by an external library \cite{pycryptodome}, we can still test the implementation by using NIST test data \cite{nist:test}.
+Although most of the work here is done by an external library \cite{pycryptodome}, we can still test the global implementation by using NIST test data \cite{nist:test}. This is done in Table \ref{tab:aes}.
 
 \subsection{Putting it all together}
 
-Now that we have seen how the different primitives are implemented, we can combine them to create the secure communication protocol we were seeking. To demonstrate how this can be done, a shell script describing a usecase is given. The file demo.sh serves as an example of how these primitives can be used in a modular way. Users may chose to run the programs quietly, or in verbose mode to display the parameters used. They may chose to redirect output to files. They may chose to change the parameters of the different primitives. This demo shell script is POSIX-compliant and should run on any reasonable shell. 
+Now that we have seen how the different primitives are implemented, we can combine them to create the secure communication protocol we were seeking. To demonstrate how this can be done, a shell script describing a usecase is given. The file \verb+demo.sh+ serves as an example of how these primitives can be used in a modular way. Users may chose to run the programs quietly, or in verbose mode to display the parameters used. They may chose to redirect output to files. They may chose to change the parameters of the different primitives. This demo shell script is POSIX-compliant and should run on any reasonable shell. 
   
-The other shell script provided, test.sh, allows to run the implementation tests of the different primitives. 
+The other shell script provided, \verb+test.sh+, allows to run the implementation tests of the different primitives. 
 
 \section{Test Results}
 
-Figure \ref{fig:pow_speed} shows the speed comparison of modular exponentiation methods. We observe exponential time complexity as the exponent gets larger using naive computation, whereas pow remains nearly constant time.
+Table \ref{tab:diffie} shows the equivalence of test data from RFC 5114 \cite{rfc5114} and keys generated by our own implementation. The test data can be found in the \verb+files/2048-bit MODP Group+ folder.
 
-\begin{figure}[ht]
+
+Figure \ref{fig:pow_speed} shows the speed comparison of modular exponentiation methods. We observe exponential time complexity as the exponent gets larger using naive computation, whereas \verb+pow()+ remains nearly constant time.
+
+\begin{figure}[h]
     \centering
-    \includegraphics[scale=0.7]{img/pow_speed.png}
-    \caption{Modular exponentiation speed comparison}
-    \label{fig:pow_speed}
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{img/bitmap_bbs.png}
+        \caption{Bitmap representation of a generated pseudo-random number}
+        \label{fig:bitmap_bbs}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/pow_speed.png}
+        \caption{Modular exponentiation speed comparison}
+        \label{fig:pow_speed}
+    \end{minipage}
 \end{figure}
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics[scale=0.4]{img/bitmap_bbs.png}
-    \caption{Bitmap representation of a generated pseudo-random number}
-    \label{fig:bitmap_bbs}
-\end{figure}
+\begin{table}[h]
+    \begin{center}
+        \begin{tabular}{|c| c c|} 
+            \hline
+            \textbf{Initiator} & \textbf{Public key equivalence} & \textbf{Shared private key equivalence} \\
+            \hline
+            A & \checkmark & \checkmark \\
+            B & \checkmark & \checkmark \\
+            \hline
+        \end{tabular}
+    \end{center}
+    \caption{Comparing IETF test data to our implementation} \label{tab:diffie}
+\end{table}
 
+Table \ref{tab:aes} shows the equivalence between NIST test data \cite{nist:test} and data generated with our implementation using pycryptodome's AES cipher. The keys, ciphertexts and plaintexts used can be found in the \verb+files/AES_test_data+ folder.
+
+\begin{table}[h]
+    \begin{center}
+        \begin{tabular}{|c c c|} 
+            \hline
+            \textbf{Key Length} & \textbf{Plaintext equivalence} & \textbf{Ciphertext equivalence} \\
+            \hline
+            128 bits & \checkmark & \checkmark \\
+            192 bits & \checkmark & \checkmark \\
+            256 bits & \checkmark & \checkmark \\
+            \hline
+        \end{tabular}
+    \end{center}
+    \caption{Comparing NIST test data to our implementation} \label{tab:aes}
+\end{table}
 
 \section{Discussion}
-%(https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/AES_Core_All.pdf)
+
+The key generation using Diffie-Hellman with a 2048-bit group is pretty much unbreakable with the current technology as it is estimated that an academic team can break a 768-bit prime and that a nation-state can break a 1024-bit prime \cite{weakdh15}. This is arguably the most secure part of our protocol. 
+
+With a 2048-bit group, the exponent could be as large as $(2^{2048}-1) \sim 10^{616}$, which would take roughly $10^{170}$ years to compute with naive exponentiation.
 
 $10^{616}$ key space DH
 

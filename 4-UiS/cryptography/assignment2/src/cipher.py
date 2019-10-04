@@ -24,7 +24,7 @@ def encrypt(plaintext, key):
 def decrypt(ciphertext, key):
     cipher = AES.new(key, AES.MODE_ECB)
     plaintext = cipher.decrypt(ciphertext)
-    if len(ciphertext) % 16 != 0:
+    if len(plaintext) % 16 != 0:
         plaintext = unpad(plaintext, 16)
     return plaintext
 

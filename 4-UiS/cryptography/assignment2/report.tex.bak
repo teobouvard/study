@@ -47,8 +47,8 @@
 
 \section{Introduction}
 
-Our main goal is to be able to communicate secret data over an insecure communication channel. To do so, we have to encrypt our data before sending it, and decrypt it after receiving it, so that it only appears encrypted on the communication channel.
-To perform these encryptions, we want to use a symmetric cipher allowing us to efficiently compute ciphertext from plaintext and vice versa. Before using symmetric encryption, we have to solve the key exchange problem, because we still need to communicate the private key between the two actors over an insecure channel.
+Our main goal is to be able to communicate secret data over an unsecure communication channel. To do so, we have to encrypt our data before sending it, and decrypt it after recieving it, so that it only appears encrypted on the communication channel.
+To perform these encryptions, we want to use a symmetric cipher allowing us to efficiently compute ciphertext from plaintext and vice versa. Before using symmetric encryption, we have to solve the key exchange problem, because we still need to communicate the private key between the two actors over an unsecure channel.
 One answer to this first problem is to use public-key cryptography, and more specifically the Diffie-Hellman key exchange protocol. 
 
 \subsection{Diffie-Hellman}
@@ -68,7 +68,7 @@ To increase the strength of the exchanged key, we use it as a seed to a cryptogr
 
 To encrypt their messages, Alice and Bob can now use a symmetric cipher with their shared private key. Here, we use AES in Electronic Code Book mode. Now that Alice and Bob exchanged their keys, they could use any symmetric cipher and mode of operation. 
 
-Using these cryptographic primitives, we implement a secure communication protocol allowing Alice and Bob to communicate data privately.
+Using these cryptographic primitves, we implement a secure communication protocol allowing Alice and Bob to communicate data privately.
 
 \section{Design and Implementation}
 
@@ -120,7 +120,7 @@ def generate_random(seed, size):
 \end{python}
 \bigskip
 
-Although testing for statistical randomness usually involves a series of tests \cite{rukhin2001statistical}, we can visually check for pseudo-randomness by looking at the bitmap created by the generated bits. If we do not identify any regular pattern, we can assume that the randomness is reasonable for the key to be secure enough. This bitmap test can be seen in Figure \ref{fig:bitmap_bbs}.
+Although testing for statisical randomness usually involves a series of tests \cite{rukhin2001statistical}, we can visually check for pseudo-randomness by looking at the bitmap created by the generated bits. If we do not identify any regular pattern, we can assume that the randomness is reasonable for the key to be secure enough. This bitmap test can be seen in Figure \ref{fig:bitmap_bbs}.
 
 \subsection{Advanced Encryption Standard}
 
@@ -154,7 +154,7 @@ Although most of the work here is done by an external library \cite{pycryptodome
 
 \subsection{Putting it all together}
 
-Now that we have seen how the different primitives are implemented, we can combine them to create the secure communication protocol we were seeking. To demonstrate how this can be done, a shell script describing a use case is given. The file \verb+demo.sh+ serves as an example of how these primitives can be used in a modular way. Users may chose to run the programs quietly, or in verbose mode to display the parameters used. They may chose to redirect output to files. They may chose to change the parameters of the different primitives. This demo shell script is POSIX-compliant and should run on any reasonable shell. 
+Now that we have seen how the different primitives are implemented, we can combine them to create the secure communication protocol we were seeking. To demonstrate how this can be done, a shell script describing a usecase is given. The file \verb+demo.sh+ serves as an example of how these primitives can be used in a modular way. Users may chose to run the programs quietly, or in verbose mode to display the parameters used. They may chose to redirect output to files. They may chose to change the parameters of the different primitives. This demo shell script is POSIX-compliant and should run on any reasonable shell. 
   
 The other shell script provided, \verb+test.sh+, allows to run the implementation tests of the different primitives. 
 
@@ -165,7 +165,7 @@ Table \ref{tab:diffie} shows the equivalence of test data from RFC 5114 \cite{rf
 
 Figure \ref{fig:pow_speed} shows the speed comparison of modular exponentiation methods. We observe exponential time complexity as the exponent gets larger using naive computation, whereas \verb+pow()+ remains nearly constant time.
 
-Figure \ref{fig:bitmap_bbs} shows a bitmap representation of a $512 \times 512$ bits random number generated with \verb+bbs.py+. Each black pixel is a 1, and each white pixel is a 0. We use it to visually assess whether the generated random number shows repeated patterns or any discernible bias. 
+Figure \ref{fig:bitmap_bbs} shows a bitmap representation of a $512 \times 512$ bits random number generated with \verb+bbs.py+. Each black pixel is a 1, and each white pixel is a 0. We use it to visually assess wether the generated random number shows repeated patterns or any discernable bias. 
 
 Figures \ref{fig:original_image} and \ref{fig:encrypted_image} are a demonstration of why Electronic Code Book mode is semantically insecure for AES encryption. Figure \ref{fig:encrypted_image} was created by encrypting the body of the original image in PPM format, and then concatenating the unencrypted header back to the encrypted body to create a valid image. 
 
@@ -240,8 +240,8 @@ With a 2048-bit group, the exponent could be as large as $(2^{2048}-1) \sim 10^{
 \bigskip
 
 The key generation using Diffie-Hellman with a 2048-bit group is pretty much unbreakable with the current technology as it is estimated that an academic team can break a 768-bit prime and that a nation-state can break a 1024-bit prime \cite{weakdh15}. This is arguably the most secure part of our protocol. 
-Thanks to the \verb+pow()+ method, it can efficiently produce 2048-bit keys, thus generating a $2^{2048}-1$ key space, which is computationally infeasible to bruteforce. Given a generous 1ms for each attempt, it would require $ \frac{2^{2048}}{3.154 \times 10^{10}}  \sim 10^{626}$ CPU-years to complete an exhaustive search. 
-Nevertheless, having to use 2048-bit keys is a constraint on the efficiency of the algorithm. According to a 2016 NIST report \cite{Barker2016}, the same security could be achieved using 255-bit keys with Elliptic Curve Diffie-Hellman. Such an implementation would be a bit more complex, but more time and memory efficient.
+Thanks to the \verb+pow()+ method, it can efficiently produce 2048-bit keys, thus generating a $2^{2048}-1$ key space, which is computationnally infeasible to bruteforce. Given a generous 1ms for each attempt, it would require $ \frac{2^{2048}}{3.154 \times 10^{10}}  \sim 10^{626}$ CPU-years to complete an exhaustive search. 
+Nevertheless, having to use 2048-bit keys is a constraint on the efficency of the algorithm. According to a 2016 NIST report \cite{Barker2016}, the same security could be achieved using 255-bit keys with Elliptic Curve Diffie-Hellman. Such an implementation would be a bit more complex, but more time and memory efficient.
 
 \bigskip
 

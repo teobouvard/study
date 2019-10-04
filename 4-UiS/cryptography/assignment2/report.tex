@@ -212,15 +212,33 @@ Table \ref{tab:aes} shows the equivalence between NIST test data \cite{nist:test
     \caption{Comparing NIST test data to our implementation} \label{tab:aes}
 \end{table}
 
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \frame{\includegraphics[width=\textwidth]{img/enigma.jpg}}
+        \caption{Original image}
+        \label{fig:original_image}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \frame{\includegraphics[width=\textwidth]{img/encrypted_enigma.jpg}}
+        \caption{Encrypted image using AES-ECB}
+        \label{fig:encrypted_image}
+    \end{minipage}
+\end{figure}
+
 \section{Discussion}
 
 The key generation using Diffie-Hellman with a 2048-bit group is pretty much unbreakable with the current technology as it is estimated that an academic team can break a 768-bit prime and that a nation-state can break a 1024-bit prime \cite{weakdh15}. This is arguably the most secure part of our protocol. 
 
-With a 2048-bit group, the exponent could be as large as $(2^{2048}-1) \sim 10^{616}$, which would take roughly $10^{170}$ years to compute with naive exponentiation.
+With a 2048-bit group, the exponent could be as large as $(2^{2048}-1) \sim 10^{616}$, which would take roughly $10^{170}$ years to compute with naive exponentiation. The \verb+pow()+ method is not only faster, it is required for the program to complete.
 
-$10^{616}$ key space DH
 
 Blum blum shub is slow and not practically secure (https://crypto.stackexchange.com/questions/3454/blum-blum-shub-vs-aes-ctr-or-other-csprngs)
+
+https://blog.filippo.io/the-ecb-penguin/
 
 \section{Conclusion}
 

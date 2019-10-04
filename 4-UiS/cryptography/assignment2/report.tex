@@ -233,11 +233,12 @@ Table \ref{tab:aes} shows the equivalence between NIST test data \cite{nist:test
 
 The key generation using Diffie-Hellman with a 2048-bit group is pretty much unbreakable with the current technology as it is estimated that an academic team can break a 768-bit prime and that a nation-state can break a 1024-bit prime \cite{weakdh15}. This is arguably the most secure part of our protocol. 
 
-With a 2048-bit group, the exponent could be as large as $(2^{2048}-1) \sim 10^{616}$, which would take roughly $10^{170}$ years to compute with naive exponentiation. The \verb+pow()+ method is not only faster, it is required for the program to complete.
+With a 2048-bit group, the exponent could be as large as $(2^{2048}-1) \sim 10^{616}$, which would take roughly $10^{170}$ years to compute with naive exponentiation. The \verb+pow()+ method is not only convenient, it is required for the program to complete.
 
 
 Blum blum shub is slow and not practically secure (https://crypto.stackexchange.com/questions/3454/blum-blum-shub-vs-aes-ctr-or-other-csprngs)
 
+ECB not secure
 https://blog.filippo.io/the-ecb-penguin/
 
 \section{Conclusion}

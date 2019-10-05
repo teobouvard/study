@@ -260,6 +260,7 @@ Finally, we can see why the Electronic Code Book is an insecure mode of operatio
 
 \section{Conclusion}
 
+We saw how a secure communication protocol could be implemented, so that two actors could communicate confidential data over an insecure channel. Using public key cryptography to exchange keys, key strength reinforcement with pseudo-random number generators and symmetric ciphers, we were able to create an end-to-end encryption scheme. However, this protocol is only a proof of concept, and should be improved to be useful in real-world applications. Transitioning to Elliptic Curve Diffie-Hellman would be a good start for the first primitive. Then, we should used a better CSPRNG than Blum Blum Shub, like AES-CTR or ChaCha20, which are more widely used (TLS, SSL, SSH) and accepted as efficient cryptographically strong pseudo-random generators. Finally, AES should be used in any other mode than ECB. It would then be necessary to communicate IV or nonces as well as data, but this would not be more  complicated and it would offer higher security.   
 
 
 \bigskip

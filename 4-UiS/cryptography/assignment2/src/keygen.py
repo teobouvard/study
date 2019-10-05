@@ -59,7 +59,7 @@ def argument_parser():
     parser.add_argument('--root', type=auto_int, default=G, help='Primitive root (hex or decimal) used for key generation')
     parser.add_argument('--secret', type=auto_int, help='Private key (hex or decimal) used for key generation')
     parser.add_argument('--verbose', action='store_true', help='Display parameters used for key generation')
-    parser.add_argument('--output', type=str, help='File to which the public key is written (standard ouput if not specified)')
+    parser.add_argument('--output', type=str, help='File to which the public key is written (standard output if not specified)')
     parser.add_argument('--public', type=auto_int, help='Public key (hex or decimal) to be merged with the private key')
 
     return parser

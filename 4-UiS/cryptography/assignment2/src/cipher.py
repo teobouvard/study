@@ -44,7 +44,7 @@ def argument_parser():
     parser.add_argument('--mode', choices=['encrypt', 'decrypt', 'test'], required=True, help='Encrypt data, decrypt data, or run the tests')
     parser.add_argument('--key', type=auto_int, help='The key used for encryption or decryption')
     parser.add_argument('--input', type=str, help='Path to the file to encrypt or decrypt')
-    parser.add_argument('--output', type=str, help='Path to wich the encrypted or decrypted data is written. If not specified, output is redirected to stdout')
+    parser.add_argument('--output', type=str, help='Path to which the encrypted or decrypted data is written. If not specified, output is redirected to stdout')
     parser.add_argument('--verbose', action='store_true', help='Run in verbose mode')
 
 

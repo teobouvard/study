@@ -1,8 +1,8 @@
 # Getting started
 
 ```{shell}
-cd src
 pip3 install pycryptodome Pillow
+cd src
 ./test.sh
 ./demo.sh
 ```
@@ -13,24 +13,18 @@ Pycryptodome is a Python package implementing AES ciphers used it in `cipher.py`
 # Directory structure
 ```
 .  
-├── README.md  
-├── report.pdf  
-└── src  
-    ├── bbs.py  
-    ├── cipher.py  
-    ├── demo.sh  
-    ├── files  
-    │   ├── 2048-bit MODP Group  
-    │   │   ├── generator.txt  
-    │   │   ├── prime.txt  
-    │   │   ├── test_xA.txt  
-    │   │   ├── test_xB.txt  
-    │   │   ├── test_yA.txt  
-    │   │   ├── test_yB.txt  
-    │   │   └── test_Z.txt  
-    │   └── really_secret_file.txt  
-    ├── keygen.py  
-    └── test.sh  
+├── README.pdf
+├── report.pdf
+└── src
+    ├── files
+    │   ├── 2048-bit MODP Group
+    │   ├── AES_test_data
+    │   └── really_secret_file.txt
+    ├── bbs.py
+    ├── cipher.py
+    ├── demo.sh
+    ├── keygen.py
+    └── test.sh
 ```
 
 # Files
@@ -49,11 +43,11 @@ Pycryptodome is a Python package implementing AES ciphers used it in `cipher.py`
         - `AES test data/` : plaintext and ciphertext equivalents from [NIST example values](https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/AES_Core_All.pdf)
     
     - `test.sh` : a shell script running implementation tests
-    - `demo.sh` : a shell script providing a usecase example of how to use the tools implemented together
+    - `demo.sh` : a shell script providing a use case example of how to use the tools implemented together
 
 # User manual
 
-All these manuals can be found using `python3 script_name.py --help`. To see usecase usage of these tools, take a look at the commands used in `demo.sh`.
+All these manuals can be found using `python3 script_name.py --help`. To see use case usage of these tools, take a look at the commands used in `demo.sh`.
 
 ## Diffie-Hellman manual
 
@@ -77,7 +71,7 @@ optional arguments:
   --secret SECRET       Private key (hex or decimal) used for key generation
   --verbose             Display parameters used for key generation
   --output OUTPUT       File to which the public key is written (standard
-                        ouput if not specified)
+                        output if not specified)
   --public PUBLIC       Public key (hex or decimal) to be merged with the
                         private key
 ```
@@ -87,16 +81,21 @@ optional arguments:
 ```{shell}
 $ python3 bbs.py --help
 
-usage: bbs.py [-h] --seed SEED [--size SIZE] [--output OUTPUT] [--verbose]
+usage: bbs.py [-h] --mode {generate,test} --seed SEED [--size SIZE]
+              [--output OUTPUT] [--verbose]
 
 Generate a random number using Blum Blum Shub algorithm
 
 optional arguments:
-  -h, --help       show this help message and exit
-  --seed SEED      Seed used for random number generation
-  --size SIZE      Size in bits of the generated number, 128 if not specified
-  --output OUTPUT  File to which the random number is written
-  --verbose        Display parameters used for key generation
+  -h, --help            show this help message and exit
+  --mode {generate,test}
+                        Generate a random number or test randomness
+  --seed SEED           Seed (hex or decimal) used for random number
+                        generation
+  --size SIZE           Size in bits of the generated number, 128 if not
+                        specified (use 128, 192 or 256 for AES compatibility)
+  --output OUTPUT       File to which the random number is written
+  --verbose             Display parameters used for key generation
 ```
 
 ## AES manual
@@ -104,18 +103,18 @@ optional arguments:
 ```{shell}
 $ python3 cipher.py --help
 
-usage: cipher.py [-h] --mode {encrypt,decrypt} --key KEY --input INPUT
-                 [--output OUTPUT] [--verbose]
+usage: cipher.py [-h] --mode {encrypt,decrypt,test} [--key KEY]
+                 [--input INPUT] [--output OUTPUT] [--verbose]
 
 Encrypt and decrypt data using AES
 
 optional arguments:
   -h, --help            show this help message and exit
-  --mode {encrypt,decrypt}
-                        Encrypt or decrypt data
+  --mode {encrypt,decrypt,test}
+                        Encrypt data, decrypt data, or run the tests
   --key KEY             The key used for encryption or decryption
   --input INPUT         Path to the file to encrypt or decrypt
-  --output OUTPUT       Path to wich the encrypted or decrypted data is
+  --output OUTPUT       Path to which the encrypted or decrypted data is
                         written. If not specified, output is redirected to
                         stdout
   --verbose             Run in verbose mode

@@ -3,7 +3,7 @@ import timeit
 
 from matplotlib import pyplot as plt
 
-LIMIT = 10e8
+LIMIT = 10e10
 x = 1
 a = 2
 m = 2

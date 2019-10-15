@@ -1,0 +1,9 @@
+.ipynb_checkpoints/
+data/aquaint
+data/index.dat
+data/basic_index.dat
+data/basic_index_new_idf.dat
+data/basic_index_jelinek_complete.dat
+data/basic_index_no_stopwords.dat
+data/stemmed_index.dat
+data/gridsearch*

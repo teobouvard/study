@@ -13,3 +13,6 @@ demo:
 
 test:
 	cd src && ./test.sh
+
+dev:
+	python3 src/chain.py

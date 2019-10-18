@@ -56,7 +56,7 @@ class Block():
         self.previous_hash = 'Block not been added to the chain yet !'
         self.tx_root = MerkleTree()
         if VERBOSE:
-            print(f'Block {self.block_index} created at {self.timestamp.strftime("%H:%M:%S.%f on %D")}', end='\n\n')
+            print(f'New block (#{self.block_index}) created at {self.timestamp.strftime("%H:%M:%S.%f on %D")}', end='\n\n')
 
     def add_transaction(self, transaction):
         self.tx_root.add(transaction)
@@ -86,7 +86,9 @@ class Transaction():
         if VERBOSE:
             print(f'New transaction')
             print(f'Timestamp : {self.timestamp.strftime("%H:%M:%S.%f - %D")}')
-            print(f'Sender    : {self.sender} - Receiver : {self.receiver} - Value : {self.value}')
+            print(f'Sender    : {self.sender}')
+            print(f'Receiver  : {self.receiver}')
+            print(f'Value     : {self.value}')
             print(f'Hash      : {self.hash}\n')
     
     def to_hash(self):

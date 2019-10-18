@@ -1,6 +1,8 @@
 from datetime import datetime
 from hash import md5
 
+VERBOSE = True
+
 def hash_function(message):
     if type(message) == bytes:
         return md5(message)
@@ -13,6 +15,8 @@ class Blockchain():
 
     def __init__(self):
         self.blocks = []
+        if VERBOSE:
+            print('Blockchain created\n')
 
     def add_block(self, block):
         block.previous_hash = hash_function(self.blocks[-1].to_hash()) if len(self.blocks) != 0 else '0x0'
@@ -23,36 +27,44 @@ class Blockchain():
 
     def __str__(self):
         if len(self.blocks) == 0:
-            return 'Empty chain ! \n'
+            return 'Empty chain ! \n\n'
         elif len(self.blocks) == 1:
-            s = '1 block\n\n'
-            s += ' ' + 100*'=' + '\n||\n'
+            s = 'Blockchain contains 1 block\n\n'
+            s += ' ' + 100*'=' + '\n'
+            s += '||' + 50*' ' + f'Block {self.blocks[0].block_index}\n||\n'
             s += str(self.blocks[0])
             s += '||\n ' + 100*'=' + '\n'
             return s
         else:
-            s = '{} blocks\n\n'.format(len(self.blocks))
+            s = f'Blockchain contains {len(self.blocks)} blocks\n\n'
             for block in self.blocks[:0:-1]:
-                s += ' ' + 100*'=' + '\n||\n'
+                s += ' ' + 100*'=' + '\n'
+                s += '||' + 45*' ' + f'Block {block.block_index}\n||\n'
                 s += str(block)
                 s += '||\n ' + 100*'=' + '\n'
                 s += 3*'{}|\n'.format(50*' ')
                 s += '{}v\n'.format(50*' ')
-            s += ' ' + 100*'=' + '\n||\n'
+            s += ' ' + 100*'=' + '\n'
+            s += '||' + 45*' ' + f'Block {self.blocks[0].block_index}\n||\n'
             s += str(self.blocks[0])
             s += '||\n ' + 100*'=' + '\n'
             return s
 
 
 class Block():
-    
+    block_index = 0
     def __init__(self):
+        Block.block_index +=1
+        self.block_index = Block.block_index
         self.timestamp = datetime.now()
         self.previous_hash = 'Block not been added to the chain yet !'
         self.tx_root = MerkleTree()
+        if VERBOSE:
+            print(f'Block {self.block_index} created at {self.timestamp.strftime("%H:%M:%S.%f on %D")}\n')
 
     def add_transaction(self, transaction):
         self.tx_root.add(transaction)
+        print(f'Transaction {transaction.hash} added to block {self.block_index}\n')
 
     def to_hash(self):
         return f'{self.timestamp} {self.previous_hash} {self.tx_root.to_hash()}'
@@ -61,7 +73,7 @@ class Block():
         return str(self)
 
     def __str__(self):
-        s  = '|| Timestamp {} - {}'.format(self.timestamp, str(self.tx_root))
+        s = f'|| Timestamp {self.timestamp} - {str(self.tx_root)}'
         s += '|| Previous block hash : {}\n'.format(self.previous_hash)
         s += '|| Transaction root hash : {}\n'.format(self.tx_root.root)
         return s
@@ -72,6 +84,11 @@ class Transaction():
         self.sender = sender
         self.receiver = receiver
         self.value = value
+        self.hash = hash_function(self.to_hash())
+        if VERBOSE:
+            print(f'Transaction created at {self.timestamp.strftime("%H:%M:%S.%f on %D")}')
+            print(f'Sender : {self.sender} - Receiver : {self.receiver} - Value : {self.value}')
+            print(f'Hash : {self.hash}\n')
     
     def to_hash(self):
         return f'{self.timestamp} {self.value} {self.sender} {self.receiver}'

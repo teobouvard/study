@@ -42,8 +42,8 @@ class Blockchain():
                 s += '||' + 30*' ' + f'Block {block.block_index} - {hash_function(block.to_hash())}\n||\n'
                 s += str(block)
                 s += '||\n ' + 100*'=' + '\n'
-                s += 3*'{}|\n'.format(50*' ')
-                s += '{}v\n'.format(50*' ')
+                s += 3*f'{50*" "}|\n'
+                s += f'{50*" "}v\n'
             s += ' ' + 100*'=' + '\n'
             s += '||' + 30*' ' + f'Block {self.blocks[0].block_index} - {hash_function(self.blocks[0].to_hash())}\n||\n'
             s += str(self.blocks[0])
@@ -74,8 +74,8 @@ class Block():
 
     def __str__(self):
         s = f'|| Timestamp {self.timestamp} - {str(self.tx_root)}'
-        s += '|| Previous block hash : {}\n'.format(self.previous_hash)
-        s += '|| Transaction root hash : {}\n'.format(self.tx_root.root)
+        s += f'|| Previous block hash : {self.previous_hash}\n'
+        s += f'|| Transaction root hash : {self.tx_root.root}\n'
         return s
 
 class Transaction():
@@ -131,5 +131,5 @@ class MerkleTree():
         return str(self)
 
     def __str__(self):
-        s = '{} transactions\n'.format(self.n_transactions)
+        s = f'{self.n_transactions} transactions\n'
         return s

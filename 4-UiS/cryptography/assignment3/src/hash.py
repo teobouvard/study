@@ -10,7 +10,6 @@ SHIFT.extend(4*[6, 10, 15, 21])
 
 INIT_BUFFER = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476]
 
-
 ### SUBROUTINES ###
 
 def chunks(l, n):
@@ -18,11 +17,18 @@ def chunks(l, n):
         yield l[i:i + n]
 
 def pad(m):
+    # convert to array of bytes
     m = bytearray(m)
     m_bit_length = (8 * len(m)) & 0xFFFFFFFFFFFFFFFF
+
+    # append '1' byte once
     m.append(0x80)
+
+    # append '0' byte until 8 bytes left
     while len(m) % 64 != 56:
         m.append(0)
+
+    # append 8 LSB of message length
     m += m_bit_length.to_bytes(8, byteorder='little')
     return m
 
@@ -33,13 +39,14 @@ def rotate_left(x, n):
 def md5(message):
     # Constants
     global K, SHIFT, INIT_BUFFER
+    buffer = INIT_BUFFER.copy()
 
     # Padding step
     message = pad(message)
 
     # Message processing
     for chunk in chunks(message, 64):
-        A, B, C, D =  INIT_BUFFER[:]
+        A, B, C, D = buffer[:]
 
         for i in range(64):
             if 0 <= i <= 15:
@@ -61,17 +68,29 @@ def md5(message):
             C = B
             B = (B + rotate_left(F, SHIFT[i])) & 0xFFFFFFFF
 
-        for i, buffer in enumerate([A, B, C, D]):
-            INIT_BUFFER[i] += buffer
-            INIT_BUFFER[i] &= 0xFFFFFFFF
+        for i, val in enumerate([A, B, C, D]):
+            buffer[i] += val
+            buffer[i] &= 0xFFFFFFFF
  
-    digest_little = sum(buf << (32*i) for i, buf in enumerate(INIT_BUFFER))
+    digest_little = sum(buf << (32*i) for i, buf in enumerate(buffer))
     digest_bytes = digest_little.to_bytes(16, byteorder='little')
     digest_big = int.from_bytes(digest_bytes, byteorder='big')
     return hex(digest_big)
     
 
 if __name__ == '__main__':
-    m = b'abcdefghijklmnopqrstuvwxyz'
-    d = md5(m)
-    stop = True
+    test_cases = {
+        b'' : '0xd41d8cd98f00b204e9800998ecf8427e',
+        b'a' : '0x0cc175b9c0f1b6a831c399e269772661',
+        b'abc' : '0x900150983cd24fb0d6963f7d28e17f72',
+        b'message digest' : '0xf96b697d7cb7938d525a2f31aaf161d0',
+        b'abcdefghijklmnopqrstuvwxyz' : '0xc3fcd3d76192e4007dfb496cca67e13b',
+        b'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789' : '0xd174ab98d277d9f5a5611c2c9f419d9f',
+        b'12345678901234567890123456789012345678901234567890123456789012345678901234567890' : '0x57edf4a22be3c955ac49da2e2107b67a',
+    }
+
+    for message, test_hash in test_cases.items():
+        message_hash = md5(message)
+        result = 'OK' if message_hash == test_hash else 'ERROR'
+        print(message_hash, test_hash)
+        print('{} -> {} : {}'.format(message, message_hash, result))

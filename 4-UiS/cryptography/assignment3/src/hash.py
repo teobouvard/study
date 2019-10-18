@@ -89,8 +89,13 @@ if __name__ == '__main__':
         b'12345678901234567890123456789012345678901234567890123456789012345678901234567890' : '0x57edf4a22be3c955ac49da2e2107b67a',
     }
 
+    passed_tests = 0
     for message, test_hash in test_cases.items():
         message_hash = md5(message)
-        result = 'OK' if message_hash == test_hash else 'ERROR'
-        print(message_hash, test_hash)
+        if int(message_hash, 16) == int(test_hash, 16):
+            result = 'OK'
+            passed_tests += 1
+        else:
+            result = 'ERROR'
         print('{} -> {} : {}'.format(message, message_hash, result))
+    print('PASSED TESTS : {}/{}'.format(passed_tests, len(test_cases.keys())))

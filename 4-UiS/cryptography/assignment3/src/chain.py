@@ -1,11 +1,9 @@
 import random
 from datetime import datetime
-from hashlib import sha3_256
+from hash import md5
 
 def hash_function(string):
-    sha = sha3_256()
-    sha.update(string.encode())
-    return sha.hexdigest()
+    return md5(string.encode())
 
 
 USERS = ['Alice', 'Bob', 'John', 'David', 'Thomas', 'Isaac', 'Bill']
@@ -72,11 +70,8 @@ class Block():
         return s
 
 class Transaction():
-    counter = 0
     def __init__(self, sender=None, receiver=None, value=None):
         self.timestamp = datetime.now()
-        self.index = Transaction.counter
-        Transaction.counter += 1
         self.sender = sender
         self.receiver = receiver
         self.value = value

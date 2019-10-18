@@ -1,13 +1,13 @@
-import random
 from datetime import datetime
 from hash import md5
 
-def hash_function(string):
-    return md5(string.encode())
-
-
-USERS = ['Alice', 'Bob', 'John', 'David', 'Thomas', 'Isaac', 'Bill']
-
+def hash_function(message):
+    if type(message) == bytes:
+        return md5(message)
+    elif type(message) == str:
+        return md5(message.encode())
+    else:
+        raise ValueError(f'MD5 implementation can only hash strings and bytes, not {type(message)}')
 
 class Blockchain():
 
@@ -15,7 +15,7 @@ class Blockchain():
         self.blocks = []
 
     def add_block(self, block):
-        block.previous_hash = hash_function(self.blocks[-1].to_hash()) if len(self.blocks) != 0 else '0'
+        block.previous_hash = hash_function(self.blocks[-1].to_hash()) if len(self.blocks) != 0 else '0x0'
         self.blocks.append(block)
 
     def __repr__(self):
@@ -55,10 +55,7 @@ class Block():
         self.tx_root.add(transaction)
 
     def to_hash(self):
-        s = str(self.timestamp)
-        s += self.previous_hash
-        s += self.tx_root.to_hash()
-        return s
+        return f'{self.timestamp} {self.previous_hash} {self.tx_root.to_hash()}'
 
     def __repr__(self):
         return str(self)
@@ -77,14 +74,10 @@ class Transaction():
         self.value = value
     
     def to_hash(self):
-        s = str(self.timestamp)
-        s += self.sender 
-        s += self.receiver 
-        s += str(self.value)
-        return s
+        return f'{self.timestamp} {self.value} {self.sender} {self.receiver}'
 
     def __str__(self):
-        return str(self.timestamp)
+        return f'{self.timestamp} : {self.value} transfer from {self.sender} to {self.receiver}'
 
     
 class MerkleTree():
@@ -101,11 +94,7 @@ class MerkleTree():
         self.compute_root(self.hashes)
     
     def to_hash(self):
-        s = str(self.transactions)
-        s += str(self.hashes) 
-        s += str(self.n_transactions)
-        s += self.root
-        return s
+        return f'{[x.to_hash() for x in self.transactions]} {self.hashes} {self.n_transactions} {self.root}'
 
     def compute_root(self, hashlist):
         pair_hashes = []
@@ -127,21 +116,3 @@ class MerkleTree():
     def __str__(self):
         s = '{} transactions\n'.format(self.n_transactions)
         return s
-    
-
-
-if __name__ == '__main__':
-
-    chain = Blockchain()
-
-    for _ in range(random.randint(1, 5)):
-        block = Block()
-
-        for _ in range(random.randint(1, 6)):
-            users = random.sample(USERS, k=2)
-            transaction = Transaction(sender=users[0], receiver=users[1], value=random.randint(1, 100))
-            block.add_transaction(transaction)
-        
-        chain.add_block(block)
-
-    print(chain)

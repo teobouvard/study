@@ -7,12 +7,8 @@ report: clean
 clean:
 	rm -rf teo_bouvard_a3 teo_bouvard_a3.tar.gz
 
-
 demo:
-	cd src && ./demo.sh
+	python3 src/main.py
 
 test:
-	cd src && ./test.sh
-
-dev:
-	python3 src/chain.py
+	python3 src/hash.py

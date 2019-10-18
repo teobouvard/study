@@ -31,7 +31,7 @@ class Blockchain():
         elif len(self.blocks) == 1:
             s = 'Blockchain contains 1 block\n\n'
             s += ' ' + 100*'=' + '\n'
-            s += '||' + 50*' ' + f'Block {self.blocks[0].block_index}\n||\n'
+            s += '||' + 30*' ' + f'Block {self.blocks[0].block_index}- {hash_function(self.blocks[0].to_hash())}\n||\n'
             s += str(self.blocks[0])
             s += '||\n ' + 100*'=' + '\n'
             return s
@@ -39,13 +39,13 @@ class Blockchain():
             s = f'Blockchain contains {len(self.blocks)} blocks\n\n'
             for block in self.blocks[:0:-1]:
                 s += ' ' + 100*'=' + '\n'
-                s += '||' + 45*' ' + f'Block {block.block_index}\n||\n'
+                s += '||' + 30*' ' + f'Block {block.block_index} - {hash_function(block.to_hash())}\n||\n'
                 s += str(block)
                 s += '||\n ' + 100*'=' + '\n'
                 s += 3*'{}|\n'.format(50*' ')
                 s += '{}v\n'.format(50*' ')
             s += ' ' + 100*'=' + '\n'
-            s += '||' + 45*' ' + f'Block {self.blocks[0].block_index}\n||\n'
+            s += '||' + 30*' ' + f'Block {self.blocks[0].block_index} - {hash_function(self.blocks[0].to_hash())}\n||\n'
             s += str(self.blocks[0])
             s += '||\n ' + 100*'=' + '\n'
             return s

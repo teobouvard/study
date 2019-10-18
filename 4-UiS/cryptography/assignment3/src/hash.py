@@ -13,18 +13,24 @@ INIT_BUFFER = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476]
 ### SUBROUTINES ###
 
 def chunks(l, n):
+    """
+    Generates chunks of size n from iterable l
+    """
     for i in range(0, len(l), n):
         yield l[i:i + n]
 
 def pad(m):
-    # convert to array of bytes
+    """
+    Returns the padded message according to MD5 specification
+    """
+    # convert bytes message to array of bytes
     m = bytearray(m)
     m_bit_length = (8 * len(m)) & 0xFFFFFFFFFFFFFFFF
 
-    # append '1' byte once
+    # append '1' bit once
     m.append(0x80)
 
-    # append '0' byte until 8 bytes left
+    # append '0' bits until 8 bytes left
     while len(m) % 64 != 56:
         m.append(0)
 
@@ -33,6 +39,9 @@ def pad(m):
     return m
 
 def rotate_left(x, n):
+    """
+    Returns x value rotated left n times with wrapping of 2^32
+    """
     x &= 0xFFFFFFFF
     return ((x << n) | (x >> (32-n))) & 0xFFFFFFFF
 
@@ -75,7 +84,7 @@ def md5(message):
     digest_little = sum(buf << (32*i) for i, buf in enumerate(buffer))
     digest_bytes = digest_little.to_bytes(16, byteorder='little')
     digest_big = int.from_bytes(digest_bytes, byteorder='big')
-    return hex(digest_big)
+    return f'0x{hex(digest_big)[2:].zfill(32)}'
     
 
 if __name__ == '__main__':

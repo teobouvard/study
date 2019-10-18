@@ -8,7 +8,7 @@ clean:
 	rm -rf teo_bouvard_a3 teo_bouvard_a3.tar.gz
 
 demo:
-	python3 src/main.py
+	@python3 src/main.py
 
 test:
-	python3 src/hash.py
+	@python3 src/hash.py

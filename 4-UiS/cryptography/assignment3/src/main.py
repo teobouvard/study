@@ -13,9 +13,10 @@ if __name__ == '__main__':
         block = Block()
 
         for _ in range(random.randint(1, 3)):
-            users = random.sample(USERS, k=2)
-            transaction = Transaction(sender=users[0], receiver=users[1], value=random.randint(1, 100))
-            block.add_transaction(transaction) 
+            sender, receiver = random.sample(USERS, k=2)
+            transaction = Transaction(sender=sender, receiver=receiver, value=random.randint(1, 100))
+            block.add_transaction(transaction)
+            #print(block)
         chain.add_block(block)
         print(chain)
 

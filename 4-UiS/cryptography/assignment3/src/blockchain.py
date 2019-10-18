@@ -1,6 +1,9 @@
 from datetime import datetime
 from hash import md5
 
+HSEP = '■' #■□☐
+RVSEP = '▐'
+LVSEP =  '▌'
 VERBOSE = True
 
 def hash_function(message):
@@ -30,25 +33,18 @@ class Blockchain():
             return 'Empty chain ! \n\n'
         elif len(self.blocks) == 1:
             s = 'Blockchain contains 1 block\n\n'
-            s += ' ' + 100*'=' + '\n'
-            s += '||' + 30*' ' + f'Block {self.blocks[0].block_index}- {hash_function(self.blocks[0].to_hash())}\n||\n'
-            s += str(self.blocks[0])
-            s += '||\n ' + 100*'=' + '\n'
-            return s
         else:
             s = f'Blockchain contains {len(self.blocks)} blocks\n\n'
-            for block in self.blocks[:0:-1]:
-                s += ' ' + 100*'=' + '\n'
-                s += '||' + 30*' ' + f'Block {block.block_index} - {hash_function(block.to_hash())}\n||\n'
-                s += str(block)
-                s += '||\n ' + 100*'=' + '\n'
-                s += 3*f'{50*" "}|\n'
-                s += f'{50*" "}v\n'
-            s += ' ' + 100*'=' + '\n'
-            s += '||' + 30*' ' + f'Block {self.blocks[0].block_index} - {hash_function(self.blocks[0].to_hash())}\n||\n'
-            s += str(self.blocks[0])
-            s += '||\n ' + 100*'=' + '\n'
-            return s
+        for block in self.blocks[:0:-1]:
+            s += 100*HSEP + '\n'
+            s += str(block)
+            s += f'{LVSEP}{RVSEP:>99}\n{100*HSEP}\n'
+            s += 2*f'{50*" "}|\n'
+            s += f'{50*" "}V\n'
+        s += f'{100*HSEP}\n'
+        s += str(self.blocks[0])
+        s += f'{LVSEP}{RVSEP:>99}\n{100*HSEP}\n'
+        return s
 
 
 class Block():
@@ -60,7 +56,7 @@ class Block():
         self.previous_hash = 'Block not been added to the chain yet !'
         self.tx_root = MerkleTree()
         if VERBOSE:
-            print(f'Block {self.block_index} created at {self.timestamp.strftime("%H:%M:%S.%f on %D")}\n')
+            print(f'Block {self.block_index} created at {self.timestamp.strftime("%H:%M:%S.%f on %D")}', end='\n\n')
 
     def add_transaction(self, transaction):
         self.tx_root.add(transaction)
@@ -73,10 +69,12 @@ class Block():
         return str(self)
 
     def __str__(self):
-        s = f'|| Timestamp {self.timestamp} - {str(self.tx_root)}'
-        s += f'|| Previous block hash : {self.previous_hash}\n'
-        s += f'|| Transaction root hash : {self.tx_root.root}\n'
+        s = f'{LVSEP} {" ":^18} Block {self.block_index} - {hash_function(self.to_hash())} - {self.tx_root.n_transactions:2} transactions {RVSEP:>16}\n{LVSEP}{RVSEP:>99}\n'
+        s += f'{LVSEP} Timestamp             : {self.timestamp.strftime("%H:%M:%S.%f %D")} {RVSEP:>49}\n'
+        s += f'{LVSEP} Previous block hash   : {self.previous_hash:34} {RVSEP:>39}\n'
+        s += f'{LVSEP} Transaction root hash : {self.tx_root.root} {RVSEP:>39}\n'
         return s
+
 
 class Transaction():
     def __init__(self, sender=None, receiver=None, value=None):
@@ -86,9 +84,10 @@ class Transaction():
         self.value = value
         self.hash = hash_function(self.to_hash())
         if VERBOSE:
-            print(f'Transaction created at {self.timestamp.strftime("%H:%M:%S.%f on %D")}')
-            print(f'Sender : {self.sender} - Receiver : {self.receiver} - Value : {self.value}')
-            print(f'Hash : {self.hash}\n')
+            print(f'New transaction')
+            print(f'Timestamp : {self.timestamp.strftime("%H:%M:%S.%f - %D")}')
+            print(f'Sender    : {self.sender} - Receiver : {self.receiver} - Value : {self.value}')
+            print(f'Hash      : {self.hash}\n')
     
     def to_hash(self):
         return f'{self.timestamp} {self.value} {self.sender} {self.receiver}'
@@ -126,10 +125,3 @@ class MerkleTree():
             self.compute_root(pair_hashes)
         else:
             self.root = pair_hashes[0]
-
-    def __repr__(self):
-        return str(self)
-
-    def __str__(self):
-        s = f'{self.n_transactions} transactions\n'
-        return s

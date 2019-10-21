@@ -1,7 +1,7 @@
 from datetime import datetime
 from hash import md5
 
-HSEP = '■' #■□☐
+HSEP = '■'
 RVSEP = '▐'
 LVSEP =  '▌'
 VERBOSE = True
@@ -24,6 +24,8 @@ class Blockchain():
     def add_block(self, block):
         block.previous_hash = hash_function(self.blocks[-1].to_hash()) if len(self.blocks) != 0 else '0x0'
         self.blocks.append(block)
+        if VERBOSE:
+            print(f'Block #{block.block_index} added to the chain\n')
 
     def __repr__(self):
         return str(self)
@@ -73,6 +75,8 @@ class Block():
         s += f'{LVSEP} Timestamp             : {self.timestamp.strftime("%H:%M:%S.%f %D")} {RVSEP:>49}\n'
         s += f'{LVSEP} Previous block hash   : {self.previous_hash:34} {RVSEP:>39}\n'
         s += f'{LVSEP} Transaction root hash : {self.tx_root.root} {RVSEP:>39}\n'
+        for transaction in self.tx_root.transactions:
+            s+= f'{LVSEP} {transaction} {RVSEP:>34}\n'
         return s
 
 
@@ -95,7 +99,7 @@ class Transaction():
         return f'{self.timestamp} {self.value} {self.sender} {self.receiver}'
 
     def __str__(self):
-        return f'{self.timestamp} : {self.value} transfer from {self.sender} to {self.receiver}'
+        return f'{self.timestamp} : {self.value} transferred from {self.sender} to {self.receiver}'
 
     
 class MerkleTree():

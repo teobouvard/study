@@ -2,7 +2,7 @@ import random
 
 from blockchain import Block, Blockchain, Transaction
 
-USERS = ['Alice', 'Bob', 'John', 'David', 'Thomas', 'Isaac', 'Bill']
+USERS = ['Alice', 'James', 'Smith', 'David', 'Adams', 'Isaac', 'Lewis']
 
 
 if __name__ == '__main__':
@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
         for _ in range(random.randint(1, 3)):
             sender, receiver = random.sample(USERS, k=2)
-            transaction = Transaction(sender=sender, receiver=receiver, value=random.randint(1, 100))
+            transaction = Transaction(sender=sender, receiver=receiver, value=random.randint(10, 100))
             block.add_transaction(transaction)
             #print(block)
         chain.add_block(block)

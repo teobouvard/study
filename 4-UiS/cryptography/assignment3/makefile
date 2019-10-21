@@ -1,6 +1,6 @@
 report: clean
 	mkdir teo_bouvard_a3
-	cp -r src README.pdf report.pdf teo_bouvard_a3
+	cp -r src makefile README.pdf report.pdf teo_bouvard_a3
 	cd teo_bouvard_a3 && tar -czf ../teo_bouvard_a3.tar.gz *
 	rm -rf teo_bouvard_a3
 

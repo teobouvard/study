@@ -106,5 +106,5 @@ if __name__ == '__main__':
             passed_tests += 1
         else:
             result = 'ERROR'
-        print('{} -> {} : {}'.format(message, message_hash, result))
-    print('PASSED TESTS : {}/{}'.format(passed_tests, len(test_cases.keys())))
+        print(f'{message} -> {message_hash} : {result}')
+    print(f'PASSED TESTS : {passed_tests}/{len(test_cases.keys())}')

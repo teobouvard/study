@@ -10,5 +10,5 @@ clean:
 demo:
 	@python3 src/main.py
 
-test:
+tests:
 	@python3 src/hash.py

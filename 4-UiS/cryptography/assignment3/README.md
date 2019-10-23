@@ -1,11 +1,9 @@
 # Getting started
 
 ```{shell}
+make tests
 make demo
 ```
-
-# Todo
-* sort out repr and str to minimize overhead
 
 # Requirements
 

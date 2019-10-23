@@ -72,9 +72,9 @@ class Block():
 
     def __str__(self):
         s = f'{LVSEP} {" ":^18} Block {self.block_index} - {hash_function(self.to_hash())} - {self.tx_root.n_transactions:2} transactions {RVSEP:>16}\n{LVSEP}{RVSEP:>99}\n'
-        s += f'{LVSEP} Timestamp             : {self.timestamp.strftime("%H:%M:%S.%f %D")} {RVSEP:>49}\n'
-        s += f'{LVSEP} Previous block hash   : {self.previous_hash:34} {RVSEP:>39}\n'
-        s += f'{LVSEP} Transaction root hash : {self.tx_root.root} {RVSEP:>39}\n'
+        s += f'{LVSEP} Timestamp                  : {self.timestamp.strftime("%H:%M:%S.%f %D")} {RVSEP:>44}\n'
+        s += f'{LVSEP} Previous block hash        : {self.previous_hash:34} {RVSEP:>34}\n'
+        s += f'{LVSEP} Transaction root hash      : {self.tx_root.root} {RVSEP:>34}\n'
         for transaction in self.tx_root.transactions:
             s+= f'{LVSEP} {transaction} {RVSEP:>34}\n'
         return s

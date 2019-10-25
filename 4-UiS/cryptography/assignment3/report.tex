@@ -56,19 +56,29 @@ Only relevant values of objects are hashed, does not provide redundant info
 
 According to Wikipedia\cite{wiki:blockchain}, a blockchain is a growing list of records, called blocks, that are linked using cryptography. Each block contains a cryptographic hash of the previous block, a timestamp, and transaction data. The transaction data is generally represented as a Merkle tree, which allow efficient and secure verification of the contents of large data structures.
 
-A blockchain can be used as a distributed ledger, as its design makes it resistant to data alteration. Each block being linked to the previous one by its cryptographic hash, modifying transaction data in one block would require a modification of every subsequent block, which requires consensus of the network majority. This design solves some of the long-standing problems of digital currencies without the need of a trusted authority. 
+\bigskip
 
-The decentralized design of this system makes it secure by not having a central point of failure, whereas traditional databases may be subject to exploits because all the data is held centrally.
+A blockchain can be used as a distributed ledger, as its design makes it resistant to data alteration. Each block being linked to the previous one by its cryptographic hash, modifying transaction data in one block would require a modification of every subsequent block, which requires consensus of the network majority. This design solves some of the long-standing problems of digital currencies, such as the double-spending problem, without the need of a trusted authority. The decentralized design of this system makes it secure by not having a central point of failure whereas traditional databases may be subject to exploits because all the data is held centrally.
 
-Blockchains can be permissionless (open), only requing new entries to include a proof of work. They can also be permissioned (private), in which case the access to the chain is restricted to authorized users only. Private blockchains do not benefit from the network advantages, and are closer in design to traditional databases.
+\bigskip
+
+Blockchains can be permissionless (open) which means anyone can add records to it, or permissioned (private), in which case the access to the chain is restricted to authorized users only. In open blockchains, access control is usually done by consensus mechanisms in order to limit the number of new blocks added to the chain. In the case of the Bitcoin blockchain, the consensus mechanism used is a Proof of Work.
+Private blockchains, on the other hand, do not benefit from the network advantages, and are closer in design to traditional databases.
+
+\bigskip
+
+To achieve overall reliability in blockhains, such systems rely on consensus protocols. These protocols dictate whether a new block is accepted in the chain or not. The most commonly used consensus protocols are Proof of Work (PoW) and Proof of Stake (PoS), which are described below.
+
+\bigskip
+
+The main idea behind Proof of Work is that the requester (of a service) must prove that it has performed a measurable effort in order to submit its request. In blockchains, this effort is to solve a Hascash-like\cite{back2002hashcash} cryptographic puzzle. By solving such a puzzle, a user can prove that it has performed a computationally expensive task, which can be verified easily by the service provider.
 
 
-To achieve overall reliability in blockhains, users rely on consensus protocols. These protocols dictate whether a new block is accepted in the chain or not. The most commonly used consensus protocols are Proof of Work (PoW) and Proof of Stake (PoS), which are described below.
+Let's take the Bitcoin blockchain as an example. In order to add a block to this chain, a network of users must "mine" it by discovering a nonce which, when hashed together with the current block, produces a hash value below the current target value. To do so, miners have no other choice than to bruteforce different nonces until the hash value begins with the necessary amount of zeros. Once this nonce is discovered the new block can be added to the chain, and other users can verify with little effort that the cryptographic puzzle has been correctly solved. In the Bitcoin blockchain, a double SHA-256 is used as hash function, and the numbers of leading zeros of the target values depends on the current difficulty of the blockchain, which regulates the average amount of time it takes to find a new block to around 10 minutes.
 
-The main idea behind Proof of Work is that the requester (of a service) must prove that it has performed a measurable effort in order to submit its request. In blockchain, this effort is to solve a Hascash-like\cite{back2002hashcash} cryptographic puzzle. By solving such a puzzle, a user can prove that it has performed a computationally expensive task, which can be verified easily by the service provider.
-Let's take the Bitcoin blockchain as an example. In order to add a block to this chain, a network of users must "mine" it by discovering a nonce which, when hashed together with the current block, produces a hash value below the current target value. To do so, the users have no other choice than to bruteforce different nonces until the hash value begins with the necessary amount of zeros. 
+\bigskip
 
-To add new blocks to the chain ... Bitcoin uses Hashcash puzzles, but with double SHA-256.
+Proof of Stake 
 
 
 \section{Discussion}

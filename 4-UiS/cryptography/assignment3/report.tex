@@ -49,7 +49,8 @@
  
 \section{Design and Implementation}
 
-The implementation contains two main modules : \verb+hash.py+ and \verb+blockchain.py+.
+The implementation contains two main modules : \verb+hash.py+ and \verb+blockchain.py+. The \verb+hash.py+ module contains an implementation of the MD5 function as specified in RFC 1321 \cite{RFC1321}. Its main function \verb+md5()+ is used as the hash function in the rest of the program. It takes a \verb+bytes+ object as input and outputs its 64 bits message digest in hexadecimal format.
+The \verb+blockchain.py+ module contains the classes used to model a blockchain : Blockchain, Block, Transaction, MerkleTree.
 
 Only relevant values of objects are hashed, does not provide redundant info
 

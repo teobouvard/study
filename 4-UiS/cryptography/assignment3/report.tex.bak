@@ -82,7 +82,7 @@ On the other hand, Proof of Stake does not rely on computationally intensive tas
 
 \bigskip
 
-In order to function properly, blockchain systems rely heavily on asymmetric cryptography. Each transaction contained in a block is signed by the private key of the sender. This allows every user of the network to verify the authenticity of a transaction, and solves the double spending problem by preventing repudiation of the transaction. Asymmetric cryptography is also used to derive the address of users, which are a hash of their public key combined with other information such as checksums of the network properties when the key pair is generated. This demonstrates the usefulness of digital signatures in the context of blockchains.
+In order to function properly, blockchain systems rely heavily on asymetric cryptography. Each transaction contained in a block is signed by the private key of the sender. This allows every user of the network to verify the authenticity of a transaction, and solves the double spending problem by preventing repudiation of the transaction. Asymetric cryptography is also used to derive the address of users, which are a hash of their public key combined with other information such as checksums of the network properties when the key pair is generated. This demonstrates the usefulness of digital signatures in the context of blockchains.
 
 
 \section{Discussion}

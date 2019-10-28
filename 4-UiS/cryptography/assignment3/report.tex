@@ -50,11 +50,34 @@
 \section{Design and Implementation}
 
 The implementation contains two main modules : \verb+hash.py+ and \verb+blockchain.py+. The \verb+hash.py+ module contains an implementation of the MD5 function as specified in RFC 1321 \cite{RFC1321}. Its main function \verb+md5()+ is used as the hash function in the rest of the program. It takes a \verb+bytes+ object as input and outputs its 64 bits message digest in hexadecimal format.
-The \verb+blockchain.py+ module contains the classes used to model a blockchain : Blockchain, Block, Transaction, MerkleTree.
+The \verb+blockchain.py+ module contains the classes used to model a blockchain : Blockchain, Block, Transaction, MerkleTree. The conceptual base class is the Transaction, which comprises a timestamp, a sender, a receiver and a value. Once instantiated, Transaction objects can be added to Block objects, which contains a block number, a creation timestamp, the previous block's hash and the transaction root. The transaction root is a MerkleTree object containing all transactions and their respective hashes, as well as the root hash which is computed each time a transaction is added to it. The root hash follows the properties of a Merkle Tree\cite{wiki:merkletree}. Once a user is done adding transactions to a block he can add the block to the chain, at which point the previous block hash is added to the final block.
 
-Only relevant values of objects are hashed, does not provide redundant info
+\bigskip
+
+If the \verb+VERBOSE+ variable is set to true in the \verb+blockhain.py+ file, every action is logged to the standard output. A graphical representation of the chain can be displayed directly by printing the chain. To run a demo, simply use \verb+make demo+.
+
+The strategy used to hash complex objects is to concatenate their relevant attributes into a single string and hash the string's utf-8 encoding representation.
 
 \section{Test Results}
+
+% TODO ADD RFC TEST CASES 
+
+\begin{table}[h]
+    \begin{center}
+        \begin{tabular}{|c c c|} 
+            \hline
+            \textbf{Plaintext} & \textbf{Plaintext equivalence} & \textbf{Ciphertext equivalence} \\
+            \hline
+            128 bits & \checkmark & \checkmark \\
+            192 bits & \checkmark & \checkmark \\
+            256 bits & \checkmark & \checkmark \\
+            \hline
+        \end{tabular}
+    \end{center}
+    \caption{Comparing NIST test data to our implementation} \label{tab:aes}
+\end{table}
+
+
 
 \section{Research}\label{Research}
 
@@ -92,6 +115,7 @@ In order to function properly, blockchain systems rely heavily on asymmetric cry
 \section{Discussion}
 
 Do not use MD5, do not implement own hash library
+Sender, receiver -> public keys not names
 
 \section{Conclusion}
 

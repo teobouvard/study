@@ -7,7 +7,7 @@
 \usepackage[super]{natbib} % format references
 \usepackage{url} % pretty wrap url
 \usepackage{indentfirst} % indent every paragraph
-\usepackage{hyperref} % color url
+\usepackage{hyperref} % color url + ref sections
 \hypersetup{urlcolor=blue, colorlinks=true}
 \usepackage{pythonhighlight} % python syntax highlighting
 \usepackage{amsmath} % equations
@@ -42,17 +42,20 @@
 \maketitle \thispagestyle{fancy}
 
 \begin{abstract}
-    
+    In this assignment, we implement a basic blockchain allowing users to create transactions, add transactions to a block, and add blocks to a chain. We implement a MD5 hashing function to generate all hashes in the blockchain. In the \nameref{Research} section, we discuss a general overview of blockchains, consensus protocols and the importance of digital signature in such systems.
 \end{abstract}
 
 \section{Introduction}
  
 \section{Design and Implementation}
+
+The implementation contains two main modules : \verb+hash.py+ and \verb+blockchain.py+.
+
 Only relevant values of objects are hashed, does not provide redundant info
 
 \section{Test Results}
 
-\section{Research}
+\section{Research}\label{Research}
 
 According to Wikipedia\cite{wiki:blockchain}, a blockchain is a growing list of records, called blocks, that are linked using cryptography. Each block contains a cryptographic hash of the previous block, a timestamp, and transaction data. The transaction data is generally represented as a Merkle tree, which allow efficient and secure verification of the contents of large data structures.
 
@@ -86,6 +89,8 @@ In order to function properly, blockchain systems rely heavily on asymmetric cry
 
 
 \section{Discussion}
+
+Do not use MD5, do not implement own hash library
 
 \section{Conclusion}
 

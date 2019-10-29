@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from hash import md5
 
 HSEP = '■'
@@ -6,6 +7,7 @@ RVSEP = '▐'
 LVSEP =  '▌'
 VERBOSE = True
 
+# wrapper around md5 function implemented in hash.py module
 def hash_function(message):
     if type(message) == bytes:
         return md5(message)
@@ -14,6 +16,7 @@ def hash_function(message):
     else:
         raise ValueError(f'MD5 implementation can only hash strings and bytes, not {type(message)}')
 
+
 class Blockchain():
 
     def __init__(self):
@@ -21,14 +24,17 @@ class Blockchain():
         if VERBOSE:
             print('Blockchain created\n')
 
+
     def add_block(self, block):
         block.previous_hash = hash_function(self.blocks[-1].to_hash()) if len(self.blocks) != 0 else '0x0'
         self.blocks.append(block)
         if VERBOSE:
             print(f'Block #{block.block_index} added to the chain\n')
 
+
     def __repr__(self):
         return str(self)
+
 
     def __str__(self):
         if len(self.blocks) == 0:
@@ -50,25 +56,32 @@ class Blockchain():
 
 
 class Block():
+
     block_index = 0
+
     def __init__(self):
         Block.block_index +=1
         self.block_index = Block.block_index
         self.timestamp = datetime.now()
         self.previous_hash = 'Block not been added to the chain yet !'
         self.tx_root = MerkleTree()
+
         if VERBOSE:
             print(f'New block (#{self.block_index}) created at {self.timestamp.strftime("%H:%M:%S.%f on %D")}', end='\n\n')
+
 
     def add_transaction(self, transaction):
         self.tx_root.add(transaction)
         print(f'Transaction {transaction.hash} added to block {self.block_index}\n')
 
+
     def to_hash(self):
-        return f'{self.timestamp} {self.previous_hash} {self.tx_root.to_hash()}'
+        return f'{self.block_index} {self.timestamp} {self.previous_hash} {self.tx_root.to_hash()}'
+
 
     def __repr__(self):
         return str(self)
+
 
     def __str__(self):
         s = f'{LVSEP} {" ":^18} Block {self.block_index} - {hash_function(self.to_hash())} - {self.tx_root.n_transactions:2} transactions {RVSEP:>16}\n{LVSEP}{RVSEP:>99}\n'
@@ -81,12 +94,14 @@ class Block():
 
 
 class Transaction():
+
     def __init__(self, sender=None, receiver=None, value=None):
         self.timestamp = datetime.now()
         self.sender = sender
         self.receiver = receiver
         self.value = value
         self.hash = hash_function(self.to_hash())
+
         if VERBOSE:
             print(f'New transaction')
             print(f'Timestamp : {self.timestamp.strftime("%H:%M:%S.%f - %D")}')
@@ -94,29 +109,35 @@ class Transaction():
             print(f'Receiver  : {self.receiver}')
             print(f'Value     : {self.value}')
             print(f'Hash      : {self.hash}\n')
-    
+
+
     def to_hash(self):
         return f'{self.timestamp} {self.value} {self.sender} {self.receiver}'
+
 
     def __str__(self):
         return f'{self.timestamp} : {self.value} transferred from {self.sender} to {self.receiver}'
 
     
 class MerkleTree():
+
     def __init__(self):
         self.transactions = []
         self.hashes = []
         self.n_transactions = 0
         self.root = 0
 
+
     def add(self, transaction):
         self.transactions.append(transaction)
-        self.hashes.append(hash_function(transaction.to_hash()))
+        self.hashes.append(transaction.hash)
         self.n_transactions += 1
         self.compute_root(self.hashes)
-    
+
+
     def to_hash(self):
-        return f'{[x.to_hash() for x in self.transactions]} {self.hashes} {self.n_transactions} {self.root}'
+        return f'{[x for x in self.hashes]} {self.n_transactions} {self.root}'
+
 
     def compute_root(self, hashlist):
         pair_hashes = []

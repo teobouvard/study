@@ -10,11 +10,11 @@
 \usepackage{hyperref} % color url + ref sections
 \hypersetup{urlcolor=blue, colorlinks=true}
 \usepackage{pythonhighlight} % python syntax highlighting
+\usepackage{adjustbox} % resize overful tables
 \usepackage{amsmath} % equations
-\usepackage{ amssymb } % symbols
+\usepackage{amssymb} % symbols
 \usepackage{graphicx} % images
 \usepackage[left=2cm, right=2cm, bottom=3cm, top=3cm]{geometry} % margin settings
-\usepackage{alltt}
 \renewcommand{\ttdefault}{txtt}
 
 
@@ -34,7 +34,6 @@
 \author{}
 \date{}
 
-
 % ========== Document ========== %
 
 \begin{document}
@@ -46,37 +45,55 @@
 \end{abstract}
 
 \section{Introduction}
- 
+
+Although the first research describing a chain of blocks linked together using cryptography traces back to Haber et al. in 1991\cite{Haber1991}, it was only practically implemented in 2008 by an unknown individual (or group of individuals) named Satoshi Nakamoto\cite{nakamoto2012bitcoin}. Nakamoto released the software on January 2009, effectively creating the first public cryptocurrency blockchain, the Bitcoin. The complete software is quite complex, as it comprises a consensus mechanism among a peer-to-peer network, but how can the core functionality be broken down to a simple Python implementation ?
+
 \section{Design and Implementation}
 
 The implementation contains two main modules : \verb+hash.py+ and \verb+blockchain.py+. The \verb+hash.py+ module contains an implementation of the MD5 function as specified in RFC 1321 \cite{RFC1321}. Its main function \verb+md5()+ is used as the hash function in the rest of the program. It takes a \verb+bytes+ object as input and outputs its 64 bits message digest in hexadecimal format.
-The \verb+blockchain.py+ module contains the classes used to model a blockchain : Blockchain, Block, Transaction, MerkleTree. The conceptual base class is the Transaction, which comprises a timestamp, a sender, a receiver and a value. Once instantiated, Transaction objects can be added to Block objects, which contains a block number, a creation timestamp, the previous block's hash and the transaction root. The transaction root is a MerkleTree object containing all transactions and their respective hashes, as well as the root hash which is computed each time a transaction is added to it. The root hash follows the properties of a Merkle Tree\cite{wiki:merkletree}. Once a user is done adding transactions to a block he can add the block to the chain, at which point the previous block hash is added to the final block.
+The \verb+blockchain.py+ module contains the classes used to model a blockchain : Blockchain, Block, Transaction and MerkleTree. The conceptual base class is the Transaction, which comprises a timestamp, a sender, a receiver and a value. Once instantiated, Transaction objects can be added to Block objects, which contains a block number, a creation timestamp, the previous block's hash (once added to the chain) and the transaction root. The transaction root is a MerkleTree object containing all transactions and their respective hashes, as well as the root hash which is computed each time a transaction is added to the block. The root hash follows the properties of a Merkle Tree\cite{wiki:merkletree}. Once a user is done adding transactions to a block he can add the block to the chain, at which point the previous block hash is added to the added block.
 
 \bigskip
 
-If the \verb+VERBOSE+ variable is set to true in the \verb+blockhain.py+ file, every action is logged to the standard output. A graphical representation of the chain can be displayed directly by printing the chain. To run a demo, simply use \verb+make demo+.
+If the \verb+VERBOSE+ variable is set to true in the \verb+blockchain.py+ file (it is, by default), every action is logged to the standard output. A graphical representation of the chain can be displayed directly by printing the chain (also done by default). To run a demo, simply use \verb+make demo+. In the \verb+demo.py+ file, the \verb+SLEEP_TIME+ variable can be set to an integer number of seconds to run a slower demo.
 
 The strategy used to hash complex objects is to concatenate their relevant attributes into a single string and hash the string's utf-8 encoding representation.
 
+The root of the Merkle Tree is computed in the recursive method \verb+compute_root()+. TODO EXPLAIN HOW IT WORKS.
+
 \section{Test Results}
 
-% TODO ADD RFC TEST CASES 
+The following tests can be reproduced by running the \verb+make tests+ command.
 
 \begin{table}[h]
     \begin{center}
+        \begin{adjustbox}{width={\textwidth},totalheight={\textheight},keepaspectratio}%
         \begin{tabular}{|c c c|} 
             \hline
-            \textbf{Plaintext} & \textbf{Plaintext equivalence} & \textbf{Ciphertext equivalence} \\
+            \textbf{Plaintext} & \textbf{Implementation hash} & \textbf{Matches RFC test} \\
             \hline
-            128 bits & \checkmark & \checkmark \\
-            192 bits & \checkmark & \checkmark \\
-            256 bits & \checkmark & \checkmark \\
+            `' & 0xd41d8cd98f00b204e9800998ecf8427e & \checkmark \\
+            `a' & 0x0cc175b9c0f1b6a831c399e269772661 & \checkmark \\
+            `abc' & 0x900150983cd24fb0d6963f7d28e17f72 & \checkmark \\
+            `message digest' & 0xf96b697d7cb7938d525a2f31aaf161d0 & \checkmark \\
+            `abcdefghijklmnopqrstuvwxyz' & 0xc3fcd3d76192e4007dfb496cca67e13b & \checkmark \\
+            `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789' & 0xd174ab98d277d9f5a5611c2c9f419d9f & \checkmark \\
+            `12345678901234567890123456789012345678901234567890123456789012345678901234567890' & 0x57edf4a22be3c955ac49da2e2107b67a & \checkmark \\
             \hline
         \end{tabular}
+    \end{adjustbox}
     \end{center}
-    \caption{Comparing NIST test data to our implementation} \label{tab:aes}
+    \caption{Comparing MD5 test suite to our implementation} \label{tab:aes}
 \end{table}
 
+
+\begin{figure}[h!]
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{demo.png}
+        \caption{A demo run of the implementation}
+        \label{fig:demo}
+    \end{center}
+\end{figure}
 
 
 \section{Research}\label{Research}
@@ -126,12 +143,6 @@ Sender, receiver -> public keys not names
 
 \bibliographystyle{unsrtnat}
 \bibliography{sources}
-
-https://rosettacode.org/wiki/MD5/Implementation
-
-https://www.ietf.org/rfc/rfc1321.txt  
-
-https://en.wikipedia.org/wiki/MD5  
 
 \end{document}
 

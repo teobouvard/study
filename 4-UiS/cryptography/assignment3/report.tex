@@ -97,8 +97,8 @@ This demo can be reproduced (beware, the number of blocks and transactions are r
 
 \begin{figure}[h!]
     \begin{center}
-        \includegraphics[width=0.7\linewidth]{demo.png}
-        \caption{A demo run of the implementation}
+        \includegraphics[width=0.7\linewidth]{img/demo.png}
+        \caption{Extract of a demo run of the implementation}
         \label{fig:demo}
     \end{center}
 \end{figure}
@@ -143,12 +143,19 @@ In order to function properly, blockchain systems rely heavily on asymmetric cry
 
 \section{Discussion}
 
-Athough MD5 was considered a secure hash function in 1992, a 2013 cryptanalytic attack by Xie Tao et al.\cite{xie2013md5} allows to find collisions in $2^{18}$ MD5 compressions, which takes around one second on an average computer. This would make our blockchain implementation vulnerable as false blocks could be forged easily, and bruteforce would not be the most efficient PoW algorithm anymore. This is why actual public blockchains use more secure hash functions such as double SHA-256 in the case of Bitcoin.
+Although MD5 was considered a secure hash function in 1992, a 2013 cryptanalytic attack by Xie Tao et al.\cite{xie2013md5} allows to find collisions in $2^{18}$ MD5 compressions, which takes around one second on an average computer. This would make our blockchain implementation vulnerable to malicious block forgery, and bruteforce would not be the most efficient PoW algorithm anymore. This is why actual public blockchains use more secure hash functions such as double SHA-256 in the case of Bitcoin.
 
-Do not use MD5, do not implement own hash library
-Sender, receiver -> public keys not names
+\bigskip
+
+Implementing a hash function is also a bad idea in general as it is prone to errors, so in a production setting using publicly available libraries would be preferable. However, having to implement MD5 from the specification is a good exercise in specification-to-code translation. Implementing a more secure hash function such as SHA-3 would have taken a lot more time, and was outside the scope of this assignment.
+
+\bigskip
+
+In this implementation, we use names to identify users in transactions. This is obviously not the right way to do it in a secure blockchain, because it does not provide any non-repudiation protection. One possible secure implementation would be to use asymmetric cryptography, as it is done in the Bitcoin chain, and sign every transaction with the sender's private key. This would prevent double-spending problems because users could not deny having made a transaction.
 
 \section{Conclusion}
+
+In this assignment we familiarized ourselves with blockchain systems, implementing a stripped-down yet functional proof-of-concept blockchain in Python. We also implemented a hash function from its specification, and identified the weaknesses it includes in our software. Finally, we got an overview of the different kinds of blockchains, their consensus mechanisms and the importance of digital signatures in this field.
 
 
 \bigskip

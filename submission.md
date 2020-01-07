@@ -62,7 +62,7 @@ Follow the steps below to register and sign up for the course on Autograder.
 
 6. Wait for the teaching staff to verify your Autograder-registration.
 
-7. You will get your own repository in the "uis-dat240-fallYEAR" organization on GitHub
+7. You will get your own repository in the "uis-dat550-fallYEAR" organization on GitHub
    after your registration is verified.
 
 ## Instructions for submitting a lab assignment

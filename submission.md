@@ -52,7 +52,7 @@ project in Autograder.
 
 7. Wait for the teaching staff to verify your Autograder-registration.
 
-8. You will get your own repository in the organization "uis-dat550-spring19" on GitHub
+8. You will get your own repository in the organization "uis-dat550-spring20" on GitHub
    after your registration is verified. You will also have access to the
    feedback pages for this course on Autograder.
 
@@ -97,8 +97,8 @@ otherwise noted.
 
 7. Now we need to set up your own remote so that you can make changes and push 
    those changes to your own copy of the repo. Follow these instructions:
-	1. `cd $GOPATH/src/github.com/uis-dat550-spring19/assignments`.
-	2. `git remote add labs https://github.com/uis-dat550-spring19/username-labs` 
+	1. `cd $GOPATH/src/github.com/uis-dat550-spring20/assignments`.
+	2. `git remote add labs https://github.com/uis-dat550-spring20/username-labs` 
      where `username` should be replaced with your own GitHub username.
 	3. The above command adds your own `username-labs` repository as a remote
    repository on your local machine. This means that once you've modified some
@@ -119,7 +119,7 @@ otherwise noted.
 10. For the first lab, you need to get familiar with whole process like using github and jupyter notebook etc and you can discuss the doubts pertaining to assignment, if any.
 
 11. In the following, we will use `Assignment-1.ipynb` as an example. Change directory to:
-   `cd $GOPATH/src/github.com/uis-dat550-spring19/assignments/assignment1` and confirm that the files
+   `cd $GOPATH/src/github.com/uis-dat550-spring20/assignments/assignment1` and confirm that the files
    for assignment1 resides in that folder. They should, assuming that you ran the `go
    get` command earlier.
 
@@ -131,7 +131,7 @@ otherwise noted.
 14. Using ` Assignment-1.ipynb` as an example, use the following
     procedure to commit and push your changes to GitHub and Autograder:
     ```
-    $ cd $GOPATH/src/github.com/uis-dat550-spring19/assignments/assignment1
+    $ cd $GOPATH/src/github.com/uis-dat550-spring20/assignments/assignment1
     $ git add  Assignment-1.ipynb
     $ git commit
     // This will open an editor for you to write a commit message
@@ -148,7 +148,7 @@ otherwise noted.
     $ git push labs
     ...
     ! [rejected]        master -> master (fetch first)
-    error: failed to push some refs to 'git@github.com:uis-dat550-spring19/username-labs.git'
+    error: failed to push some refs to 'git@github.com:uis-dat550-spring20/username-labs.git'
     ...
     $ git pull labs master
     ...
@@ -156,7 +156,7 @@ otherwise noted.
     CONFLICT (add/add): Merge conflict in README.md
     Automatic merge failed; fix conflicts and then commit the result.
     ...
-    $ cd $GOPATH/src/github.com/uis-dat550-spring19/assignments
+    $ cd $GOPATH/src/github.com/uis-dat550-spring20/assignments
     $ vi README.md
     // Remove everything in the file, then add for example "username-labs" to the file.
     // Save and exit.
@@ -175,7 +175,7 @@ otherwise noted.
 
 16. Autograder will now build and run a test suite on the code you submitted.
     You can check the output by going the [Autograder web
-    interface](http://ag3.ux.uis.no/). The results (build log) should be
+    interface](http://ag.itest.run/). The results (build log) should be
     available under "Individual - lab1". Note that the results shows output
     for all the tests in current lab assignment. You will want to focus on the
     output for the specific test results related to the task you're working on.
@@ -201,5 +201,5 @@ lab to be approved. A lab needs to be approved before Autograder will provide
 feedback on the next lab assignment.
 
 Also see the [Grading and Collaboration
-Policy](https://github.com/uis-dat550-spring19/course-info/blob/master/policy.md)
+Policy](https://github.com/uis-dat550-spring20/course-info/blob/master/policy.md)
 document for additional information.

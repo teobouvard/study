@@ -156,9 +156,8 @@ This section give step-by-step instructions on how to submit assignments.
 
    ```console
    cd $HOME/uis-dat550-spring20/assignments/assignment1
-   vim shell-answers.md
-   # make your edits and save
-   git add shell-answers.md
+   # make your edits to Assignment-1.ipynb and save
+   git add Assignment-1.ipynb 
    git commit
    # This will open an editor for you to write a commit message
    # Use for example "Implemented Assignment 1"

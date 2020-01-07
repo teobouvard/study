@@ -26,7 +26,7 @@ project in Autograder.
    account.
 
 2. Click the "Sign in with GitHub" button in
-   [Autograder](http://ag3.ux.uis.no) to register. You will then be
+   [Autograder](http://ag.itest.run) to register. You will then be
    taken to GitHub's website.
 
 3. Approve that our Autograder application may have permission to access to the
@@ -42,10 +42,10 @@ project in Autograder.
 
 3. In the Courses menu select “Join a course”. Available courses will be listed.
 
-4. Find the course “DAT550" and click Sign up.
+4. Find the course “DAT550 Data Mining" and click Sign up.
 
 5. Read through and accept the terms. You will then be invited to the
-   organization [uis-dat550-spring19](http://www.github.com/uis-dat550-spring19) on GitHub.
+   organization [uis-dat550-spring20](http://www.github.com/uis-dat550-spring20) on GitHub.
 
 6. An invitation will be sent to the email address registered with your GitHub
    account. Accept the invitation using the received email.
@@ -74,9 +74,9 @@ otherwise noted.
 
 3. (Option 1) Using just the `git` command on the command line.
 	1. `ls -la $GOPATH` (make sure that this is a real directory)
-	2. `mkdir -p $GOPATH/src/github.com/uis-dat550-spring19`
-	3. `cd $GOPATH/src/github.com/uis-dat550-spring19`
-	4. `git clone https://github.com/uis-dat550-spring19/assignments.git`
+	2. `mkdir -p $GOPATH/src/github.com/uis-dat550-spring20`
+	3. `cd $GOPATH/src/github.com/uis-dat550-spring20`
+	4. `git clone https://github.com/uis-dat550-spring20/assignments.git`
 	5. You will be asked for your GitHub user name and password
 	6. Continue in Step 6 below
   

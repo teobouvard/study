@@ -12,11 +12,11 @@
 
 ### Table of Contents
 
-1. [Introduction](https://github.com/uis-dat520-2020/assignments/blob/master/lab1/README.md#introduction)
-2. [Lab Overview](https://github.com/uis-dat520-2020/assignments/blob/master/lab1/README.md#lab-overview)
-3. [Prerequisites](https://github.com/uis-dat520-2020/assignments/blob/master/lab1/README.md#prerequisites)
-4. [Go Assignments](https://github.com/uis-dat520-2020/assignments/blob/master/lab1/README.md#go-assignments)
-5. [Lab Approval](https://github.com/uis-dat520-2020/assignments/blob/master/lab1/README.md#lab-approval)
+1. [Introduction](https://github.com/dat520-2020/assignments/blob/master/lab1/README.md#introduction)
+2. [Lab Overview](https://github.com/dat520-2020/assignments/blob/master/lab1/README.md#lab-overview)
+3. [Prerequisites](https://github.com/dat520-2020/assignments/blob/master/lab1/README.md#prerequisites)
+4. [Go Assignments](https://github.com/dat520-2020/assignments/blob/master/lab1/README.md#go-assignments)
+5. [Lab Approval](https://github.com/dat520-2020/assignments/blob/master/lab1/README.md#lab-approval)
 
 ## Introduction
 
@@ -75,7 +75,7 @@ service for Git source repositories.
 
 You will have to sign up for the lab project in Autograder if you have not already
 done so. Instructions for this can be found
-[here](http://github.com/uis-dat520-2020/course-info/autograder-registation.md).
+[here](http://github.com/dat520-2020/course-info/autograder-registation.md).
 
 #### The GNU/Linux Workstation Lab
 
@@ -146,7 +146,7 @@ assignments:
   up for a GitHub account to get access to the required course material.
 
 This course is registered as a GitHub organization. The organization can be
-found at http://github.com/uis-dat520-2020.
+found at http://github.com/dat520-2020.
 
 #### The Go Programming Language
 
@@ -278,15 +278,15 @@ they serve as a good example of how to work with Autograder.
 
 2. To get started with the Go part of this lab, you can now use the `go get`
    command to clone the original `assignments` repository. Here is how to do it: On
-   the command line enter: `go get github.com/uis-dat520-2020/assignments` (ignore the
+   the command line enter: `go get github.com/dat520-2020/assignments` (ignore the
    message about no buildable Go files). This will clone the original `assignments`
    git repo (not your copy of it.) This is important because it means that you
    don't need to change the import path in the source files to use your own
    repository's path. That is, when you make a commit and push to submit your
    handin, you don't have to change this back to the original import path.
 
-3. Change directory to: `cd $GOPATH/src/github.com/uis-dat520-2020/assignments`. Next, run
-   the following command: `git remote add labs https://github.com/uis-dat520-2020/username-labs` where `username` should be
+3. Change directory to: `cd $GOPATH/src/github.com/dat520-2020/assignments`. Next, run
+   the following command: `git remote add labs https://github.com/dat520-2020/username-labs` where `username` should be
    replaced with your own GitHub username.
 
 4. The above command adds your own `username-labs` repository as a remote
@@ -295,7 +295,7 @@ they serve as a good example of how to work with Autograder.
    have them pushed up to your own `username-labs` repository on GitHub.
 
 5. Note to advanced users: Follow these
-   [steps](https://github.com/uis-dat520-2020/course-info/blob/master/github-ssh.md)
+   [steps](https://github.com/dat520-2020/course-info/blob/master/github-ssh.md)
    if you want to use SSH for GitHub authentication.
 
 6. If you make changes to your own `username-labs` repository using the GitHub
@@ -316,7 +316,7 @@ they serve as a good example of how to work with Autograder.
    implementation. Not all tests must pass to get a passing grade.
 
 9. In the following, we will use **Task 1** as an example. Change directory to:
-   `cd $GOPATH/src/github.com/uis-dat520-2020/assignments/lab1` and confirm that the files
+   `cd $GOPATH/src/github.com/dat520-2020/assignments/lab1` and confirm that the files
    for lab1 resides in that folder. They should, assuming that you ran the `go get` command earlier. The file `fib.go` contain the following skeleton code:
 
    ```go
@@ -384,7 +384,7 @@ they serve as a good example of how to work with Autograder.
     procedure to commit and push your changes to GitHub and Autograder:
 
     ```
-    $ cd $GOPATH/src/github.com/uis-dat520-2020/assignments/lab1
+    $ cd $GOPATH/src/github.com/dat520-2020/assignments/lab1
     $ git add fib.go
     $ git commit
     // This will open an editor for you to write a commit message
@@ -401,7 +401,7 @@ they serve as a good example of how to work with Autograder.
     $ git push labs
     ...
     ! [rejected]        master -> master (fetch first)
-    error: failed to push some refs to 'git@github.com:uis-dat520-2020/username-labs.git'
+    error: failed to push some refs to 'git@github.com:dat520-2020/username-labs.git'
     ...
     $ git pull labs master
     ...
@@ -409,7 +409,7 @@ they serve as a good example of how to work with Autograder.
     CONFLICT (add/add): Merge conflict in README.md
     Automatic merge failed; fix conflicts and then commit the result.
     ...
-    $ cd $GOPATH/src/github.com/uis-dat520-2020/assignments
+    $ cd $GOPATH/src/github.com/dat520-2020/assignments
     $ nano README.md
     // Remove everything in the file, then add for example "username-labs" to the file.
     // Save and exit.
@@ -467,5 +467,5 @@ lab to be approved. A lab needs to be approved before Autograder will provide
 feedback on the next lab assignment.
 
 Also see the [Grading and Collaboration
-Policy](https://github.com/uis-dat520-2020/course-info/policy.md)
+Policy](https://github.com/dat520-2020/course-info/policy.md)
 document for additional information.

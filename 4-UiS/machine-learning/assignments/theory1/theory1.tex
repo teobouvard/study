@@ -1,7 +1,8 @@
-\documentclass[a4paper, 12pt, twoside]{report}
+\documentclass[a4paper, 12pt, twoside]{article}
 \usepackage[left=2cm, right=2cm, top=2cm, bottom=3cm]{geometry}
 \usepackage{amsmath}
-\usepackage{esint}
+\usepackage[shortlabels]{enumitem}
+\usepackage{bbold}
 
 \begin{document}
 
@@ -10,14 +11,65 @@
 \maketitle
 
 \section{Problem 1}
+\begin{enumerate}[a)]
+    \item From the sum rule, we have
+    \begin{align*}
+        \int_\Omega \rho(\omega) \,d\omega &= 1 \\
+        \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty} \rho(x_1, x_2) \,dx_1dx_2 &= 1 \\
+        \int_{a_1}^{b_1}\int_{a_2}^{b_2} c \,dx_1dx_2 &= 1 \\
+        c(b_1-a_1)(b_2-a_2) &= 1 \\
+        \frac{1}{(b_1-a_1)(b_2-a_2)} &= c
+    \end{align*}
 
-\begin{align*}
-    \int_\Omega \rho(\omega) \,d\omega &= 1 \\
-    \int_{-\infty}^{+\infty} x^2 \,dx &= 1
-\end{align*}
+    \item Using the formula to compute the expected value, we have
+    \begin{align*}
+        \mathbb{E}(x) &= \int_\Omega \omega\rho(\omega) \,d\omega \\
+        &= \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix}\rho(x_1, x_2) \,dx_1dx_2 \\
+        &= c \int_{a_2}^{b_2}\int_{a_1}^{b_1} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} \,dx_1dx_2 \\
+        &= c \int_{a_2}^{b_2} \begin{bmatrix} \frac{b_1^2 - a_1^2}{2} \\ x_2(b_1-a_1) \end{bmatrix} \,dx_2 \\
+        &= c\begin{bmatrix} \frac{b_1^2 - a_1^2}{2}(b_2-a_2) \\ \frac
+        {b_2^2 - a_2^2}{2}(b_1-a_1) \end{bmatrix}
+    \end{align*}
 
+    Using $a^2-b^2 = (a-b)(a+b)$, we can factor factor this expression as 
+    $$\mathbb{E}(x) = c\begin{bmatrix} \frac{(b_1-a_1)(b_1+a_1)(b_2-a_2)}{2} \\ \frac
+    {(b_1-a_1)(b_2+a_2)(b_2-a_2)}{2} \end{bmatrix}$$
+
+    If we replace $c$ with the value computed in the previous question, we can simplify it further as
+
+    \begin{align*}
+        \mathbb{E}(x) &= \frac{1}{(b_1-a_1)(b_2-a_2)}\begin{bmatrix} \frac{(b_1-a_1)(b_1+a_1)(b_2-a_2)}{2} \\ \frac{(b_1-a_1)(b_2+a_2)(b_2-a_2)}{2} \end{bmatrix} \\
+    &= \frac{1}{2}\begin{bmatrix} b_1+a_1 \\ b_2+a_2 \end{bmatrix}
+    \end{align*}
+
+    DO SKETCH
+
+    \item We compute the covariance matrix.
+    \begin{align*}
+        \mathrm{Cov}(x) &= \mathbb{E}((x-\mu)(x-\mu)^T) \\
+        &= \mathbb{E}(xx^T) - \mu\mu^T
+    \end{align*}
+
+    We compute each term independently.
+
+    \begin{align*}
+    \mathbb{E}(xx^T) &= \mathbb{E}(\begin{bmatrix} x_1^2 & x_1x_2 \\ x_1x_2 & x_2^2 \end{bmatrix})
+    \end{align*}
+    Not so sure about that ?
+
+    \begin{align*}
+    \mu\mu^T &= \frac{1}{2}\begin{bmatrix} a_1+b_1 \\ a_2+b_2 \end{bmatrix} \times\frac{1}{2} \begin{bmatrix} a_1+b_1 & a_2+b_2 \end{bmatrix} \\
+        &= \frac{1}{4}\begin{bmatrix} (a_1+b_1)^2 & (a_1+b_1)(a_2+b_2) \\ (a_1+b_1)(a_2+b_2) & (a_2+b_2)^2 \end{bmatrix}
+    \end{align*}
+
+\end{enumerate}
 
 \section{Problem 2}
+
+\begin{enumerate}[a)]
+    \item We first compute the eigenvalues.
+    
+\end{enumerate}
 
 
 \end{document}

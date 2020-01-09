@@ -2,6 +2,8 @@
 
 package lab1
 
+import "fmt"
+
 /*
 Task 2: Stringers
 
@@ -33,5 +35,5 @@ type Student struct {
 }
 
 func (s Student) String() string {
-	return ""
+	return fmt.Sprintf("Student ID: %d. Name: %s, %s. Age: %d.", s.ID, s.LastName, s.FirstName, s.Age)
 }

@@ -3,6 +3,8 @@
 \usepackage{amsmath}
 \usepackage[shortlabels]{enumitem}
 \usepackage{bbold}
+\usepackage{cases}
+\usepackage{systeme}
 
 \begin{document}
 
@@ -12,19 +14,18 @@
 
 \section{Problem 1}
 \begin{enumerate}[a)]
-    \item From the sum rule, we have
+    \item According to the sum rule, we have
     \begin{align*}
-        \int_\Omega \rho(\omega) \,d\omega &= 1 \\
+        \int_X \rho(x) \,dx &= 1 \\
         \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty} \rho(x_1, x_2) \,dx_1dx_2 &= 1 \\
         \int_{a_1}^{b_1}\int_{a_2}^{b_2} c \,dx_1dx_2 &= 1 && \text{p.d.f is zero outside of these bounds} \\ 
         c(b_1-a_1)(b_2-a_2) &= 1 \\
         \frac{1}{(b_1-a_1)(b_2-a_2)} &= c
     \end{align*}
 
-    \item Using the formula to compute the expected value, we have
+    \item Using the formula to compute the expected value,
     \begin{align*}
-        \mathbb{E}(x) &= \int_\Omega \omega\rho(\omega) \,d\omega \\
-        &= \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix}\rho(x_1, x_2) \,dx_1dx_2 \\
+        \mathrm{E}(x) &= \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix}\rho(x_1, x_2) \,dx_1dx_2 \\
         &= c \int_{a_2}^{b_2}\int_{a_1}^{b_1} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} \,dx_1dx_2 \\
         &= c \int_{a_2}^{b_2} \begin{bmatrix} \frac{b_1^2 - a_1^2}{2} \\ x_2(b_1-a_1) \end{bmatrix} \,dx_2 \\
         &= c\begin{bmatrix} \frac{b_1^2 - a_1^2}{2}(b_2-a_2) \\ \frac
@@ -32,13 +33,13 @@
     \end{align*}
 
     Using $a^2-b^2 = (a-b)(a+b)$, we can factor factor this expression as 
-    $$\mathbb{E}(x) = c\begin{bmatrix} \frac{(b_1-a_1)(b_1+a_1)(b_2-a_2)}{2} \\ \frac
+    $$\mathrm{E}(x) = c\begin{bmatrix} \frac{(b_1-a_1)(b_1+a_1)(b_2-a_2)}{2} \\ \frac
     {(b_1-a_1)(b_2+a_2)(b_2-a_2)}{2} \end{bmatrix}$$
 
-    If we replace $c$ with the value computed in the previous question, we can simplify it further as
+    Substituting $c$ with the value computed in the previous question, we can simplify it further as
 
     \begin{align*}
-        \mathbb{E}(x) &= \frac{1}{(b_1-a_1)(b_2-a_2)}\begin{bmatrix} \frac{(b_1-a_1)(b_1+a_1)(b_2-a_2)}{2} \\ \frac{(b_1-a_1)(b_2+a_2)(b_2-a_2)}{2} \end{bmatrix} \\
+        \mathrm{E}(x) &= \frac{1}{(b_1-a_1)(b_2-a_2)}\begin{bmatrix} \frac{(b_1-a_1)(b_1+a_1)(b_2-a_2)}{2} \\ \frac{(b_1-a_1)(b_2+a_2)(b_2-a_2)}{2} \end{bmatrix} \\
     &= \frac{1}{2}\begin{bmatrix} b_1+a_1 \\ b_2+a_2 \end{bmatrix}
     \end{align*}
 
@@ -46,14 +47,14 @@
 
     \item We compute the covariance matrix.
     \begin{align*}
-        \mathrm{Cov}(x) &= \mathbb{E}((x-\mu)(x-\mu)^T) \\
-        &= \mathbb{E}(xx^T) - \mu\mu^T
+        \mathrm{Cov}(x) &= \mathrm{E}((x-\mu)(x-\mu)^T) \\
+        &= \mathrm{E}(xx^T) - \mu\mu^T
     \end{align*}
 
     We compute each term independently.
 
     \begin{align*}
-    \mathbb{E}(xx^T) &= \mathbb{E}(\begin{bmatrix} x_1^2 & x_1x_2 \\ x_1x_2 & x_2^2 \end{bmatrix})
+    \mathrm{E}(xx^T) &= \mathrm{E}(\begin{bmatrix} x_1^2 & x_1x_2 \\ x_1x_2 & x_2^2 \end{bmatrix})
     \end{align*}
     Not so sure about that ?
 
@@ -62,13 +63,103 @@
         &= \frac{1}{4}\begin{bmatrix} (a_1+b_1)^2 & (a_1+b_1)(a_2+b_2) \\ (a_1+b_1)(a_2+b_2) & (a_2+b_2)^2 \end{bmatrix}
     \end{align*}
 
+    \item identical diagonal?
+    \item diagonal ?
+
 \end{enumerate}
 
 \section{Problem 2}
 
 \begin{enumerate}[a)]
-    \item We first compute the eigenvalues.
+    \item We first find the eigenvalues by computing the characteristic equation.
     
+    \begin{align*}
+        \det (\Sigma - \lambda I) &= 0 \\
+        \begin{vmatrix} 5 - \lambda & 3 \\ 3 & 5 - \lambda \end{vmatrix} &= 0 \\
+        (5-\lambda)^2 &= 3^2 \\
+    \end{align*}
+
+    Which implies
+    \begin{align*}
+        &\begin{cases}
+            5 - \lambda_1 &= -3 \\
+            5 - \lambda_2 &= 3    
+        \end{cases} \\
+        &\begin{cases}
+            \lambda_1 &= 8 \\
+            \lambda_2 &= 2  
+        \end{cases}
+    \end{align*}
+
+    Let $u_1 = \begin{bmatrix}e_{11} \\ e_{21}\end{bmatrix}$ and $u_2 = \begin{bmatrix}e_{12} \\ e_{22}\end{bmatrix}$ be the two eigenvectors of $\Sigma$.
+
+    \begin{align*}
+        \Sigma u_1 &= \lambda_1 u_1 \\
+        (\Sigma - \lambda_1 I) u_1 &= 0 \\
+        \begin{bmatrix}
+            -3 & 3 \\
+            3 & -3
+        \end{bmatrix}
+        \begin{bmatrix}
+            e_{11} \\ e_{21}
+        \end{bmatrix} &= 0 \\
+    \end{align*}
+    Which leads to the following system of equations
+    \begin{align*}
+        \systeme{
+            -3 e_{11} + 3 e_{21} = 0, 
+            3 e_{11} - 3 e_{21} = 0
+        } 
+        \implies e_{11} = e_{21} 
+    \implies u_1 = \frac{1}{\sqrt{2}}\begin{bmatrix}1 \\ 1\end{bmatrix}
+    \end{align*}
+
+    We use the same process to find $u_2$.
+
+    \begin{align*}
+        \Sigma u_2 &= \lambda_2 u_2 \\
+        (\Sigma - \lambda_2 I) u_2 &= 0 \\
+        \begin{bmatrix}
+            3 & 3 \\
+            3 & 3
+        \end{bmatrix}
+        \begin{bmatrix}
+            e_{12} \\ e_{22}
+        \end{bmatrix} &= 0 \\
+    \end{align*}
+    Which leads to the following system of equations
+    \begin{align*}
+        \systeme{
+            3 e_{12} + 3 e_{22} = 0, 
+            3 e_{12} + 3 e_{22} = 0
+        } 
+        \implies e_{12} = - e_{22} 
+    \implies u_2 = \frac{1}{\sqrt{2}}\begin{bmatrix}1 \\ -1\end{bmatrix}
+    \end{align*}
+
+    Therefore, we have
+
+    \begin{align*}
+        \Phi &= \frac{1}{\sqrt{2}}\begin{bmatrix}1&1\\1&-1\end{bmatrix} \\
+        \Lambda &= \begin{bmatrix}8&0\\0&2\end{bmatrix}
+    \end{align*}
+
+    We can check our results by verifying that $\Phi \Lambda \Phi^T = \Sigma$.
+
+    \begin{align*}
+        \Phi \Lambda \Phi^T &= \frac{1}{\sqrt{2}}\frac{1}{\sqrt{2}}\begin{bmatrix}1&1\\1&-1\end{bmatrix}\begin{bmatrix}8&0\\0&2\end{bmatrix}\begin{bmatrix}1&1\\1&-1\end{bmatrix} \\
+            &= \frac{1}{2}\begin{bmatrix}8&2\\8&-2\end{bmatrix}\begin{bmatrix}1&1\\1&-1\end{bmatrix} \\
+            &= \frac{1}{2}\begin{bmatrix}10&6\\6&10\end{bmatrix} \\
+            &= \begin{bmatrix}5&3\\3&5\end{bmatrix} \\
+            &= \Sigma
+    \end{align*}
+    Let $v_1$ and $v_2$ be the principal axes of the probability density function. According to the previous decomposition, we have $v_1 = \sqrt{\lambda_1}u_1$ and $v_2 = \sqrt{\lambda_2}u_2$.
+    \begin{align*}
+        v_1 &= 2\sqrt{2}\begin{bmatrix}1\\1\end{bmatrix} \\
+        v_2 &= \sqrt{2}\begin{bmatrix}1\\-1\end{bmatrix} \\
+    \end{align*}
+
+    \item DO SKETCH
 \end{enumerate}
 
 

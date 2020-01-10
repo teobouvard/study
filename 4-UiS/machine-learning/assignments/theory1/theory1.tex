@@ -81,13 +81,19 @@
           \begin{align*}
               \mathrm{Cov}(x) & = \mathrm{E}(xx^T) - \mu\mu^T                                        \\
                               & = \begin{bmatrix} \frac{a_1^2+a_1b_1+b_1^2}{3} & \frac{(b_2+a_2)(b_1+a_1)}{4} \\ \frac{(b_2+a_2)(b_1+a_1)}{4} & \frac{a_2^2+a_2b_2+b_2^2}{3} \end{bmatrix} - \frac{1}{4}\begin{bmatrix} (a_1+b_1)^2 & (a_1+b_1)(a_2+b_2) \\ (a_1+b_1)(a_2+b_2) & (a_2+b_2)^2 \end{bmatrix} \\
-                              & = \frac{1}{12} \begin{bmatrix} 4(a_1^2+a_1b_1+b_1^2) - 3(a_1+b_1)^2 & 3(b_2+a_2)(b_1+a_1)-3(b_2+a_2)(b_1+a_1) \\ 3(b_2+a_2)(b_1+a_1)-3(b_2+a_2)(b_1+a_1) & 4(a_2^2+a_2b_2+b_2^2) - 3(a_2+b_1)^2 \end{bmatrix} \\
-                              & = \frac{1}{12} \begin{bmatrix} a_1^2-2a_1b_1+b_1^2 & 0 \\ 0 & a_2^2-2a_2b_2+b_2^2 \end{bmatrix} \\
+                              & = \frac{1}{12} \begin{bmatrix} 4(a_1^2+a_1b_1+b_1^2) - 3(a_1+b_1)^2 & 3(b_2+a_2)(b_1+a_1)-3(b_2+a_2)(b_1+a_1) \\ 3(b_2+a_2)(b_1+a_1)-3(b_2+a_2)(b_1+a_1) & 4(a_2^2+a_2b_2+b_2^2) - 3(a_2+b_1)^2 \end{bmatrix}                            \\
+                              & = \frac{1}{12} \begin{bmatrix} a_1^2-2a_1b_1+b_1^2 & 0 \\ 0 & a_2^2-2a_2b_2+b_2^2 \end{bmatrix}                            \\
                               & = \frac{1}{12} \begin{bmatrix} (a_1-b_1)^2 & 0 \\ 0 & (a_2-b_2)^2 \end{bmatrix}
           \end{align*}
 
-    \item identical diagonal?
-    \item diagonal ?
+    \item
+          $\mathrm{Cov}(x) = \begin{bmatrix}
+                  \sigma_{x_1}^2   & \sigma(x_1, x_2) \\
+                  \sigma(x_2, x_1) & \sigma_{x_2}^2   \\
+              \end{bmatrix}$, so identical elements on the diagonal $\implies \sigma_{x_1} = \sigma_{x_2}$. In other terms, $x_1$ and $x_2$ spread in a similar manner around their respective expected value. \\
+          In this problem, having identical elements on the diagonal would mean that $a_1-b_1 = a_2-b_2$, or that the probability density function is a square.
+    \item
+          $\mathrm{Cov}(x) \text{ diagonal} \implies \sigma(x_1, x_2) = 0 \text{ and } \sigma(x_2, x_1) = 0$, which means that $x_1$ and $x_2$ are uncorrelated.
 
 \end{enumerate}
 

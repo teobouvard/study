@@ -41,6 +41,7 @@ func WriteTo(b []byte, writers ...io.Writer) (n []int, errs Errors) {
 	errs = make(Errors, len(writers))
 	for i, w := range writers {
 		n[i], errs[i] = w.Write(b)
+		//check for short writes
 		if n[i] != len(b) {
 			errs[i] = io.ErrShortWrite
 		}
@@ -50,6 +51,6 @@ func WriteTo(b []byte, writers ...io.Writer) (n []int, errs Errors) {
 			return
 		}
 	}
-	// only when there are no errors in the slice, return only nil and not a slice of nil (spec 5.)
+	// only when there are no errors in the slice, return nil and not a slice of nil (spec 5.)
 	return n, nil
 }

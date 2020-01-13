@@ -5,6 +5,7 @@
 \usepackage{bbold}
 \usepackage{cases}
 \usepackage{systeme}
+\usepackage{graphicx}
 
 \begin{document}
 
@@ -42,10 +43,13 @@
               \mathrm{E}(x) & = \frac{1}{(b_1-a_1)(b_2-a_2)}\begin{bmatrix} \frac{(b_1-a_1)(b_1+a_1)(b_2-a_2)}{2} \\ \frac{(b_1-a_1)(b_2+a_2)(b_2-a_2)}{2} \end{bmatrix} \\
                             & = \frac{1}{2}\begin{bmatrix} b_1+a_1 \\ b_2+a_2 \end{bmatrix}
           \end{align*}
+          
+          \begin{align*}
+            \includegraphics[width=0.5 \textwidth]{sketch1.png}
+          \end{align*}
 
-          DO SKETCH
 
-    \item We compute the covariance matrix.
+    \item We compute the covariance matrix, defined as follows
 
           \begin{align*}
               \mathrm{Cov}(x) & = \mathrm{E}((x-\mu)(x-\mu)^T) \\
@@ -70,6 +74,8 @@
                & = \frac{1}{(b_1-a_1)(b_2-a_2)}\begin{bmatrix} \frac{(b_1-a_1)(a_1^2+a_1b_1+b_1^2)(b_2-a_2)}{3} & \frac{(b_2-a_2)(b_2+a_2)(b_1-a_1)(b_1+a_1)}{4} \\ \frac{(b_2-a_2)(b_2+a_2)(b_1-a_1)(b_1+a_1)}{4} & \frac{(b_2-a_2)(a_2^2+a_2b_2+b_2^2)(b_1-a_1)}{3} \end{bmatrix} \\
                & = \begin{bmatrix} \frac{a_1^2+a_1b_1+b_1^2}{3} & \frac{(b_2+a_2)(b_1+a_1)}{4} \\ \frac{(b_2+a_2)(b_1+a_1)}{4} & \frac{a_2^2+a_2b_2+b_2^2}{3} \end{bmatrix}                             \\
           \end{align*}
+
+          And
 
           \begin{align*}
               \mu\mu^T & = \frac{1}{2}\begin{bmatrix} a_1+b_1 \\ a_2+b_2 \end{bmatrix} \times\frac{1}{2} \begin{bmatrix} a_1+b_1 & a_2+b_2 \end{bmatrix} \\
@@ -188,7 +194,11 @@
               v_2 & = \sqrt{2}\begin{bmatrix}1\\-1\end{bmatrix}  \\
           \end{align*}
 
-    \item DO SKETCH
+    \item
+    \begin{align*}
+        \includegraphics[width=0.7 \textwidth]{sketch2.png}
+    \end{align*}
+
 \end{enumerate}
 
 

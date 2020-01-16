@@ -6,35 +6,22 @@ def norm1D(mu, sigma, x):
     for i in np.arange(n):
         p[i] = 1 / (np.sqrt(2 * np.pi) * sigma) * \
             np.exp(-1 / 2 * np.square((x[i] - mu)) / (np.square(sigma)))
-
     return p
 
-def norm2D(mu, sigma, mesh):
-    n1, d1 = np.shape(mesh[0])
-    n2, d2 = np.shape(mesh[1])
 
-    # we make sure that the grid is a square
-    assert n1 == n2
-    assert d1 == d2
+def norm2D(mu, sigma, x1, x2):
+    mesh = np.meshgrid(x1, x2, indexing='ij')
 
-    # precompute constant values and initialize result
-    p = np.zeros((n1, d1))
-    k = 1 / (np.sqrt(2 * np.pi * np.linalg.det(sigma)))
+    # precompute constant value and initialize result array
+    p = np.zeros([len(x1), len(x2)])
+    k = 1 / (2 * np.pi * np.sqrt(np.linalg.det(sigma)))
     sigma_inv = np.linalg.inv(sigma)
 
-    for i in np.arange(n1):
-        for j in np.arange(d1):
-            x = np.array([mesh[0][i][j], mesh[1][i][j]]).reshape(-1, 1)
-            M = np.matmul(np.subtract(x, mu).T, sigma_inv)
-            M = np.matmul(M, np.subtract(x,mu))
+    for i, u in enumerate(x1):
+        for j, v in enumerate(x2):
+            x = np.array([u, v]).reshape(-1, 1)
+            M = (x-mu).T @ sigma_inv @ (x-mu)
             p[i][j] = k * np.exp(-0.5 * M)
 
-    return p
-
-if __name__ == '__main__':
-    x1 = np.arange(-10, 10.5, 0.5).reshape(-1, 1)
-    x2 = np.arange(-9, 10.5, 0.5).reshape(-1, 1)
-    grid = np.meshgrid(x1, x2)
-    mu = np.array([1, 1]).reshape(-1, 1)
-    covariance_matrix = np.array([5, 3, 3, 5]).reshape(2, 2)
-    p = norm2D(mu, covariance_matrix, grid)
+    return p, mesh
+    

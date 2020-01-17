@@ -2,10 +2,10 @@
 \usepackage[left=2cm, right=2cm, top=2cm, bottom=3cm]{geometry}
 \usepackage{amsmath}
 \usepackage[shortlabels]{enumitem}
-\usepackage{bbold}
 \usepackage{cases}
 \usepackage{systeme}
 \usepackage{graphicx}
+
 
 \begin{document}
 
@@ -15,7 +15,51 @@
 
 \section*{Problem 1}
 \begin{enumerate}[a)]
-    \item 
+    \item In the following, we use the notation $\lambda(\alpha_i \mid \omega_j) \Leftrightarrow \lambda_{ij}$
+          \begin{align*}
+              \lambda_{11} & = 0    & \text{correct classification of toxic container}       \\
+              \lambda_{12} & = 10^5 & \text{incorrect classification of toxic container}     \\
+              \lambda_{22} & = 0    & \text{correct classification of non-toxic container}   \\
+              \lambda_{21} & = 250  & \text{incorrect classification of non-toxic container}
+          \end{align*}
+
+    \item
+          \begin{align*}
+              R(\alpha_1 \mid x) & = \lambda_{11}P(\omega_1 \mid x) + \lambda_{12}P(\omega_2 \mid x) \\
+              R(\alpha_2 \mid x) & = \lambda_{21}P(\omega_1 \mid x) + \lambda_{22}P(\omega_2 \mid x) \\
+          \end{align*}
+          As $\lambda_{11} = 0$ and $\lambda_{22} = 0$,
+          \begin{align*}
+              R(\alpha_1 \mid x) & = \lambda_{12}P(\omega_2 \mid x) \\
+              R(\alpha_2 \mid x) & = \lambda_{21}P(\omega_1 \mid x) \\
+          \end{align*}
+
+    \item To determine the decision boundary that minimizes the average cost, we solve the equality of conditional loss functions.
+          \begin{align*}
+              R(\alpha_1 \mid x)                                                          & = R(\alpha_2 \mid x)                                               \\
+              \lambda_{12}P(\omega_2 \mid x)                                              & = \lambda_{21}P(\omega_1 \mid x)                                   \\
+              \frac{\lambda_{12}}{\lambda_{21}}\frac{P(\omega_2)P(x \mid \omega_2)}{P(x)} & = \frac{P(\omega_1)P(x \mid \omega_1)}{P(x)} & \text{(Bayes Rule)} \\
+              \frac{\lambda_{12}P(\omega_2)}{\lambda_{21}P(\omega_1)}P(x \mid \omega_2)   & = P(x \mid \omega_1)                                               \\
+          \end{align*}
+          Let $K = \frac{\lambda_{12}P(\omega_2)}{\lambda_{21}P(\omega_1)}$. Furthermore, we know that $P(x \mid \omega_1) \sim \mathcal{N}(\mu_1,\sigma^{2})$ and $P(x \mid \omega_2) \sim \mathcal{N}(\mu_2,\sigma^{2})$.
+          \begin{align*}
+              K\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x-\mu_1)^2}{2\sigma}}          & = \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x-\mu_2)^2}{2\sigma}} \\
+              \ln{(Ke^{-\frac{(x-\mu_1)^2}{2\sigma}})}                              & = \ln{(e^{-\frac{(x-\mu_2)^2}{2\sigma}})}                     \\
+              \ln K - \frac{(x-\mu_1)^2}{2\sigma}                                   & = -\frac{(x-\mu_2)^2}{2\sigma}                                \\
+              \ln K + \frac{1}{2\sigma}((x-\mu_2)^2 - (x-\mu_1)^2)                  & = 0                                                           \\
+              \ln K + \frac{1}{2\sigma}(x^2 -2\mu_2x+\mu_2^2-x^2+2\mu_1x-\mu_1^2)   & = 0                                                           \\
+              \ln K + \frac{1}{2\sigma}(2x(\mu_1-\mu_2)+\mu_2^2-\mu_1^2)            & = 0                                                           \\
+              \ln K + \frac{\mu_1-\mu_2}{\sigma}x + \frac{\mu_2^2-\mu_1^2}{2\sigma} & = 0                                                           \\
+              \frac{\mu_1-\mu_2}{\sigma}x                                           & = \frac{\mu_1^2-\mu_2^2}{2\sigma} - \ln K                     \\
+              x                                                                     & = \frac{\mu_1^2-\mu_2^2}{2(\mu_1-\mu_2)} - \sigma\ln K        \\
+              x                                                                     & = \frac{\mu_1 + \mu_2}{2} - \frac{\sigma}{\mu_1-\mu_2}\ln K   \\
+          \end{align*}
+          Numerically solving this equation gives us the decsion boundary
+          \begin{align*}
+              x & = \frac{0.4 + 0.2}{2} - \frac{10^{-4}}{0.4-0.2} \times \ln (\frac{25\times10^5}{250}) \\
+              x & = 0.2954
+          \end{align*}
+    \item minimum average cost ?
 \end{enumerate}
 
 

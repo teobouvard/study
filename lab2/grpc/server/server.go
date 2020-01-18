@@ -12,7 +12,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
-	pb "github.com/dat520-2020/assignments/lab2/grpc/proto"
+	pb "../proto"
 )
 
 type keyValueServicesServer struct {
@@ -48,7 +48,7 @@ func Usage() {
 //**************************************************************************************************************
 func (s *keyValueServicesServer) Insert(ctx context.Context, req *pb.InsertRequest) (*pb.InsertResponse, error) {
 	s.kv[req.Key] = req.Value
-
+	fmt.Println("received request", *req)
 	return &pb.InsertResponse{Success: true}, nil
 }
 

@@ -45,3 +45,24 @@ Follow these steps:
 5. When a new assignment is realeased go to the master assignment repository and use type in:
   - git pull origin master
 6. Now copy the new assignment folder into your private repository and work on it there
+-------
+Question: I get the error "fatal: refusing to merge unrelated histories" when I try to pull the repository what do I do?
+
+It happens mostly because you made commits on the github website before doing an initial commit. To resolve it run the following commands.
+
+
+
+git pull --allow-unrelated-histories origin master
+
+then followed by 
+
+git push --set-upstream origin master
+
+Note that if you created a remote called *labs* instead of origin then you should use 
+
+git pull --allow-unrelated-histories labs master
+
+then followed by 
+
+git push --set-upstream labs master
+

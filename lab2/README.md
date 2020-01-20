@@ -159,6 +159,7 @@ func socketIsClosed(err error) bool {
 }
 ```
 
+
 ## Web Server
 
 In this task you will learn how to implement a very simple web server. This

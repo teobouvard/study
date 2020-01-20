@@ -46,7 +46,7 @@ func main() {
 	}
 	defer conn.Close()
 	client := pb.NewKeyValueServiceClient(conn)
-	req := &pb.InsertRequest{"test", "test"}
+	req := &pb.InsertRequest{Key: "test", Value: "dfd"}
 	a, err := client.Insert(context.Background(), req)
-	fmt.Println(a)
+	fmt.Println(a, err)
 }

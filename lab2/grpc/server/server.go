@@ -8,17 +8,18 @@ import (
 	"fmt"
 	"net"
 	"os"
-
-	"golang.org/x/net/context"
-	"google.golang.org/grpc"
+	"sync"
 
 	pb "../proto"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc"
 )
 
 type keyValueServicesServer struct {
-	kv map[string]string
-	keys []string
 	// TODO (student): Add fields if needed
+	lock sync.RWMutex
+	kv   map[string]string
+	keys []string
 }
 
 var (
@@ -40,9 +41,9 @@ func Usage() {
 	flag.PrintDefaults()
 }
 
-func stringInList(s string, list []string) bool{
-	for _, x := range list{
-		if x == s{
+func stringInList(s string, list []string) bool {
+	for _, x := range list {
+		if x == s {
 			return true
 		}
 	}
@@ -57,11 +58,16 @@ func stringInList(s string, list []string) bool{
 //         (2)     An error (if any).
 //**************************************************************************************************************
 func (s *keyValueServicesServer) Insert(ctx context.Context, req *pb.InsertRequest) (*pb.InsertResponse, error) {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
 	s.kv[req.Key] = req.Value
-	if !stringInList(req.Key, s.keys){
+	if !stringInList(req.Key, s.keys) {
 		s.keys = append(s.keys, req.Key)
+		fmt.Println("Inserted key [", req.Key, "] with value [", req.Value, "]")
+	} else {
+		fmt.Println("Updated key [", req.Key, "] with value [", req.Value, "]")
 	}
-	fmt.Println("Inserted key [", req.Key, "] with value [", req.Value, "]")
 	return &pb.InsertResponse{Success: true}, nil
 }
 
@@ -74,6 +80,9 @@ func (s *keyValueServicesServer) Insert(ctx context.Context, req *pb.InsertReque
 //**************************************************************************************************************
 func (s *keyValueServicesServer) Lookup(ctx context.Context, req *pb.LookupRequest) (*pb.LookupResponse, error) {
 	// TODO (student): Implement function Lookup
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
 	if value, found := s.kv[req.Key]; found {
 		fmt.Println("Found key [", req.Key, "] with value [", value, "]")
 		return &pb.LookupResponse{Value: value}, nil
@@ -92,6 +101,8 @@ func (s *keyValueServicesServer) Lookup(ctx context.Context, req *pb.LookupReque
 //**************************************************************************************************************
 func (s *keyValueServicesServer) Keys(ctx context.Context, req *pb.KeysRequest) (*pb.KeysResponse, error) {
 	// TODO (student): Implement function Keys
+	s.lock.Lock()
+	defer s.lock.Unlock()
 	return &pb.KeysResponse{Keys: s.keys}, nil
 }
 
@@ -111,8 +122,8 @@ func main() {
 	}
 
 	server := new(keyValueServicesServer)
-	//server.kv = make(map[string]string)
-	//server.keys = []string{} // are these memory allocations necessary ?
+	server.kv = make(map[string]string)
+	server.keys = []string{} // why is this memory alloc not necessary ?
 	grpcServer := grpc.NewServer()
 	pb.RegisterKeyValueServiceServer(grpcServer, server)
 	fmt.Printf("Preparing to serve incoming requests.\n")

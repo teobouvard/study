@@ -46,7 +46,17 @@ func main() {
 	}
 	defer conn.Close()
 	client := pb.NewKeyValueServiceClient(conn)
-	req := &pb.InsertRequest{Key: "test", Value: "dfk"}
-	a, err := client.Insert(context.Background(), req)
-	fmt.Println(a, err)
+	
+	r1, err := client.Insert(context.Background(), &pb.InsertRequest{Key: "first", Value: "42"})
+	fmt.Println(r1, err)
+	r2, err := client.Insert(context.Background(), &pb.InsertRequest{Key: "second", Value: "0x2A"})
+	fmt.Println(r2, err)
+	r3, err := client.Lookup(context.Background(), &pb.LookupRequest{Key: "first"})
+	fmt.Println(r3, err)
+	r4, err := client.Insert(context.Background(), &pb.InsertRequest{Key: "first", Value: "zap"})
+	fmt.Println(r4, err)
+	r5, err := client.Insert(context.Background(), &pb.InsertRequest{Key: "third", Value: "eaxeax"})
+	fmt.Println(r5, err)
+	r6, err := client.Keys(context.Background(), &pb.KeysRequest{})
+	fmt.Println(r6, err)
 }

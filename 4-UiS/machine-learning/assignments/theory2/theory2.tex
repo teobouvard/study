@@ -55,52 +55,38 @@
               x                                                                         & = \frac{\mu_1^2-\mu_2^2}{2(\mu_1-\mu_2)} - \sigma^2\ln K        \\
               x                                                                         & = \frac{\mu_1 + \mu_2}{2} - \frac{\sigma^2}{\mu_1-\mu_2}\ln K   \\
           \end{align*}
-          Numerically solving this equation gives us the decision boundary (CHECK STRANGE RESULT?)
+          Numerically solving this equation gives us the decision boundary
           \begin{align*}
-              x_{lim} & = \frac{0.4 + 0.2}{2} - \frac{10^{-4}}{0.4-0.2} \times \ln (\frac{25\times250}{10^5}) \\
-              x_{lim} & = 0.3014
+              x_0 & = \frac{0.4 + 0.2}{2} - \frac{10^{-4}}{0.4-0.2} \times \ln (\frac{25\times250}{10^5}) \\
+              x_0 & = 0.3014
           \end{align*}
-    \item To determine the minimum average cost $R_{min}$ upon classification, we can use either of the two equations derived in question \ref{eq:risk}.
+    \item We determine the minimum average cost $R$ upon classification
           \begin{align*}
-              R_{min} & = \lambda_{12}P(\omega_2 \mid x_{lim})                                                                                              \\
-                      & = \lambda_{12}\frac{P(\omega_2)P(x_{lim} \mid \omega_2)}{P(x_{lim})}                                                                \\
-                      & = \lambda_{12}\frac{P(\omega_2)P(x_{lim} \mid \omega_2)}{P(\omega_1)P(x_{lim} \mid \omega_1) + P(\omega_2)P(x_{lim} \mid \omega_2)} \\
-                      & = \lambda_{12}\frac{1}{\frac{P(\omega_1)}{P(\omega_2)}\frac{P(x_{lim} \mid \omega_1)}{P(x_{lim} \mid \omega_2)} + 1}                \\
+              R & = \int_{-\infty}^{x_0} R(\alpha_2 \mid x) P(x)dx + \int_{x_0}^{+\infty} R(\alpha_1 \mid x) P(x)dx                                                                         \\
+              R & = \int_{-\infty}^{x_0} \lambda_{21}P(\omega_1 \mid x) P(x)dx + \int_{x_0}^{+\infty} \lambda_{12}P(\omega_2 \mid x) P(x)dx                                                 \\
+                & = \lambda_{21}\int_{-\infty}^{x_0} \frac{P(\omega_1)P(x \mid \omega_1)}{P(x)} P(x)dx + \lambda_{12}\int_{x_0}^{+\infty} \frac{P(\omega_2)P(x \mid \omega_2)}{P(x)} P(x)dx \\
+                & = \lambda_{21}P(\omega_1) \int_{-\infty}^{x_0} P(x \mid \omega_1) dx + \lambda_{12} P(\omega_2) \int_{x_0}^{+\infty} P(x \mid \omega_2) dx                                \\
+                & = \lambda_{21}P(\omega_1) P(x < x_0 \mid \omega_1) + \lambda_{12} P(\omega_2) P(x > x_0 \mid \omega_2)                                                                    \\
           \end{align*}
-          We are given $\frac{P(\omega_1)}{P(\omega_2)} = \frac{1}{25}$, we need to compute $\frac{P(x_{lim} \mid \omega_1)}{P(x_{lim} \mid \omega_2)}$
-
-          \begin{align*}
-              \frac{P(x_{lim} \mid \omega_1)}{P(x_{lim} \mid \omega_2)} & = \frac{\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x_{lim}-\mu_1)^2}{2\sigma^2}}}{\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x_{lim}-\mu_2)^2}{2\sigma^2}}} \\
-                                                                        & = e^{{\frac{(x_{lim}-\mu_2)^2-(x_{lim}-\mu_1)^2}{2\sigma^2}}}
-          \end{align*}
-
-          So
-          \begin{align*}
-              R_{min} & = 249.4 \text{ NOK}
-          \end{align*}
-
-          OR P(error) with integral ?
-          \begin{align*}
-              R_{min} & = P(w_2)P(x < x_{lim} \mid w_2) + P(w_1)P(x > x_{lim} \mid w_1)                                       \\
-              R_{min} & = P(w_2) \int_{-\infty}^{x_{lim}} P(x \mid w_2) dx + P(w_1) \int_{x_{lim}}^{+\infty} P(x \mid w_1) dx
-          \end{align*}
-          To get $P(w_1) \text{ and } P(w_2)$, we use the fact that
+          To get $P(\omega_1) \text{ and } P(\omega_2)$, we use the fact that
           \begin{align*}
               \begin{cases}
-                  P(w_1)+P(w_2)         & = 1  \\
-                  \frac{P(w_2)}{P(w_1)} & = 25
+                  P(\omega_1)+P(\omega_2)         & = 1  \\
+                  \frac{P(\omega_2)}{P(\omega_1)} & = 25
               \end{cases}
               \implies
               \begin{cases}
-                  P(w_1) & = \frac{1}{26}  \\
-                  P(w_2) & = \frac{25}{26}
+                  P(\omega_1) & = \frac{1}{26}  \\
+                  P(\omega_2) & = \frac{25}{26}
               \end{cases}
           \end{align*}
-          Furthermore,
+          Using a standard normal table,
           \begin{align*}
-              \int_{-\infty}^{x_{lim}} P(x \mid w_2) dx & = P(u < \frac{x_{lim} - \mu_1}{\sigma}) \\
-                                                        & = ?
+              P(x < x_0 \mid \omega_1) & = P(y < \frac{x_0 - \mu_1}{\sigma} \mid \omega_1) \approx 10^{-23} \\
+              P(x > x_0 \mid \omega_2) & = P(y < \frac{x_0 - \mu_2}{\sigma} \mid \omega_2) \approx 10^{-23}
           \end{align*}
+          Which gives us a minimum average cost of $R = 10^{-20}$ NOK.
+          Because the variance $\sigma$ is so small for both distributions, the average estimated risk is nearly 0.
 \end{enumerate}
 
 \section*{Problem 2}
@@ -151,13 +137,16 @@
 \begin{align*}
     g_i(x)                                                                                                                             & = g_j(x)                                                \\
     -\frac{\norm{x-\mu_i}^2}{2\sigma^2} + \ln P(\omega_1)                                                                              & = -\frac{\norm{x-\mu_j}^2}{2\sigma^2} + \ln P(\omega_2) \\
-    \frac{\norm{x-\mu_j}^2 - \norm{x-\mu_i}^2}{2\sigma^2} + \ln \frac{P(\omega_1)}{P(\omega_2)}                                        & = 0                                                     \\
-    \frac{(\mu_i-\mu_j)(2x-(\mu_i+\mu_j))}{2\sigma^2} + \ln \frac{P(\omega_1)}{P(\omega_2)}                                            & = 0                                                     \\
-    \frac{2x(\mu_i-\mu_j)-(\mu_i+\mu_j)(\mu_i-\mu_j)}{2\sigma^2} + \ln \frac{P(\omega_1)}{P(\omega_2)}                                 & = 0                                                     \\
-    \frac{x(\mu_i-\mu_j)}{\sigma^2}-\frac{(\mu_i+\mu_j)(\mu_i-\mu_j)}{2\sigma^2} + \ln \frac{P(\omega_1)}{P(\omega_2)}                 & = 0                                                     \\
-    x(\mu_i-\mu_j)-\frac{1}{2}(\mu_i+\mu_j)(\mu_i-\mu_j) + \sigma^2 \ln \frac{P(\omega_1)}{P(\omega_2)}                                & = 0                                                     \\
-    (\mu_i-\mu_j)(x-\frac{1}{2}(\mu_i+\mu_j) + \frac{\sigma^2}{\mu_i-\mu_j} \ln \frac{P(\omega_1)}{P(\omega_2)})                       & = 0                                                     \\
-    (\mu_i-\mu_j)(x-\frac{1}{2}(\mu_i+\mu_j) + \frac{\sigma^2}{\norm{\mu_i-\mu_j}^2} \ln \frac{P(\omega_1)}{P(\omega_2)}(\mu_i-\mu_j)) & = 0                                                     \\
+    \frac{\norm{x-\mu_j}^2 - \norm{x-\mu_i}^2}{2\sigma^2} + \ln \frac{P(\omega_1)}{P(\omega_2)}                                        & = 0 
+\end{align*}
+By remarking that $\norm{u}^2 = u^Tu$, we get 
+\begin{align*}    
+    \frac{(\mu_i-\mu_j)^T(2x-(\mu_i+\mu_j))}{2\sigma^2} + \ln \frac{P(\omega_1)}{P(\omega_2)}                                            & = 0                                                     \\
+    \frac{2(\mu_i-\mu_j)^Tx-(\mu_i-\mu_j)^T(\mu_i+\mu_j)}{2\sigma^2} + \ln \frac{P(\omega_1)}{P(\omega_2)}                                 & = 0                                                     \\
+    \frac{(\mu_i-\mu_j)^Tx}{\sigma^2}-\frac{(\mu_i-\mu_j)^T(\mu_i+\mu_j)}{2\sigma^2} + \ln \frac{P(\omega_1)}{P(\omega_2)}                 & = 0                                                     \\
+    (\mu_i-\mu_j)^Tx-\frac{1}{2}(\mu_i-\mu_j)^T(\mu_i+\mu_j) + \sigma^2 \ln \frac{P(\omega_1)}{P(\omega_2)}                                & = 0                                                     \\
+    (\mu_i-\mu_j)^T(x-\frac{1}{2}(\mu_i+\mu_j) + \frac{\sigma^2}{(\mu_i-\mu_j)^T} \ln \frac{P(\omega_1)}{P(\omega_2)})                       & = 0                                                     \\
+    (\mu_i-\mu_j)^T(x-\frac{1}{2}(\mu_i+\mu_j) + \frac{\sigma^2}{\norm{\mu_i-\mu_j}^2} \ln \frac{P(\omega_1)}{P(\omega_2)}(\mu_i-\mu_j)) & = 0                                                     \\
 \end{align*}
 By assigning
 \begin{align}

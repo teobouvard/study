@@ -1,5 +1,8 @@
 import numpy as np
 
+from pdffuns import norm2D
+
+
 def labsol2(discr='pxw'):
 #Initialise values:
 #- axes, x1 and x2

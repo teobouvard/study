@@ -32,8 +32,7 @@ type rot13Reader struct {
 
 func (r rot13Reader) Read(p []byte) (n int, err error) {
 	n, err = r.r.Read(p)
-	s := string(p)
-	for i, char := range s {
+	for i, char := range string(p) {
 		if 'a' <= char && char <= 'z' {
 			char = char - 'a' + 13
 			char %= 26

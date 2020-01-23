@@ -20,6 +20,7 @@
 
 ## Introduction
 
+
 The goal of this lab assignment is to get you started with network programming
 in Go. The overall aim of the lab project is to implement a fault tolerant
 distributed application, specifically a reliable bulletin board. Knowledge of

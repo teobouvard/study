@@ -9,7 +9,8 @@ import (
 
 	"golang.org/x/net/context"
 
-	pb "../proto"
+	//pb "../proto"
+	pb "github.com/dat520-2020/assignments/lab2/grpc/proto"
 )
 
 func TestGRPCServer(t *testing.T) {

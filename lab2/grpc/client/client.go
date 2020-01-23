@@ -9,7 +9,8 @@ import (
 	"fmt"
 	"os"
 
-	pb "../proto"
+	//pb "../proto"
+	pb "github.com/dat520-2020/assignments/lab2/grpc/proto"
 	"google.golang.org/grpc"
 )
 
@@ -46,7 +47,7 @@ func main() {
 	}
 	defer conn.Close()
 	client := pb.NewKeyValueServiceClient(conn)
-	
+
 	r1, err := client.Insert(context.Background(), &pb.InsertRequest{Key: "first", Value: "42"})
 	fmt.Println(r1, err)
 	r2, err := client.Insert(context.Background(), &pb.InsertRequest{Key: "second", Value: "0x2A"})

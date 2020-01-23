@@ -10,7 +10,8 @@ import (
 	"os"
 	"sync"
 
-	pb "../proto"
+	//pb "../proto"
+	pb "github.com/dat520-2020/assignments/lab2/grpc/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )

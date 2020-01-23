@@ -50,7 +50,7 @@ The first error + " (and X other errors)"
 */
 func (m Errors) Error() string {
 	var firstError error
-	var errorCounter = 0
+	errorCounter := 0
 	for _, e := range m {
 		if e != nil {
 			if firstError == nil {

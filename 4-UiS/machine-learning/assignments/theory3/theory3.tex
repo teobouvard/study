@@ -81,13 +81,33 @@
               \frac{1}{2} (x - \mu_1)^T \Sigma_1^{-1}(x - \mu_1)
                & =
               \frac{1}{2}
-            \begin{bmatrix}x_1-3 & x_2-6\end{bmatrix}
-            \begin{bmatrix}2 & 0 \\ 0 & \frac{1}{2}\end{bmatrix}
-            \begin{bmatrix}x_1-3 \\ x_2-6\end{bmatrix} \\
-                &=
-            \frac{1}{2}\left((2(x_1-3)^2 + \frac{1}{2}(x_2-6)^2\right)
+              \begin{bmatrix}x_1-3 & x_2-6\end{bmatrix}
+              \begin{bmatrix}2 & 0 \\ 0 & \frac{1}{2}\end{bmatrix}
+              \begin{bmatrix}x_1-3 \\ x_2-6\end{bmatrix} \\
+               & =
+              \frac{1}{2}\left((2(x_1-3)^2 + \frac{1}{2}(x_2-6)^2\right)
           \end{align*}
+          And
+          \begin{align*}
+              \frac{1}{2} (x - \mu_2)^T \Sigma_2^{-1}(x - \mu_2)
+               & =
+              \frac{1}{2}
+              \begin{bmatrix}x_1-3 & x_2+2\end{bmatrix}
+              \begin{bmatrix}\frac{1}{2} & -\frac{3}{40} \\ -\frac{3}{40} & \frac{409}{800}\end{bmatrix}
+              \begin{bmatrix}x_1-3 \\ x_2+2\end{bmatrix} \\
+               & =
+              \frac{1}{2}\left(\frac{1}{2}(x_1-3)^2 - \frac{3}{20}(x_1-3)(x_2+2)+\frac{409}{800}(x_2+2)^2\right)
+          \end{align*}
+          Which gives us the final decision boundary equation
+          \begin{align*}
+              -\frac{3}{4} (x_1-3)^2 - \frac{1}{4} (x_2-6)^2 + \frac{409}{1600} (x_2+2)^2 - \frac{3}{40} (x_1-3)(x_2+2) + \ln 2 = 0
+          \end{align*}
+          This equation describes a hyperbola whose upper part is slightly tilted towards the left. This is due to the samples of $\chi_2$ not describing a circle, and thus orienting the decision border sideways.
+    \item In order to match more closely a parabolic decision boundary, one should gather more data samples in $\chi_1$ and $\chi_2$, which would smooth out irregularites in the samples.
 \end{enumerate}
 
+\section*{Problem 2}
+
+\section*{Problem 3}
 
 \end{document}

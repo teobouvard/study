@@ -114,9 +114,9 @@
 
           Which gives us the final decision boundary equation
 
-          \begin{align*}
-              -\frac{3}{4} (x_1-3)^2 - \frac{1}{4} (x_2-6)^2 + \frac{409}{1600} (x_2+2)^2 - \frac{3}{40} (x_1-3)(x_2+2) + \ln 2 = 0
-          \end{align*}
+          \begin{align}
+              -\frac{3}{4} (x_1-3)^2 - \frac{1}{4} (x_2-6)^2 + \frac{409}{1600} (x_2+2)^2 - \frac{3}{40} (x_1-3)(x_2+2) + \ln 2 = 0 \label{eq:E}
+          \end{align}
 
           This equation describes a hyperbola whose upper part is slightly tilted towards the left. This is due to the samples of $\chi_2$ not describing a circle, and thus orienting the decision border sideways.
 
@@ -125,6 +125,18 @@
 \end{enumerate}
 
 \section*{Problem 2}
+\begin{enumerate}[a)]
+    \item Equation \eqref{eq:E} can be used as a classifier by considering the inequality between the two discriminants functions. This leads to the following decision rule
+          \begin{align*}
+              \text{decide}
+              \begin{cases}
+                  \omega_1 \text{ if \eqref{eq:E}} > 0 \\
+                  \omega_2 \text{ otherwise}
+              \end{cases}
+          \end{align*}
+          For $x = (2.5 \, 2.0)^T$ we have $\eqref{eq:E} = 0.745..$, which means $x$ would be classified as belonging to $\omega_1$.
+          \item parzen ?
+\end{enumerate}
 
 \section*{Problem 3}
 Let $x$ be a $l$-dimensional random vector following a multivariate gaussian distribution described by the probability density function $p$ such that

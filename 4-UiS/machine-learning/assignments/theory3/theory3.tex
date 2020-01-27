@@ -120,13 +120,13 @@
 
           This equation describes a hyperbola whose upper part is slightly tilted towards the left. This is due to the samples of $\chi_2$ not describing a circle, and thus orienting the decision border sideways.
 
-    \item In order to match more closely a parabolic decision boundary, one should gather more data samples in $\chi_1$ and $\chi_2$, which would smooth out irregularites in the samples.
+    \item In order to match more closely a parabolic decision boundary, one should gather more data samples in $\chi_1$ and $\chi_2$, which would smooth out irregularities in the samples.
 
 \end{enumerate}
 
 \section*{Problem 2}
 \begin{enumerate}[a)]
-    \item Equation \eqref{eq:E} can be used as a classifier by considering the inequality between the two discriminants functions. This leads to the following decision rule
+    \item Equation \eqref{eq:E} can be used as a classifier by considering the inequality between the two discriminant functions. This leads to the following decision rule
           \begin{align*}
               \text{decide}
               \begin{cases}
@@ -142,7 +142,7 @@
               \frac{1}{N_1}\sum_{i=1}^{N_1}\frac{1}{V_{N_1}}\phi(u) & < \frac{1}{N_2}\sum_{j=1}^{N_2}\frac{1}{V_{N_2}}\phi(u)
           \end{align*}
 
-          In our case, $N_1=N_2=N$ so thess factors cancels out. Furthermore, $V_N = h_N^2 = \frac{h_1^2}{N}$ so this factor cancels out too.
+          In our case, $N_1=N_2=N$ so these factors cancel out. Furthermore, $V_N = h_N^2 = \frac{h_1^2}{N}$ so this factor cancels out too.
 
           \begin{align*}
               \sum_{i=1}^N \phi(u)                                                                              & < \sum_{j=1}^N \phi(u)                                                                              \\
@@ -159,21 +159,21 @@
               \Vert x - x_{21} \Vert^2 & = \frac{73}{4} & \Vert x - x_{22} \Vert^2 & = \frac{901}{25} & \Vert x - x_{23} \Vert^2 & = \frac{116}{25} & \Vert x - x_{24} \Vert^2 & = \frac{89}{4}
           \end{align*}
 
-          Wich leads to the following inequality at the test point, for $h_1 = 0.5$.
+          Which leads to the following inequality at the test point, for $h_1 = 0.5$.
 
           \begin{align*}
               1.714 \times 10^{-15} < 7.568 \times 10^{-17}
           \end{align*}
 
           This equation is a contradiction, which means that our hypothesis $x \in \omega_2$ is false. Therefore, $x \in \omega_1$.
-          \item We can evaluate the previous inequality with $h_1 = 5$
+    \item We can evaluate the previous inequality with $h_1 = 5$
           \begin{align*}
-            1.272 < 1.147
+              1.272 < 1.147
           \end{align*}
 
-          Which is also false, proving that $x \in \omega_1$ with this greater window size too. However the ratio of the probability densities has greatly decreased. With $h_1 = 0.5$, we had $\frac{p_2(x)}{p_1(x)} = 0.04$, whereas with $h_1 = 5$ we have $\frac{p_2(x)}{p_1(x)} = 0.9$. This is because increasing the window size leads to a smoother contribution of each sample, and therefore a bigger overlap of the two probability density functions. In other terms, the resulting probability density functions are less `spiky' at the sample locations when increasing the window size.  
-          \item We can use the squared distances computed in the previous question to build a k-nearest neighbours classifier. In the case $k = 1$, $x$ is classified as $\omega_1$ because the closest data sample $x_{12}$ belongs to $\chi_1$. 
-          \item If we extend the previous classifier to the three closest neighbours, we have $x_{12} and x_{11}$ from $\chi_1$ in first and third position, and $x_{23}$ from $\chi_2$ in second position. That means $x$ will also be classified as belonging to $\omega_1$ because two of the three closest neighbours are from this class.
+          Which is also false, proving that $x \in \omega_1$ with this greater window size too. However the ratio of the probability densities has greatly decreased. With $h_1 = 0.5$, we had $\frac{p_2(x)}{p_1(x)} = 0.04$, whereas with $h_1 = 5$ we have $\frac{p_2(x)}{p_1(x)} = 0.9$. This is because increasing the window size leads to a smoother contribution of each sample, and therefore to a greater overlap of the two probability density functions. In other terms, the resulting probability density functions are less `spiky' at the sample locations when increasing the window size.
+    \item We can use the squared distances computed in the previous question to build a k-nearest neighbors classifier. In the case $k = 1$, $x$ is classified as $\omega_1$ because the closest data sample $x_{12}$ belongs to $\chi_1$.
+    \item If we extend the previous classifier to the three closest neighbors, we have $x_{12}$ and $x_{11}$ from $\chi_1$ in first and third position, and $x_{23}$ from $\chi_2$ in second position. That means $x$ will also be classified as belonging to $\omega_1$ because two of the three closest neighbors are from this class.
 \end{enumerate}
 
 \section*{Problem 3}
@@ -185,7 +185,7 @@ Let $x$ be a $l$-dimensional random vector following a multivariate gaussian dis
     e^{-\frac{1}{2} (x-\mu)^T \Sigma^{-1} (x-\mu)}
 \end{align*}
 
-Let $L$ be the likelihood function which describes the probability that a a set of samples $\chi = \left\{x_1, \dots, x_N\right\}$ was generated by the parameters $(\mu, \theta)$. As our goal is to find the maximum of $L$, we use its natural logarithm in order to make differentiation easier. This does not change the location of the maximum as the natural logarithm is monotonically increasing over $]0, +\infty$[ and therefore over the image domain of $p$. In the follwing, we denote this natural logarithm of the likelihood function as $\mathcal{L}$.
+Let $L$ be the likelihood function which describes the probability that a a set of samples $\chi = \left\{x_1, \dots, x_N\right\}$ was generated by the parameters $(\mu, \theta)$. As our goal is to find the maximum of $L$, we use its natural logarithm in order to make differentiation easier. This does not change the location of the maximum as the natural logarithm is monotonically increasing over $]0, +\infty$[ and therefore over the image domain of $p$. In the following, we denote this natural logarithm of the likelihood function as $\mathcal{L}$.
 
 \begin{align*}
     \mathcal{L}(\mu, \theta)

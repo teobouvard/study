@@ -134,8 +134,46 @@
                   \omega_2 \text{ otherwise}
               \end{cases}
           \end{align*}
-          For $x = (2.5 \, 2.0)^T$ we have $\eqref{eq:E} = 0.745..$, which means $x$ would be classified as belonging to $\omega_1$.
-          \item parzen ?
+          For $x = (2.5 \, 2.0)^T$ we have $\eqref{eq:E} = 0.745..$, which means $x$ would be classified as belonging to $\omega_1$. In this case, we did not properly prove that the inequality leading to decision rule was in the right direction. This is done in the following question.
+    \item
+          To classify $x$ with a Parzen window technique, we are going to make the assumption that $x \in \omega_2$, and show that this leads to a contradiction. First, we write down the inequality between the two probability density functions in the case $x \in \omega_2$.
+          \begin{align*}
+              p_1(x)                                                & < p_2(x)                                                \\
+              \frac{1}{N_1}\sum_{i=1}^{N_1}\frac{1}{V_{N_1}}\phi(u) & < \frac{1}{N_2}\sum_{j=1}^{N_2}\frac{1}{V_{N_2}}\phi(u)
+          \end{align*}
+
+          In our case, $N_1=N_2=N$ so thess factors cancels out. Furthermore, $V_N = h_N^2 = \frac{h_1^2}{N}$ so this factor cancels out too.
+
+          \begin{align*}
+              \sum_{i=1}^N \phi(u)                                                                              & < \sum_{j=1}^N \phi(u)                                                                              \\
+              \sum_{i=1}^N \frac{1}{2 \pi \begin{vmatrix}I\end{vmatrix}^\frac{1}{2}} e^{-\frac{1}{2} u^T I^{-1} u} & < \sum_{j=1}^N \frac{1}{2 \pi \begin{vmatrix}I\end{vmatrix}^\frac{1}{2}} e^{-\frac{1}{2} u^T I^{-1} u} \\
+              \sum_{i=1}^N e^{-\frac{1}{2} \Vert u \Vert^2}                                                     & < \sum_{j=1}^N e^{-\frac{1}{2} \Vert u \Vert^2}                                                     \\
+              \sum_{i=1}^N e^{-\frac{1}{2} \Vert \frac{x - x_i}{h_N} \Vert^2}                                   & < \sum_{j=1}^N e^{-\frac{1}{2} \Vert  \frac{x - x_j}{h_N} \Vert^2}                                  \\
+              \sum_{i=1}^N e^{-\frac{N}{2h_1^2} \Vert x - x_i \Vert^2}                                          & < \sum_{j=1}^N e^{-\frac{N}{2h_1^2} \Vert x - x_j \Vert^2}                                          \\
+          \end{align*}
+
+          To compute the numerical values appearing in this equation, we must first compute the squared distances between the test point $x$ and each other data point.
+
+          \begin{align*}
+              \Vert x - x_{11} \Vert^2 & = \frac{65}{4} & \Vert x - x_{12} \Vert^2 & = \frac{17}{4}   & \Vert x - x_{13} \Vert^2 & = \frac{145}{4}  & \Vert x - x_{14} \Vert^2 & = \frac{73}{4} \\
+              \Vert x - x_{21} \Vert^2 & = \frac{73}{4} & \Vert x - x_{22} \Vert^2 & = \frac{901}{25} & \Vert x - x_{23} \Vert^2 & = \frac{116}{25} & \Vert x - x_{24} \Vert^2 & = \frac{89}{4}
+          \end{align*}
+
+          Wich leads to the following inequality at the test point, for $h_1 = 0.5$.
+
+          \begin{align*}
+              1.714 \times 10^{-15} < 7.568 \times 10^{-17}
+          \end{align*}
+
+          This equation is a contradiction, which means that our hypothesis $x \in \omega_2$ is false. Therefore, $x \in \omega_1$.
+          \item We can evaluate the previous inequality with $h_1 = 5$
+          \begin{align*}
+            1.272 < 1.147
+          \end{align*}
+
+          Which is also false, proving that $x \in \omega_1$ with this greater window size too. However the ratio of the probability densities has greatly decreased. With $h_1 = 0.5$, we had $\frac{p_2(x)}{p_1(x)} = 0.04$, whereas with $h_1 = 5$ we have $\frac{p_2(x)}{p_1(x)} = 0.9$. This is because increasing the window size leads to a smoother contribution of each sample, and therefore a bigger overlap of the two probability density functions. In other terms, the resulting probability density functions are less `spiky' at the sample locations when increasing the window size.  
+          \item We can use the squared distances computed in the previous question to build a k-nearest neighbours classifier. In the case $k = 1$, $x$ is classified as $\omega_1$ because the closest data sample $x_{12}$ belongs to $\chi_1$. 
+          \item If we extend the previous classifier to the three closest neighbours, we have $x_{12} and x_{11}$ from $\chi_1$ in first and third position, and $x_{23}$ from $\chi_2$ in second position. That means $x$ will also be classified as belonging to $\omega_1$ because two of the three closest neighbours are from this class.
 \end{enumerate}
 
 \section*{Problem 3}

@@ -1,6 +1,6 @@
 // +build !solution
 
-package web
+package main
 
 import (
 	"flag"

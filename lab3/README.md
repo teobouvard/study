@@ -58,9 +58,9 @@ their own sections.
 
 ## Prerequisites
 
-You need to register your group on [Autograder](https://ag3.ux.uis.no/)
+You need to register your group on [Autograder](https://ag.itest.run/)
 before you begin this assignment as it constitutes a group project. This can be
-done on your [course page](https://ag3.ux.uis.no/app/student/courses/3/members) in
+done on your [course page](https://ag.itest.run/app/student/courses/3/members) in
 the tab "Members". Select the students you are collaborating with and submit the
 group selection. **Only one group member should do this.** Please don't create
 a group unless you have agreed with the other member(s) up front.
@@ -87,7 +87,7 @@ Each group will get access to a shared group repository when your group has
 been approved. This will be named `group#`, where `#` is replaced with your 
 group number. You will receive an email notification when
 Autograder creates a new team on GitHub. Refer to the procedure described in
-[lab 1](https://github.com/uis-dat520-s2019/assignments/tree/master/lab1#go-assignments) for
+[lab 1](https://github.com/dat520-2020/assignments/tree/master/lab1#go-assignments) for
 instructions on how to setup this repository on your local machine.  Follow
 steps 1 to 7 in this procedure, but use the new name `group#`
 instead of `username-labs`.
@@ -97,7 +97,7 @@ A short list of relevant commands are provided below:
 ```shell
 # Create environment variables used for subsequent labs
 # Remember to add these to your ~/.profile or ~/.bashrc file
-export dat520="github.com/uis-dat520-s2019"
+export dat520="github.com/dat520-2020"
 export gpath=$dat520/"<groupname>" // replace <groupname> with your group name on Autograder
 
 git clone https://$dat520/assignments.git $GOPATH/src/$gpath

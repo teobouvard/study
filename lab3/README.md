@@ -66,7 +66,7 @@ group selection. **Only one group member should do this.** Please don't create
 a group unless you have agreed with the other member(s) up front.
 
 If you don't have a group partner yet, you may take a look at the [Partner
-match-up](https://github.com/uis-dat520-s2019/course-info/blob/master/group-partner-hunt.md)
+match-up](https://github.com/dat520-2020/course-info/blob/master/group-partner-hunt.md)
 page. If you see a person listed there that you wish to work with, please
 connect with him/her directly and agree to submit a group composition
 accordingly following the above instructions.

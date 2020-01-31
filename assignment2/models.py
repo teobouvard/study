@@ -1,27 +1,72 @@
 import numpy as np
 
+from metrics import RMSE, log_RMSE
+
+MIN_PER_NODE = 10
+STOPPING_ERROR = 10
+
+class Node:
+    def __init__(self, error):
+        self.size = None
+        self.error = error
+        self.parent = None
+
+    def is_leaf(self):
+        return (self.size < MIN_PER_NODE) or (self.error < STOPPING_ERROR) 
+
+
+class Tree:
+    def __init__(self):
+        self.nodes = []
+    
+    def add_node(self, node):
+        self.nodes.append(node)
+
+    def has_converged(self):
+        for n in self.nodes:
+            if not n.is_leaf():
+                return False
+        return True
+    
+    def find_best_split(self):
+        for n in self.nodes:
+
+    def branch(self, x, y):
+        if not self.has_converged():
+            x = self.find_best_split(x, y)
+            self.branch(x)
+    
+    def predict(self, x):
+        pass
+
+
 class DecisionTree:
-    def __init__(self, max_depth=None):
-        self.max_depth = max_depth
-        self.model = []
+    def __init__(self):
+        self.model = Tree()
 
-    def fit(self, features, labels):
-        self.mean_value = labels.mean()
+    def fit(self, x, y):
+        if not self.model.nodes:
+            err = RMSE(np.repeat(x.mean(), len(labels)), labels)
+            n = Node(err)
+            self.model.add_node(n)
+        else:
+            self.model.branch(x, y)
 
-    def predict(self, features):
-        return np.repeat(self.mean_value, len(features))
+    def predict(self, x):
+        return np.array([self.model.predict(_) for _ in x])
+
 
 class RandomForest:
     def __init__(self, n_trees, **kwargs):
-        self.trees = n_trees * [DecisionTreeClassifier(**kwargs)]
+        self.trees = n_trees * [DecisionTree(**kwargs)]
 
-    def fit(self, features, labels):
+    def fit(self, x, y):
         for t in self.trees:
             sample_features, sample_labels = self.sample(features, labels)
             t.fit(sample_features, sample_labels)
 
-    def predict(self, features):
-        predictions = np.array([t.predict(features) for t in self.trees])
+    def predict(self, x):
+        predictions = np.array([t.predict(x) for t in self.trees])
         return predictions.mean(axis=1)
 
     def sample(self, x, y, frac=0.8):
@@ -35,7 +80,6 @@ class RandomForest:
 
 if __name__ == '__main__':
     from utils import train_test_split
-    from metrics import RMSE, log_RMSE
     import pandas as pd
     np.random.seed(42)
 
@@ -43,7 +87,7 @@ if __name__ == '__main__':
     labels = features.pop('SalePrice')
     x_train, y_train, x_test, y_test = train_test_split(features, labels)
 
-    model = DecisionTreeClassifier()
+    model = DecisionTree()
     model.fit(x_train.values, y_train.values)
     y_pred = model.predict(x_test.values)
     error = RMSE(y_pred, y_test.values)

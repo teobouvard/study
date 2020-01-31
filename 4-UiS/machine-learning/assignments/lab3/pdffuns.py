@@ -13,7 +13,7 @@ def norm2D(mu, sigma, min_x1=-10, max_x1=10, min_x2=-10, max_x2=10):
     p = np.zeros([len(x1), len(x2)])
     k = 1 / (2 * np.pi * np.sqrt(np.linalg.det(sigma)))
     sigma_inv = np.linalg.inv(sigma)
-    
+
     for i, u in enumerate(x1):
         for j, v in enumerate(x2):
             x = np.array([u, v]).reshape(-1, 1)
@@ -22,12 +22,14 @@ def norm2D(mu, sigma, min_x1=-10, max_x1=10, min_x2=-10, max_x2=10):
 
     return mesh[0], mesh[1], p
 
+
 def parzen(samples, h1):
     cov = np.diag([h1**2, h1**2])
     x1, x2, p = norm2D(samples[0].reshape(-1, 1), cov)
     for s in samples[1:]:
         p += norm2D(s.reshape(-1, 1), cov)[2]
     return x1, x2, p / len(samples)
+
 
 def knn(samples_1, samples_2, k, min_x1=-10, max_x1=10, min_x2=-10, max_x2=10):
     x1 = np.linspace(min_x1, max_x1, num=10*(max_x1-min_x1)).reshape(-1, 1)
@@ -53,7 +55,8 @@ def knn(samples_1, samples_2, k, min_x1=-10, max_x1=10, min_x2=-10, max_x2=10):
 
     return mesh[0], mesh[1], p
 
-def plot_3d(pdf_A, pdf_B, filename, scale=1e2):
+
+def plot_3d(pdf_A, pdf_B, filename, scale=2e2):
     mlab.clf()
     mlab.surf(pdf_A, colormap='Reds', warp_scale=scale)
     mlab.surf(pdf_B, colormap='Blues', warp_scale=scale)
@@ -62,8 +65,10 @@ def plot_3d(pdf_A, pdf_B, filename, scale=1e2):
     # because the interactive version is not convertible to pdf
     mlab.savefig(filename=filename, size=(2000, 2000))
 
+
 def plot_knn(mesh):
     pass
+
 
 def plot_regions(pdf_A, pdf_B):
     diff_x1 = (np.diff(np.sign(pdf_A[2] - pdf_B[2]), axis=0, append=0) != 0)*1
@@ -74,11 +79,14 @@ def plot_regions(pdf_A, pdf_B):
     fig, ax = plt.subplots(1, 2)
     ax[0].contour(*pdf_A, cmap=cm.Reds)
     ax[0].contour(*pdf_B, cmap=cm.Blues)
-    ax[0].imshow(change, cmap=cm.binary, extent=[pdf_A[0][0][0], pdf_A[0][-1][-1], pdf_A[1][0][0], pdf_A[1][0][-1]], origin='lower')
+    ax[0].imshow(change, cmap=cm.binary, extent=[pdf_A[0][0][0], pdf_A[0]
+                                                 [-1][-1], pdf_A[1][0][0], pdf_A[1][0][-1]], origin='lower')
 
     ax[1].contour(*pdf_A, cmap=cm.Reds)
     ax[1].contour(*pdf_B, cmap=cm.Blues)
-    ax[1].imshow(regions, cmap=cm.seismic, extent=[pdf_A[0][0][0], pdf_A[0][-1][-1], pdf_A[1][0][0], pdf_A[1][0][-1]], origin='lower')
+    ax[1].imshow(regions, cmap=cm.seismic, extent=[pdf_A[0][0][0], pdf_A[0]
+                                                   [-1][-1], pdf_A[1][0][0], pdf_A[1][0][-1]], origin='lower')
+
 
 if __name__ == '__main__':
     samples_1, samples_2 = np.load('assignments/lab3/lab3.p', allow_pickle=True)

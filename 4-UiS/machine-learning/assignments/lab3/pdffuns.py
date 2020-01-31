@@ -24,7 +24,7 @@ def norm2D(mu, sigma, min_x1=-10, max_x1=10, min_x2=-10, max_x2=10):
 
 
 def parzen(samples, h1):
-    cov = np.diag([h1**2, h1**2])
+    cov = np.diag([h1, h1])
     x1, x2, p = norm2D(samples[0].reshape(-1, 1), cov)
     for s in samples[1:]:
         p += norm2D(s.reshape(-1, 1), cov)[2]
@@ -66,8 +66,19 @@ def plot_3d(pdf_A, pdf_B, filename, scale=2e2):
     mlab.savefig(filename=filename, size=(2000, 2000))
 
 
-def plot_knn(mesh):
-    pass
+def plot_knn(samples_1, samples_2, regions):
+    diff_x1 = (np.diff(regions[2], axis=0, append=0) != 0)*1
+    diff_x2 = (np.diff(regions[2], axis=1, append=0) != 0)*1
+    change = (diff_x1 | diff_x2).T
+
+    fig, ax = plt.subplots(1, 2)
+    ax[0].scatter(*samples_1, s=20, c='red')
+    ax[0].scatter(*samples_2, s=20, c='blue')
+    ax[0].imshow(change, cmap=cm.binary, extent=[regions[0][0][0], regions[0][-1][-1], regions[1][0][0], regions[1][0][-1]], origin='lower')
+    
+    ax[1].scatter(*samples_1, s=20, c='white')
+    ax[1].scatter(*samples_2, s=20, c='white')
+    ax[1].imshow(regions[2].T, cmap=cm.seismic, extent=[-10, 10, -10, 10], origin='lower')
 
 
 def plot_regions(pdf_A, pdf_B):
@@ -79,15 +90,8 @@ def plot_regions(pdf_A, pdf_B):
     fig, ax = plt.subplots(1, 2)
     ax[0].contour(*pdf_A, cmap=cm.Reds)
     ax[0].contour(*pdf_B, cmap=cm.Blues)
-    ax[0].imshow(change, cmap=cm.binary, extent=[pdf_A[0][0][0], pdf_A[0]
-                                                 [-1][-1], pdf_A[1][0][0], pdf_A[1][0][-1]], origin='lower')
+    ax[0].imshow(change, cmap=cm.binary, extent=[pdf_A[0][0][0], pdf_A[0][-1][-1], pdf_A[1][0][0], pdf_A[1][0][-1]], origin='lower')
 
     ax[1].contour(*pdf_A, cmap=cm.Reds)
     ax[1].contour(*pdf_B, cmap=cm.Blues)
-    ax[1].imshow(regions, cmap=cm.seismic, extent=[pdf_A[0][0][0], pdf_A[0]
-                                                   [-1][-1], pdf_A[1][0][0], pdf_A[1][0][-1]], origin='lower')
-
-
-if __name__ == '__main__':
-    samples_1, samples_2 = np.load('assignments/lab3/lab3.p', allow_pickle=True)
-    knn_regions = knn(samples_1.T, samples_2.T, 3)
+    ax[1].imshow(regions, cmap=cm.seismic, extent=[pdf_A[0][0][0], pdf_A[0] [-1][-1], pdf_A[1][0][0], pdf_A[1][0][-1]], origin='lower')

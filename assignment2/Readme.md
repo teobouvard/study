@@ -9,9 +9,9 @@ In this assignment you will be implementing your own decision trees and random f
       - The output (a single file with the predictions for each test instance) **must be generated automatically using the approach implemented by you**. Submitting predictions/code from any other source (Internet, another student, etc.) is considered cheating and will result in immediate disqualification (i.e., dismissal from the course).   
       - You may assume the test data is present data/housing_price_test.csv on autograder.
       - The autograder will automatically run your jupyter notebook ([this notebook](Random_Forest.ipynb)) to generate the predictions in a file called "submission.csv" and the autograder script will compute a score automatically. So you are not required to upload the submissions file but rather the code to generate the submissions file.
-      - In order to pass this assignment, you need to reach a **Score of at least 70%** in autograder. This will be computed based on the Root Mean Square Error w.r.t to the test data.
-      - A skeleton of a possible implementation in Python for an example dataset is made available in [this notebook](Random_Forest.ipynb).
-      - Deadline for the assignment is 19.02.2020 by 23.59 CET.
+      - In order to pass this assignment, you need to reach a **Score of at least 80%** in autograder. This will be computed based on the Root Mean Square Error w.r.t to the test data.
+      - A skeleton of a possible implementation in Python for an example dataset is made available in [this notebook](Random_Forest.ipynb). (This notebook gives you some basic ideas but you're free to implement your own and different approach)
+      - Deadline for the assignment is **19.02.2020 by 23.59 CET**.
 
 * Dataset:
   - The dataset is taken from an ongoing [Kaggle competition](https://www.kaggle.com/c/house-prices-advanced-regression-techniques)

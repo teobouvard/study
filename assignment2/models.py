@@ -1,15 +1,15 @@
 import numpy as np
+from multiprocessing import Pool
 
 from metrics import RMSE, log_RMSE
 
-MIN_PER_NODE = 10
-
 class Node:
-    def __init__(self, x, y, depth=0, max_depth=10, benchmark=False):
+
+    def __init__(self, x, y, depth=0, max_depth=10, min_node_size=10, benchmark=False):
         self.max_depth = max_depth
         self.depth = depth
         self.size = len(y)
-        self.is_leaf = (self.size < MIN_PER_NODE) or (self.depth > max_depth)
+        self.is_leaf = (self.size < min_node_size) or (self.depth > max_depth)
         self.value = y.mean()
         self.error = RMSE(np.repeat(self.value, self.size), y)
         if not self.is_leaf and not benchmark:
@@ -29,6 +29,7 @@ class Node:
 
             possible_values = sorted(set(x[:, idx]))
 
+            # numeriacal attributes
             if isinstance(x[0, idx], (int, float)):
                 for i in range(len(possible_values) - 1):
                     threshold = np.mean([possible_values[i], possible_values[i+1]])
@@ -41,19 +42,20 @@ class Node:
                         split_value = threshold
                         split_type = 'numeric'
 
+            # categorical attributes
             elif isinstance(x[0, idx], str):
                 for value in possible_values:
                     left_split = Node(x, y[x[:, idx] == value], benchmark=True)
                     right_split = Node(x, y[x[:, idx] != value], benchmark=True)
-                    error_reduction = self.error - (left_split.size*left_split.error+right_split.size*right_split.error)/2
+                    error_reduction = self.error - (left_split.size*left_split.error+right_split.size*right_split.error)/(2*self.size)
                     if error_reduction > best_error_reduction:
                         best_error_reduction = error_reduction
                         split_idx = idx
                         split_value = value
                         split_type = 'categorical'
+
             else:
-                print('AH')
-                split_type = 'wtf'
+                raise ValueError(f'Attribute {x[0, idx]} is of type {type(x[0, idx])} but should be int, float or str')
         
         return split_idx, split_value, split_type
     
@@ -63,19 +65,21 @@ class Node:
         elif self.split_type == 'categorical':
             left_mask = x[:, self.split_idx] == self.split_value
         else:
-            print('ah')
+            raise ValueError(f'Split type is {self.split_type} but sould be numeric or categorical')
 
         left_node = Node(x[left_mask], y[left_mask], depth=self.depth+1, max_depth=self.max_depth)
         right_node = Node(x[np.invert(left_mask)], y[np.invert(left_mask)], depth=self.depth+1, max_depth=self.max_depth)
         return left_node, right_node
 
 class DecisionTree:
-    def __init__(self, max_depth=10):
+    def __init__(self, max_depth=10, min_node_size=10):
         self.tree = None
         self.max_depth = max_depth
+        self.min_node_size = min_node_size
 
     def fit(self, x, y):
-        self.tree = Node(x, y, max_depth=self.max_depth)
+        self.tree = Node(x, y, max_depth=self.max_depth, min_node_size=self.min_node_size)
+        return self # so that multiprocess training collects the results
 
     def predict(self, x):
         return np.array([self.predict_instance(_) for _ in x])
@@ -97,20 +101,22 @@ class DecisionTree:
 
 
 class RandomForest:
-    def __init__(self, n_trees, **kwargs):
-        self.trees = n_trees * [DecisionTree(**kwargs)]
+    def __init__(self, n_trees=5, subsample_size=0.6, **kwargs):
+        self.trees = [DecisionTree(**kwargs) for _ in range(n_trees)]
+        self.subsample_size = subsample_size
 
     def fit(self, x, y):
-        for t in self.trees:
-            sample_features, sample_labels = self.sample(features, labels)
-            t.fit(sample_features, sample_labels)
+        subsamples = [self.sample(x, y, self.subsample_size) for _ in self.trees]
+        xs = [_[0] for _ in subsamples]
+        ys = [_[1] for _ in subsamples]
+        with Pool() as p:
+            self.trees = p.starmap(DecisionTree.fit, zip(self.trees, xs, ys))
 
     def predict(self, x):
         predictions = np.array([t.predict(x) for t in self.trees])
-        return predictions.mean() # maybe different axis
+        return predictions.mean(axis=0)
 
-    def sample(self, x, y, frac=0.8):
-        # sanity check
+    def sample(self, x, y, frac):
         assert len(x) == len(y)
         n_samples = int(frac * len(x))
         all_indices = np.arange(len(x))
@@ -127,13 +133,13 @@ if __name__ == '__main__':
     labels = features.pop('SalePrice')
     x_train, y_train, x_test, y_test = train_test_split(features, labels)
 
-    model = DecisionTree(max_depth=5)
+    model = RandomForest(n_trees=16, max_depth=10)
     model.fit(x_train.values, y_train.values)
     y_pred = model.predict(x_test.values)
+
     baseline_error = RMSE(np.repeat(y_train.values.mean(), len(y_test)), y_test.values)
     error = RMSE(y_pred, y_test.values)
     log_error = log_RMSE(y_pred, y_test.values)
 
 
-    print(f'RMSE : {error} - {error/baseline_error:%} of baseline error')
-    #print(log_error)
+    print(f'RMSE : {error} - l-RMSE : {log_error} - {error/baseline_error:%} of baseline error')

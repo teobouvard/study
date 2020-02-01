@@ -1,7 +1,6 @@
 import numpy as np
 
 def train_test_split(x, y, test_ratio=0.2):
-    # sanity check
     assert len(x) == len(y)
     n_samples = int(test_ratio * len(x))
     all_indices = np.arange(len(x))

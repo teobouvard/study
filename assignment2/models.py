@@ -1,6 +1,7 @@
 import numpy as np
-from multiprocessing import Pool
+#np.seterr(all='raise') 
 
+from multiprocessing import Pool
 from metrics import RMSE, log_RMSE
 
 class Node:
@@ -10,7 +11,7 @@ class Node:
         self.depth = depth
         self.size = len(y)
         self.is_leaf = (self.size < min_node_size) or (self.depth > max_depth)
-        self.value = y.mean()
+        self.value = y.mean() if self.size > 0 else 0
         self.error = RMSE(np.repeat(self.value, self.size), y)
         if not self.is_leaf and not benchmark:
             self.split_idx, self.split_value, self.split_type = self.find_best_split(x, y)
@@ -79,7 +80,7 @@ class DecisionTree:
 
     def fit(self, x, y):
         self.tree = Node(x, y, max_depth=self.max_depth, min_node_size=self.min_node_size)
-        return self # so that multiprocess training collects the results
+        return self # so that multiprocess training can collect the results
 
     def predict(self, x):
         return np.array([self.predict_instance(_) for _ in x])
@@ -101,7 +102,7 @@ class DecisionTree:
 
 
 class RandomForest:
-    def __init__(self, n_trees=5, subsample_size=0.6, **kwargs):
+    def __init__(self, n_trees=100, subsample_size=0.6, **kwargs):
         self.trees = [DecisionTree(**kwargs) for _ in range(n_trees)]
         self.subsample_size = subsample_size
 
@@ -109,8 +110,10 @@ class RandomForest:
         subsamples = [self.sample(x, y, self.subsample_size) for _ in self.trees]
         xs = [_[0] for _ in subsamples]
         ys = [_[1] for _ in subsamples]
-        with Pool() as p:
-            self.trees = p.starmap(DecisionTree.fit, zip(self.trees, xs, ys))
+        #with Pool() as p:
+        #    self.trees = p.starmap(DecisionTree.fit, zip(self.trees, xs, ys))
+        for t in self.trees:
+            t.fit(*self.sample(x, y, self.subsample_size))
 
     def predict(self, x):
         predictions = np.array([t.predict(x) for t in self.trees])
@@ -129,17 +132,33 @@ if __name__ == '__main__':
     import pandas as pd
     np.random.seed(42)
 
-    features = pd.read_csv('data/housing_price_train.csv', index_col=0)
-    labels = features.pop('SalePrice')
-    x_train, y_train, x_test, y_test = train_test_split(features, labels)
+    train_data = pd.read_csv('data/housing_price_train.csv', index_col=0)
+    test_data = pd.read_csv('data/housing_price_test.csv', index_col=0)
 
-    model = RandomForest(n_trees=16, max_depth=10)
+    attrs = ['PoolQC', 'MiscFeature', 'Alley', 'Fence', 'FireplaceQu', 'GarageType', 'GarageCond', 'GarageFinish', 'GarageQual', 'BsmtFinType2', 'BsmtExposure', 'BsmtQual', 'BsmtCond', 'BsmtFinType1', 'MasVnrType']
+    train_data[attrs] = train_data[attrs].fillna('None')
+    test_data[attrs] = test_data[attrs].fillna('None')
+
+    attr = 'LotFrontage'
+    train_data[attr] = train_data[attr].fillna(train_data[attr].mean())
+    test_data[attr] = test_data[attr].fillna(test_data[attr].mean())
+
+    attr = 'GarageYrBlt'
+    train_data.drop(attr, axis='columns', inplace=True)
+    test_data.drop(attr, axis='columns', inplace=True)
+
+    attrs = ['MasVnrArea', 'Electrical']
+    train_data.dropna(axis='index', subset=attrs, inplace=True)
+    test_data.dropna(axis='index', subset=attrs, inplace=True)
+
+    train_labels = train_data.pop('SalePrice')
+    x_train, y_train, x_val, y_val = train_test_split(train_data, train_labels)
+
+    model = RandomForest(n_trees=10, max_depth=5)
     model.fit(x_train.values, y_train.values)
-    y_pred = model.predict(x_test.values)
+    y_pred = model.predict(x_val.values)
 
-    baseline_error = RMSE(np.repeat(y_train.values.mean(), len(y_test)), y_test.values)
-    error = RMSE(y_pred, y_test.values)
-    log_error = log_RMSE(y_pred, y_test.values)
-
-
+    baseline_error = RMSE(np.repeat(y_train.values.mean(), len(y_val)), y_val.values)
+    error = RMSE(y_pred, y_val.values)
+    log_error = log_RMSE(y_pred, y_val.values)
     print(f'RMSE : {error} - l-RMSE : {log_error} - {error/baseline_error:%} of baseline error')

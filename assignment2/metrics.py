@@ -1,7 +1,8 @@
 import numpy as np
 
 def RMSE(x, y):
-    return np.sqrt(((x - y) ** 2).mean())
+    distance = (x - y) ** 2
+    return np.sqrt(distance.mean()) if distance.size > 0 else 0
 
 def log_RMSE(x, y):
     return np.sqrt(((np.log(x) - np.log(y)) ** 2).mean())

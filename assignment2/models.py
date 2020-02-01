@@ -1,5 +1,4 @@
 import numpy as np
-#np.seterr(all='raise') 
 
 from multiprocessing import Pool
 from metrics import RMSE, log_RMSE
@@ -26,11 +25,11 @@ class Node:
         for idx in range(x.shape[1]):
             # check that all feature values for this index are of the same type
             if len(set(type(_) for _ in x[:, idx])) > 1:
-                continue
+                raise ValueError(f'{set(type(_) for _ in x[:, idx])} : different types for same attribute at index {idx}')
 
             possible_values = sorted(set(x[:, idx]))
 
-            # numeriacal attributes
+            # numerical attributes
             if isinstance(x[0, idx], (int, float)):
                 for i in range(len(possible_values) - 1):
                     threshold = np.mean([possible_values[i], possible_values[i+1]])
@@ -102,7 +101,7 @@ class DecisionTree:
 
 
 class RandomForest:
-    def __init__(self, n_trees=100, subsample_size=0.6, **kwargs):
+    def __init__(self, n_trees=100, subsample_size=0.8, **kwargs):
         self.trees = [DecisionTree(**kwargs) for _ in range(n_trees)]
         self.subsample_size = subsample_size
 
@@ -110,10 +109,10 @@ class RandomForest:
         subsamples = [self.sample(x, y, self.subsample_size) for _ in self.trees]
         xs = [_[0] for _ in subsamples]
         ys = [_[1] for _ in subsamples]
-        #with Pool() as p:
-        #    self.trees = p.starmap(DecisionTree.fit, zip(self.trees, xs, ys))
-        for t in self.trees:
-            t.fit(*self.sample(x, y, self.subsample_size))
+        with Pool() as p:
+            self.trees = p.starmap(DecisionTree.fit, zip(self.trees, xs, ys))
+        #for t in self.trees:
+        #    t.fit(*self.sample(x, y, self.subsample_size))
 
     def predict(self, x):
         predictions = np.array([t.predict(x) for t in self.trees])
@@ -130,7 +129,7 @@ class RandomForest:
 if __name__ == '__main__':
     from utils import train_test_split
     import pandas as pd
-    np.random.seed(42)
+    np.random.seed(92)
 
     train_data = pd.read_csv('data/housing_price_train.csv', index_col=0)
     test_data = pd.read_csv('data/housing_price_test.csv', index_col=0)
@@ -149,16 +148,22 @@ if __name__ == '__main__':
 
     attrs = ['MasVnrArea', 'Electrical']
     train_data.dropna(axis='index', subset=attrs, inplace=True)
-    test_data.dropna(axis='index', subset=attrs, inplace=True)
 
     train_labels = train_data.pop('SalePrice')
     x_train, y_train, x_val, y_val = train_test_split(train_data, train_labels)
 
-    model = RandomForest(n_trees=10, max_depth=5)
-    model.fit(x_train.values, y_train.values)
-    y_pred = model.predict(x_val.values)
+    #model = RandomForest(n_trees=16, max_depth=100)
+    #model.fit(x_train.values, y_train.values)
+    #y_pred = model.predict(x_val.values)
+    #baseline_error = RMSE(np.repeat(y_train.values.mean(), len(y_val)), y_val.values)
+    #error = RMSE(y_pred, y_val.values)
+    #log_error = log_RMSE(y_pred, y_val.values)
+    #print(f'RMSE : {error} - l-RMSE : {log_error} - {error/baseline_error:%} of baseline error')
 
-    baseline_error = RMSE(np.repeat(y_train.values.mean(), len(y_val)), y_val.values)
-    error = RMSE(y_pred, y_val.values)
-    log_error = log_RMSE(y_pred, y_val.values)
-    print(f'RMSE : {error} - l-RMSE : {log_error} - {error/baseline_error:%} of baseline error')
+    model = RandomForest(n_trees=1000, max_depth=100)
+    model.fit(train_data.values, train_labels.values)
+    y_pred = model.predict(test_data.values)
+    submission = pd.DataFrame()
+    submission['Id'] = test_data.index
+    submission['SalePrice'] = y_pred
+    submission.to_csv('submission.csv', index=False)

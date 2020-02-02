@@ -53,7 +53,6 @@ func main() {
 	} else if !fileExists(*config) {
 		fmt.Fprintf(os.Stderr, "[--config] file does not exist or is not readable\n")
 	} else {
-		fmt.Fprintf(os.Stderr, "Starting up app for node %d\n", *id)
 		app := app.NewApp(*id, *config)
 		app.Run()
 	}

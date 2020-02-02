@@ -104,7 +104,7 @@ func (e *EvtFailureDetector) Stop() {
 func (e *EvtFailureDetector) timeout() {
 	// TODO(student): Implement timeout procedure
 	for i := range e.nodeIDs {
-		if e.alive[i] && e.alive[i] == e.suspected[i] {
+		if e.alive[i] && (e.alive[i] == e.suspected[i]) {
 			e.delay += e.delta
 			break
 		}

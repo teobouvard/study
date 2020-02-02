@@ -1,0 +1,14 @@
+first:
+    addr: localhost
+    port: 8080
+    id: 1
+
+second:
+    addr: localhost
+    port: 8081
+    id: 2
+    
+third:
+    addr: localhost
+    port: 8082
+    id: 3

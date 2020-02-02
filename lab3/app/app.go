@@ -22,15 +22,13 @@ type Config struct {
 
 type App struct {
 	id int
-
 	fd *detector.EvtFailureDetector
 	ld *detector.MonLeaderDetector
-
-	subscriptions []chan int
+	//subscriptions []chan int
 }
 
 func NewApp(id int, config string) *App {
-	nodes := parse(config)
+	nodes := parseConfig(config)
 	nodeIDs := []int{}
 
 	for _, node := range nodes {
@@ -39,21 +37,36 @@ func NewApp(id int, config string) *App {
 		// connect to node (UDP?, TCP)
 	}
 
-	hbSend := make(chan<- detector.Heartbeat)
+	if !contains(nodeIDs, id) {
+		fmt.Fprintf(os.Stderr, "[--id] is not present in config file. Exiting.\n")
+		os.Exit(1)
+	}
+
+	hbSend := make(chan<- detector.Heartbeat, 100) // to not block
 	ld := detector.NewMonLeaderDetector(nodeIDs)
 	fd := detector.NewEvtFailureDetector(id, nodeIDs, ld, time.Second, hbSend)
 
 	return &App{
-		id:            id,
-		ld:            ld,
-		fd:            fd,
-		subscriptions: make([]chan int, len(nodeIDs)),
+		id: id,
+		fd: fd,
+		ld: ld,
+		//subscriptions: make([]chan int, len(nodeIDs)),
 	}
 }
 
 func (app *App) Run() {
-	fmt.Fprintf(os.Stderr, "Starting up app for node %d\n", app.id)
+	fmt.Fprintf(os.Stderr, "[LOG] Starting up app for node %d\n", app.id)
 	app.fd.Start()
+	sub := app.ld.Subscribe()
+	leader := app.ld.Leader()
+	fmt.Printf("[LOG] Initial leader : Node [%d]\n", leader)
+
+	for {
+		select {
+		case leader := <-sub:
+			fmt.Printf("[LOG] Change of leader : Node [%d] elected.\n", leader)
+		}
+	}
 
 	//for _, ch := range app.subscriptions {
 	//	go func() {
@@ -61,14 +74,17 @@ func (app *App) Run() {
 	//			select {
 	//				// THINGS TO DO
 	//				// app.fd.DeliverHeartbeat(hb)
+	//				// app.ld.Leader()
 	//				// app.ld.Subscribe()
+	// 				// app.fd.Stop()
 	//			}
 	//		}
 	//	}()
 	//}
+
 }
 
-func parse(config string) []Node {
+func parseConfig(config string) []Node {
 	var c Config
 	file, _ := ioutil.ReadFile(config)
 	err := yaml.Unmarshal(file, &c)
@@ -80,4 +96,13 @@ func check(err error) {
 	if err != nil {
 		fmt.Print(err)
 	}
+}
+
+func contains(arr []int, x int) bool {
+	for _, e := range arr {
+		if e == x {
+			return true
+		}
+	}
+	return false
 }

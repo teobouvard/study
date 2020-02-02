@@ -2,7 +2,11 @@
 
 package detector
 
-import "time"
+import (
+	"fmt"
+	"os"
+	"time"
+)
 
 // EvtFailureDetector represents a Eventually Perfect Failure Detector as
 // described at page 53 in:
@@ -81,7 +85,9 @@ func (e *EvtFailureDetector) Start() {
 			case hb := <-e.hbIn:
 				// TODO(student): Handle incoming heartbeat
 				e.handleHeartbeat(hb)
+				fmt.Fprintf(os.Stderr, "[LOG] Received Heartbeat\n")
 			case <-e.timeoutSignal.C:
+				fmt.Fprintf(os.Stderr, "[LOG] Failure detector timeout\n")
 				e.timeout()
 			case <-e.stop:
 				return
@@ -106,11 +112,12 @@ func (e *EvtFailureDetector) timeout() {
 	for i := range e.nodeIDs {
 		if e.alive[i] && (e.alive[i] == e.suspected[i]) {
 			e.delay += e.delta
+			fmt.Printf("[LOG] Increasing delay\n")
 			break
 		}
 	}
 
-	for i := range e.nodeIDs {
+	for _, i := range e.nodeIDs {
 		if !e.alive[i] && !e.suspected[i] {
 			e.suspected[i] = true
 			e.sr.Suspect(i)
@@ -122,7 +129,6 @@ func (e *EvtFailureDetector) timeout() {
 	}
 
 	e.clearAlive()
-	e.setTimer()
 }
 
 // TODO(student): Add other unexported functions or methods if needed.
@@ -142,7 +148,6 @@ func (e *EvtFailureDetector) clearAlive() {
 	e.alive = make(map[int]bool)
 }
 
-// clearAlive empties the alive set of node (l17)
 func (e *EvtFailureDetector) setTimer() {
 	e.timeoutSignal = time.NewTicker(e.delay)
 }

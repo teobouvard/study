@@ -1,47 +1,48 @@
-package main
+package app
 
 import (
-	"flag"
 	"fmt"
-	"os"
+	"io/ioutil"
 
 	"../detector"
+	"gopkg.in/yaml.v2"
 )
 
-var (
-	help = flag.Bool(
-		"help",
-		false,
-		"Show usage help",
-	)
-	id = flag.Int(
-		"id",
-		detector.UnknownID,
-		"ID of running node",
-	)
-	config = flag.String(
-		"config",
-		"config.yaml",
-		"Configuration file of nodes",
-	)
-)
-
-func usage() {
-	fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS]\n", os.Args[0])
-	fmt.Fprintf(os.Stderr, "\nOptions:\n")
-	flag.PrintDefaults()
+type Node struct {
+	Hostname string
+	Port int
+	ID int
 }
 
-func main() {
-	flag.Parse()
+type Config struct {
+	Nodes []Node
+}
 
-	if *help {
-		usage()
-		os.Exit(0)
-	} else if *id == detector.UnknownID {
-		fmt.Fprintf(os.Stderr, "--id parameter is required and should be a positive integer\n")
-	} else {
-		fmt.Println("Starting up app...")
 
+type App struct {
+	id int
+
+	fd *detector.EvtFailureDetector
+	ld *detector.MonLeaderDetector
+}
+
+func NewApp(id int, config string) *App{
+	var c Config
+	file, _ := ioutil.ReadFile(config)
+	err := yaml.Unmarshal(file, &c)
+	check(err)
+	fmt.Println(c)
+	return &App{
+		id: id,
+	}
+}
+
+func (app *App) Run(){
+	fmt.Println("Running!")
+}
+
+func check(err error){
+	if err != nil {
+		fmt.Print(err)
 	}
 }

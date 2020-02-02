@@ -45,7 +45,9 @@ func NewEvtFailureDetector(id int, nodeIDs []int, sr SuspectRestorer, delta time
 	suspected := make(map[int]bool)
 	alive := make(map[int]bool)
 
-	// TODO(student): perform any initialization necessary
+	for i := range nodeIDs {
+		alive[i] = true
+	}
 
 	return &EvtFailureDetector{
 		id:        id,
@@ -71,13 +73,14 @@ func NewEvtFailureDetector(id int, nodeIDs []int, sr SuspectRestorer, delta time
 // timeout procedure at an interval corresponding to e's internal delay
 // duration variable.
 func (e *EvtFailureDetector) Start() {
-	e.timeoutSignal = time.NewTicker(e.delay)
+	e.setTimer()
 	go func() {
 		for {
 			e.testingHook() // DO NOT REMOVE THIS LINE. A no-op when not testing.
 			select {
-			case <-e.hbIn:
+			case hb := <-e.hbIn:
 				// TODO(student): Handle incoming heartbeat
+				e.handleHeartbeat(hb)
 			case <-e.timeoutSignal.C:
 				e.timeout()
 			case <-e.stop:
@@ -100,6 +103,59 @@ func (e *EvtFailureDetector) Stop() {
 // Internal: timeout runs e's timeout procedure.
 func (e *EvtFailureDetector) timeout() {
 	// TODO(student): Implement timeout procedure
+	for i := range e.nodeIDs {
+		if e.alive[i] && e.alive[i] == e.suspected[i] {
+			e.delay += e.delta
+			break
+		}
+	}
+
+	for i := range e.nodeIDs {
+		if !e.alive[i] && !e.suspected[i] {
+			e.suspected[i] = true
+			e.sr.Suspect(i)
+		} else if e.alive[i] && e.suspected[i] {
+			delete(e.suspected, i)
+			e.sr.Restore(i)
+		}
+		e.sendHeartbeatRequest(i)
+	}
+
+	e.clearAlive()
+	e.setTimer()
 }
 
 // TODO(student): Add other unexported functions or methods if needed.
+
+// sendHeartbeatRequest sends a heartbeat request to node toNode.
+func (e *EvtFailureDetector) sendHeartbeatRequest(toNode int) {
+	hb := Heartbeat{
+		From:    e.id,
+		To:      toNode,
+		Request: true,
+	}
+	e.hbSend <- hb
+}
+
+// clearAlive empties the alive set of node (l17)
+func (e *EvtFailureDetector) clearAlive() {
+	e.alive = make(map[int]bool)
+}
+
+// clearAlive empties the alive set of node (l17)
+func (e *EvtFailureDetector) setTimer() {
+	e.timeoutSignal = time.NewTicker(e.delay)
+}
+
+func (e *EvtFailureDetector) handleHeartbeat(hb Heartbeat) {
+	if hb.Request {
+		hb := Heartbeat{
+			From:    e.id,
+			To:      hb.From,
+			Request: false,
+		}
+		e.hbSend <- hb
+	} else {
+		e.alive[hb.From] = true
+	}
+}

@@ -2,18 +2,35 @@
 
 package detector
 
+import "sort"
+
 // A MonLeaderDetector represents a Monarchical Eventual Leader Detector as
 // described at page 53 in:
 // Christian Cachin, Rachid Guerraoui, and Luís Rodrigues: "Introduction to
 // Reliable and Secure Distributed Programming" Springer, 2nd edition, 2011.
 type MonLeaderDetector struct {
 	// TODO(student): Add needed fields
+	nodeIDs     []int
+	suspected   map[int]bool
+	leader      int
+	subscribers []chan int
 }
 
 // NewMonLeaderDetector returns a new Monarchical Eventual Leader Detector
 // given a list of node ids.
 func NewMonLeaderDetector(nodeIDs []int) *MonLeaderDetector {
-	m := &MonLeaderDetector{}
+	m := &MonLeaderDetector{
+		nodeIDs:     nodeIDs,
+		suspected:   make(map[int]bool),
+		leader:      UnknownID,
+		subscribers: make([]chan int, len(nodeIDs)),
+	}
+
+	m.leader = m.Leader()
+	for i := range m.subscribers {
+		m.subscribers[i] = make(chan int, 10)
+	}
+
 	return m
 }
 
@@ -21,6 +38,13 @@ func NewMonLeaderDetector(nodeIDs []int) *MonLeaderDetector {
 // are suspected.
 func (m *MonLeaderDetector) Leader() int {
 	// TODO(student): Implement
+	// https://golang.org/pkg/sort/#Reverse
+	sort.Sort(sort.Reverse(sort.IntSlice(m.nodeIDs)))
+	for _, id := range m.nodeIDs {
+		if id > UnknownID && !m.suspected[id] {
+			return id
+		}
+	}
 	return UnknownID
 }
 
@@ -29,6 +53,8 @@ func (m *MonLeaderDetector) Leader() int {
 // this publish this change its subscribers.
 func (m *MonLeaderDetector) Suspect(id int) {
 	// TODO(student): Implement
+	m.suspected[id] = true
+	m.publish()
 }
 
 // Restore instructs m to consider the node with matching id as restored. If
@@ -36,6 +62,8 @@ func (m *MonLeaderDetector) Suspect(id int) {
 // this publish this change its subscribers.
 func (m *MonLeaderDetector) Restore(id int) {
 	// TODO(student): Implement
+	delete(m.suspected, id)
+	m.publish()
 }
 
 // Subscribe returns a buffered channel that m on leader change will use to
@@ -45,7 +73,18 @@ func (m *MonLeaderDetector) Restore(id int) {
 // subscriber; it is not meant to be shared.
 func (m *MonLeaderDetector) Subscribe() <-chan int {
 	// TODO(student): Implement
-	return nil
+	sub := make(chan int, 2)
+	m.subscribers = append(m.subscribers, sub)
+	return sub
+}
+
+func (m *MonLeaderDetector) publish() {
+	if m.leader != m.Leader() {
+		m.leader = m.Leader()
+		for _, sub := range m.subscribers {
+			sub <- m.leader
+		}
+	}
 }
 
 // TODO(student): Add other unexported functions or methods if needed.

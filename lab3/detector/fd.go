@@ -84,9 +84,9 @@ func (e *EvtFailureDetector) Start() {
 			case hb := <-e.hbIn:
 				// TODO(student): Handle incoming heartbeat
 				e.handleHeartbeat(hb)
-				log.Printf("Received Heartbeat\n")
+				//log.Printf("Received Heartbeat\n")
 			case <-e.timeoutSignal.C:
-				log.Printf("Failure detector timeout\n")
+				//log.Printf("Failure detector timeout\n")
 				e.timeout()
 			case <-e.stop:
 				return

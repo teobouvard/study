@@ -25,7 +25,7 @@ var (
 	config = flag.String(
 		"config",
 		"config.yaml",
-		"Configuration file of nodes",
+		"YAML configuration file of nodes",
 	)
 )
 

@@ -3,7 +3,6 @@
 package detector
 
 import (
-	"log"
 	"time"
 )
 
@@ -82,7 +81,6 @@ func (e *EvtFailureDetector) Start() {
 			e.testingHook() // DO NOT REMOVE THIS LINE. A no-op when not testing.
 			select {
 			case hb := <-e.hbIn:
-				// TODO(student): Handle incoming heartbeat
 				e.handleHeartbeat(hb)
 				//log.Printf("Received Heartbeat\n")
 			case <-e.timeoutSignal.C:
@@ -107,11 +105,10 @@ func (e *EvtFailureDetector) Stop() {
 
 // Internal: timeout runs e's timeout procedure.
 func (e *EvtFailureDetector) timeout() {
-	// TODO(student): Implement timeout procedure
 	for i := range e.nodeIDs {
 		if e.alive[i] && (e.alive[i] == e.suspected[i]) {
 			e.delay += e.delta
-			log.Printf("Increasing delay\n")
+			//log.Printf("Increasing delay\n")
 			break
 		}
 	}
@@ -129,8 +126,6 @@ func (e *EvtFailureDetector) timeout() {
 
 	e.clearAlive()
 }
-
-// TODO(student): Add other unexported functions or methods if needed.
 
 // sendHeartbeatRequest sends a heartbeat request to node toNode.
 func (e *EvtFailureDetector) sendHeartbeatRequest(toNode int) {
@@ -151,6 +146,7 @@ func (e *EvtFailureDetector) setTimer() {
 	e.timeoutSignal = time.NewTicker(e.delay)
 }
 
+// handleHeartbeat responds to hearbeat requests or acknowledge heartbeat responses
 func (e *EvtFailureDetector) handleHeartbeat(hb Heartbeat) {
 	if hb.Request {
 		hb := Heartbeat{

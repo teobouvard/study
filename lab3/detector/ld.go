@@ -3,7 +3,6 @@
 package detector
 
 import (
-	"log"
 	"sort"
 )
 
@@ -57,7 +56,7 @@ func (m *MonLeaderDetector) Leader() int {
 func (m *MonLeaderDetector) Suspect(id int) {
 	// TODO(student): Implement
 	m.suspected[id] = true
-	log.Printf("Node [%d] is suspected\n", id)
+	//log.Printf("Node [%d] is suspected\n", id)
 	m.publish()
 }
 
@@ -65,7 +64,6 @@ func (m *MonLeaderDetector) Suspect(id int) {
 // the restore indication result in a leader change the leader detector should
 // this publish this change its subscribers.
 func (m *MonLeaderDetector) Restore(id int) {
-	// TODO(student): Implement
 	delete(m.suspected, id)
 	m.publish()
 }
@@ -76,7 +74,6 @@ func (m *MonLeaderDetector) Restore(id int) {
 // slow subscribers. Note: Subscribe returns a unique channel to every
 // subscriber; it is not meant to be shared.
 func (m *MonLeaderDetector) Subscribe() <-chan int {
-	// TODO(student): Implement
 	sub := make(chan int, 2)
 	m.subscribers = append(m.subscribers, sub)
 	return sub
@@ -85,11 +82,8 @@ func (m *MonLeaderDetector) Subscribe() <-chan int {
 func (m *MonLeaderDetector) publish() {
 	if m.leader != m.Leader() {
 		m.leader = m.Leader()
-		log.Printf("Change of leader. Publishing.\n")
 		for _, sub := range m.subscribers {
 			sub <- m.leader
 		}
 	}
 }
-
-// TODO(student): Add other unexported functions or methods if needed.

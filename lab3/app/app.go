@@ -33,9 +33,8 @@ func NewApp(id int, configFile string) *App {
 		nodeIDs = append(nodeIDs, node.ID)
 	}
 
-	if !contains(nodeIDs, id) {
-		fmt.Printf("[--id] is not present in config file. Exiting.\n")
-		os.Exit(1)
+	if !Contains(nodeIDs, id) {
+		Raise(fmt.Sprintf("Node [%d] is not present in config file. Change --id parameter\n", id))
 	}
 
 	hbSend := make(chan detector.Heartbeat, 100) // to not block
@@ -54,46 +53,21 @@ func NewApp(id int, configFile string) *App {
 	}
 }
 
+// Run runs app main loop
 func (app *App) Run() {
 	log.Printf("Starting up app for node %d\n", app.id)
 	app.fd.Start()
 	sub := app.ld.Subscribe()
 	notify := app.server.Listen()
-
 	for {
 		select {
 		case leader := <-sub:
 			log.Printf("Change of leader : Node [%d] elected.\n", leader)
 		case hb := <-notify:
-			//log.Printf("MESSAGE RECIEVED : %v\n", message)
 			app.fd.DeliverHeartbeat(hb)
 		case hb := <-app.hbSend:
 			addr := app.registry[hb.To]
 			app.server.Send(addr, hb)
 		}
-
 	}
-
-	//for _, ch := range app.subscriptions {
-	//	go func() {
-	//		for {
-	//			select {
-	//				// THINGS TO DO
-	//				// app.ld.Leader()
-	//				// app.ld.Subscribe()
-	// 				// app.fd.Stop()
-	//			}
-	//		}
-	//	}()
-	//}
-
-}
-
-func contains(arr []int, x int) bool {
-	for _, e := range arr {
-		if e == x {
-			return true
-		}
-	}
-	return false
 }

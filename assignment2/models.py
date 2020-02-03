@@ -60,7 +60,7 @@ class Node:
                         split_idx = idx
                         split_value = value
                         split_op = operator.eq
-                        
+
             # invalid attributes
             else:
                 raise ValueError(f'Attribute {x[0, idx]} is of type {type(x[0, idx])} but should be int, float or str')
@@ -123,7 +123,7 @@ class RandomForest:
 if __name__ == '__main__':
     from utils import train_test_split
     import pandas as pd
-    np.random.seed(92)
+    np.random.seed(42)
 
     train_data = pd.read_csv('data/housing_price_train.csv', index_col=0)
     test_data = pd.read_csv('data/housing_price_test.csv', index_col=0)
@@ -146,7 +146,7 @@ if __name__ == '__main__':
     train_labels = train_data.pop('SalePrice')
     x_train, y_train, x_val, y_val = train_test_split(train_data, train_labels)
 
-    model = RandomForest(n_trees=16, max_depth=100)
+    model = RandomForest(n_trees=100, max_depth=10)
     model.fit(x_train.values, y_train.values)
     y_pred = model.predict(x_val.values)
     baseline_error = RMSE(np.repeat(y_train.values.mean(), len(y_val)), y_val.values)

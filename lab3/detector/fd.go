@@ -3,8 +3,7 @@
 package detector
 
 import (
-	"fmt"
-	"os"
+	"log"
 	"time"
 )
 
@@ -85,9 +84,9 @@ func (e *EvtFailureDetector) Start() {
 			case hb := <-e.hbIn:
 				// TODO(student): Handle incoming heartbeat
 				e.handleHeartbeat(hb)
-				fmt.Fprintf(os.Stderr, "[LOG] Received Heartbeat\n")
+				log.Printf("Received Heartbeat\n")
 			case <-e.timeoutSignal.C:
-				fmt.Fprintf(os.Stderr, "[LOG] Failure detector timeout\n")
+				log.Printf("Failure detector timeout\n")
 				e.timeout()
 			case <-e.stop:
 				return
@@ -112,7 +111,7 @@ func (e *EvtFailureDetector) timeout() {
 	for i := range e.nodeIDs {
 		if e.alive[i] && (e.alive[i] == e.suspected[i]) {
 			e.delay += e.delta
-			fmt.Printf("[LOG] Increasing delay\n")
+			log.Printf("Increasing delay\n")
 			break
 		}
 	}

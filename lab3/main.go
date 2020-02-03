@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 
 	"./app"
@@ -44,6 +45,8 @@ func fileExists(path string) bool {
 
 func main() {
 	flag.Parse()
+	log.SetFlags(0)
+	log.SetPrefix("[\033[93;1m LOG \033[0m] ")
 
 	if *help {
 		usage()

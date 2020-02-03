@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"time"
 
@@ -32,13 +33,13 @@ func NewApp(id int, config string) *App {
 	nodeIDs := []int{}
 
 	for _, node := range nodes {
-		fmt.Printf("[\u001b[32;1mCONFIG\u001b[0m] Node [%d] @ %v:%v\n", node.ID, node.Hostname, node.Port)
+		fmt.Fprintf(os.Stderr, "[\033[32;1m CONFIG \033[0m] Node [%d] @ %v:%v\n", node.ID, node.Hostname, node.Port)
 		nodeIDs = append(nodeIDs, node.ID)
 		// connect to node (UDP?, TCP)
 	}
 
 	if !contains(nodeIDs, id) {
-		fmt.Fprintf(os.Stderr, "[--id] is not present in config file. Exiting.\n")
+		log.Printf("[--id] is not present in config file. Exiting.\n")
 		os.Exit(1)
 	}
 
@@ -55,16 +56,16 @@ func NewApp(id int, config string) *App {
 }
 
 func (app *App) Run() {
-	fmt.Fprintf(os.Stderr, "[LOG] Starting up app for node %d\n", app.id)
+	log.Printf("Starting up app for node %d\n", app.id)
 	app.fd.Start()
 	sub := app.ld.Subscribe()
 	leader := app.ld.Leader()
-	fmt.Printf("[LOG] Initial leader : Node [%d]\n", leader)
+	log.Printf("Initial leader : Node [%d]\n", leader)
 
 	for {
 		select {
 		case leader := <-sub:
-			fmt.Printf("[LOG] Change of leader : Node [%d] elected.\n", leader)
+			log.Printf("Change of leader : Node [%d] elected.\n", leader)
 		}
 	}
 
@@ -94,7 +95,7 @@ func parseConfig(config string) []Node {
 
 func check(err error) {
 	if err != nil {
-		fmt.Print(err)
+		log.Print(err)
 	}
 }
 

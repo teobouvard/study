@@ -3,7 +3,7 @@
 package detector
 
 import (
-	"fmt"
+	"log"
 	"sort"
 )
 
@@ -57,7 +57,7 @@ func (m *MonLeaderDetector) Leader() int {
 func (m *MonLeaderDetector) Suspect(id int) {
 	// TODO(student): Implement
 	m.suspected[id] = true
-	fmt.Printf("[LOG] Node [%d] is suspected\n", id)
+	log.Printf("Node [%d] is suspected\n", id)
 	m.publish()
 }
 
@@ -85,7 +85,7 @@ func (m *MonLeaderDetector) Subscribe() <-chan int {
 func (m *MonLeaderDetector) publish() {
 	if m.leader != m.Leader() {
 		m.leader = m.Leader()
-		fmt.Printf("[LOG] Change of leader. Publishing.\n")
+		log.Printf("Change of leader. Publishing.\n")
 		for _, sub := range m.subscribers {
 			sub <- m.leader
 		}

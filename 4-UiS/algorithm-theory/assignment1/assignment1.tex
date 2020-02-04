@@ -14,7 +14,58 @@
 \maketitle
 
 \section*{Problem 1}
-In this problem, the objective is to maximize the profit of selling products X and Y, while satisfying production constraints on these products.
+In this problem, the objective is to maximize the profit of selling products X and Y, while satisfying production constraints on these products. The profit can be computed as 
+
+\begin{align*}
+    profit &= revenue - cost \\
+    &= revenue - (time_{machine} \times cost_{machine} + time_{craftsman} \times cost_{craftsman})
+\end{align*}
+
+We can compute profits for each of the products
+
+\begin{align*}
+    profit(X) = 200 - (\frac{15}{60} \times 100 + \frac{20}{60} \times 20) = \frac{505}{3} \\
+    profit(Y) = 300 - (\frac{20}{60} \times 100 + \frac{30}{60} \times 20) = \frac{770}{3}
+\end{align*}
+
+And formulate the problem as a Linear Programming problem. Let $n_X$ and $n_Y$ be the number of products X and Y produced.
+
+\begin{align*}
+    &\text{maximize } n_X \times profit(X) + n_Y \times profit(Y) \\
+    &\text{subject to } 
+    \begin{cases}
+        n_X \times time_{machine}(X) + n_Y \times time_{machine}(Y) \le 40 \times 60 \\
+        n_X \times time_{craftsman}(X) + n_Y \times time_{craftsman}(Y) \le 35 \times 60 \\
+        n_X \ge 10 \\
+        n_X, n_Y \ge 0 \\
+    \end{cases} 
+\end{align*}
+
+Which can be simplified as
+
+\begin{align*}
+    &\text{maximize } n_X \times \frac{505}{3} + n_Y \times \frac{770}{3} \\
+    &\text{subject to } 
+    \begin{cases}
+        15 \times n_X + 20 \times n_Y \le 2400 \\
+        20 \times n_X + 30 \times n_Y \le 2100 \\
+        n_X \ge 10 \\
+        n_Y \ge 0 \\
+    \end{cases} 
+\end{align*}
+
+\section*{Problem 2}
+Let $n_A$ and $n_B$ be the number of products A and B produced.
+
+\begin{align*}
+    &\text{maximize } n_A \times 3 + n_B \times 5 \\
+    &\text{subject to } 
+    \begin{cases}
+        12 \times n_A + 25 \times n_B \le 30 \times 60 \\
+        5 \times n_B - 2 \times n_A \ge 0 \\
+        n_A, n_B \ge 0 \\
+    \end{cases} 
+\end{align*}
 
 
 \end{document}

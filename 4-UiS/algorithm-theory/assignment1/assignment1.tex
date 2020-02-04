@@ -9,16 +9,18 @@
 
 \begin{document}
 
+
+
 \title{Algorithm Theory - Assignment 1}
 \author{T\'eo Bouvard}
 \maketitle
 
 \section*{Problem 1}
-In this problem, the objective is to maximize the profit of selling products X and Y, while satisfying production constraints on these products. The profit can be computed as 
+In this problem, the objective is to maximize the profit of selling products X and Y, while satisfying production constraints on these products. The profit can be computed as
 
 \begin{align*}
-    profit &= revenue - cost \\
-    &= revenue - (time_{machine} \times cost_{machine} + time_{craftsman} \times cost_{craftsman})
+    profit & = revenue - cost                                                                              \\
+           & = revenue - (time_{machine} \times cost_{machine} + time_{craftsman} \times cost_{craftsman})
 \end{align*}
 
 We can compute profits for each of the products
@@ -31,41 +33,72 @@ We can compute profits for each of the products
 And formulate the problem as a Linear Programming problem. Let $n_X$ and $n_Y$ be the number of products X and Y produced.
 
 \begin{align*}
-    &\text{maximize } n_X \times profit(X) + n_Y \times profit(Y) \\
-    &\text{subject to } 
+     & \text{maximize } n_X \times profit(X) + n_Y \times profit(Y) \\
+     & \text{subject to }
     \begin{cases}
-        n_X \times time_{machine}(X) + n_Y \times time_{machine}(Y) \le 40 \times 60 \\
+        n_X \times time_{machine}(X) + n_Y \times time_{machine}(Y) \le 40 \times 60     \\
         n_X \times time_{craftsman}(X) + n_Y \times time_{craftsman}(Y) \le 35 \times 60 \\
-        n_X \ge 10 \\
-        n_X, n_Y \ge 0 \\
-    \end{cases} 
+        n_X \ge 10                                                                       \\
+        n_X, n_Y \ge 0                                                                   \\
+    \end{cases}
 \end{align*}
 
 Which can be simplified as
 
 \begin{align*}
-    &\text{maximize } n_X \times \frac{505}{3} + n_Y \times \frac{770}{3} \\
-    &\text{subject to } 
+     & \text{maximize } n_X \times \frac{505}{3} + n_Y \times \frac{770}{3} \\
+     & \text{subject to }
     \begin{cases}
         15 \times n_X + 20 \times n_Y \le 2400 \\
         20 \times n_X + 30 \times n_Y \le 2100 \\
-        n_X \ge 10 \\
-        n_Y \ge 0 \\
-    \end{cases} 
+        n_X \ge 10                             \\
+        n_Y \ge 0                              \\
+    \end{cases}
 \end{align*}
 
 \section*{Problem 2}
-Let $n_A$ and $n_B$ be the number of products A and B produced.
+\begin{enumerate}[a)]
+    \item
 
-\begin{align*}
-    &\text{maximize } n_A \times 3 + n_B \times 5 \\
-    &\text{subject to } 
-    \begin{cases}
-        12 \times n_A + 25 \times n_B \le 30 \times 60 \\
-        5 \times n_B - 2 \times n_A \ge 0 \\
-        n_A, n_B \ge 0 \\
-    \end{cases} 
-\end{align*}
+          Let $n_{A}$ and $n_{B}$ be the number of products A and B produced.
+
+          \begin{align*}
+               & \text{maximize } n_{A} \times 3 + n_{B} \times 5 \\
+               & \text{subject to }
+              \begin{cases}
+                  12 \times n_{A} + 25 \times n_{B} \le 30 \times 60 \\
+                  2 \times n_{B} - 5 \times n_{A} \ge 0              \\
+                  n_{A}, n_{B} \ge 0                                 \\
+              \end{cases}
+          \end{align*}
+
+          \begin{center}
+              \includegraphics[width = .5 \textwidth]{graph.png}
+          \end{center}
+
+          By graphing the feasible region, we see three candidate points. The first one $I_0 = (0, 0)$ can be trivially discarded as it leads to a profit of 0\$. Let's evaluate the objective function at the two other points. At $I_1 = (72, 0)$ the profit is 216\$. To compute the coordinates of the last point, we solve the following system.
+
+          \begin{align*}
+              \systeme{
+                  12 \times n_{A} + 25 \times n_{B} = 1800,
+                  2 \times n_{B} - 5 \times n_{A} = 0
+              }
+              \implies
+              \systeme{
+                  22 \times n_{A} = 1800,
+                  n_{B} = \frac{2}{5} \times n_{A}
+              }
+              \implies
+              \systeme{
+                  n_{A} = 81.8,
+                  n_{B} = 32.7
+              }
+          \end{align*}
+
+          and at $I_2 = (81.8, 32.7)$ the profit is 408.9\$ which is the highest profit in this case. However, $n_A$ and $n_B$ are not integers. It is not specified in the exercise whether they should be or not, but as the problem is about a weekly production, we can assume that they do not need to be integer quantities as the weeks are continuous. If we wanted to optimal integer solution, we should pick $n_A = 81$ and $n_B = 33$, leading to a profit of 408\$.
+
+        \item By doubling the production capacity without modifying the other constraints, the resulting profit is doubled. The company should then pay less than 408\$ for renting an extra machine thath is profitable.
+\end{enumerate}
 
 
 \end{document}

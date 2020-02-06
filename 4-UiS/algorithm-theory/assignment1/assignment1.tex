@@ -97,132 +97,142 @@ Which can be simplified as
 
           and at $I_2 = (81.8, 32.7)$ the profit is 408.9\$ which is the highest profit in this case. However, $n_A$ and $n_B$ are not integers. It is not specified in the exercise whether they should be or not, but as the problem is about a weekly production, we can assume that they do not need to be integer quantities as the weeks are continuous. If we wanted to optimal integer solution, we should pick $n_A = 81$ and $n_B = 33$, leading to a profit of 408\$.
 
-        \item By doubling the production capacity without modifying the other constraints, the resulting profit is doubled. The company should then pay less than 408\$ for renting an extra machine thath is profitable.
+    \item By doubling the production capacity without modifying the other constraints, the resulting profit is doubled. The company should then pay less than 408\$ for renting an extra machine thath is profitable.
 \end{enumerate}
 
 \section*{Problem 3}
 
 \begin{enumerate}[a)]
     \item We want to minimize the total cost of transportation, while respecting constraints on the flights. This problem can be formulated as the following linear programming problem.
-    Let $n_{A}$ and $n_{B}$ be the number of flights flown with aircrafts A and B respectively. 
+          Let $n_{A}$ and $n_{B}$ be the number of flights flown with aircrafts A and B respectively.
 
-    \begin{align*}
-        & \text{minimize } n_{A} \times 10000 + n_{B} \times 12000 \\
-        & \text{subject to }
-       \begin{cases}
-           30 \times n_{A} + 15 \times n_{B} \ge 300 \\
-           500 \times n_{A} - 750 \times n_{B} \ge 9000 \\
-           n_{A} + n_{B} \le 16 \\
-           n_{A}, n_{B} \ge 0 \\
-       \end{cases}
-   \end{align*}
+          \begin{align*}
+               & \text{minimize } n_{A} \times 10000 + n_{B} \times 12000 \\
+               & \text{subject to }
+              \begin{cases}
+                  30 \times n_{A} + 15 \times n_{B} \ge 300    \\
+                  500 \times n_{A} - 750 \times n_{B} \ge 9000 \\
+                  n_{A} + n_{B} \le 16                         \\
+                  n_{A}, n_{B} \ge 0                           \\
+              \end{cases}
+          \end{align*}
 
-   With the graph method, we can identify the three points delimiting the feasible region. We first determine their coordinates, and then evaluate the objective function at these points.
+          With the graph method, we can identify the three points delimiting the feasible region. We first determine their coordinates, and then evaluate the objective function at these points.
 
-    \begin{align*}
-        I_1 : 
-        \systeme{
-            30x+15y=300,
-            x+y=16
-        }
-        \implies
-        \systeme[.]{
-            x=4,
-            y=12
-        }
-        \implies \text{cost } = 184000\,\$ \\
-        I_2 : 
-        \systeme{
-            30x+15y=300,
-            500x+750y=9000
-        }
-        \implies
-        \systeme[.]{
-            x=6,
-            y=8
-        }
-        \implies \text{cost } = 156000\,\$ \\
-        I_3 : 
-        \systeme{
-            x+y=16,
-            500x+750y=9000
-        }
-        \implies
-        \systeme[.]{
-            x=12,
-            y=4
-        }
-        \implies \text{cost } = 168000\,\$ \\
-    \end{align*}
+          \begin{align*}
+              I_1 :
+              \systeme{
+                  30x+15y=300,
+                  x+y=16
+              }
+              \implies
+              \systeme[.]{
+                  x=4,
+                  y=12
+              }
+              \implies \text{cost } = 184000\,\$ \\
+              I_2 :
+              \systeme{
+                  30x+15y=300,
+                  500x+750y=9000
+              }
+              \implies
+              \systeme[.]{
+                  x=6,
+                  y=8
+              }
+              \implies \text{cost } = 156000\,\$ \\
+              I_3 :
+              \systeme{
+                  x+y=16,
+                  500x+750y=9000
+              }
+              \implies
+              \systeme[.]{
+                  x=12,
+                  y=4
+              }
+              \implies \text{cost } = 168000\,\$ \\
+          \end{align*}
 
-    The lowest cost is achieved by using 6 flights with A and 8 flights with B, for a total cost of 156000\$.
-   
+          The lowest cost is achieved by using 6 flights with A and 8 flights with B, for a total cost of 156000\$.
+
 \end{enumerate}
 
 \section*{Problem 4}
 
 \begin{enumerate}[a)]
     \item Graph method
-    
-    \begin{align*}
-        I_2 : 
-        \systeme[]{
-            x_1 = 0,
-            x_2 = 0
-        }
-        \implies \text{objective } = 0 \\
-        I_3 : 
-        \systeme[]{
-            x_1 = 30,
-            x_2 = 0
-        }
-        \implies \text{objective } = 90 \\
-        I_3 : 
-        \systeme[]{
-            x_1 = 0,
-            x_2 = 25
-        }
-        \implies \text{objective } = 125 \\
-        I_1 : 
-        \systeme{
-            x_1+2x_2=50,
-            8x_1+3x_2=240
-        }
-        \implies
-        \systeme[]{
-            x_1 = \frac{490}{13},
-            x_2 = \frac{160}{13}
-        }
-        \implies \text{objective } = \frac{2270}{13} \approx 174.6 \\
-    \end{align*}
+
+          \begin{align*}
+              I_2 :
+              \systeme[]{
+                  x_1 = 0,
+                  x_2 = 0
+              }
+              \implies \text{objective } = 0                             \\
+              I_3 :
+              \systeme[]{
+                  x_1 = 30,
+                  x_2 = 0
+              }
+              \implies \text{objective } = 90                            \\
+              I_3 :
+              \systeme[]{
+                  x_1 = 0,
+                  x_2 = 25
+              }
+              \implies \text{objective } = 125                           \\
+              I_1 :
+              \systeme{
+                  x_1+2x_2=50,
+                  8x_1+3x_2=240
+              }
+              \implies
+              \systeme[]{
+                  x_1 = \frac{330}{13},
+                  x_2 = \frac{160}{13}
+              }
+              \implies \text{objective } = \frac{1790}{13} \approx 137.7 \\
+          \end{align*}
 
     \item Simplex algorithm
 
-    We first convert the linear problem its the slack form by introducing two variables $s_1$ and $s_2$.
+          We first convert the linear problem to its the slack form by introducing two slack variables $s_1$ and $s_2$.
 
-    \begin{align*}
-        &\text{maximize } z = 3x_1 + 5x_2 \\
-        &\text{subject to }
-        \begin{cases}
-            x_1 + 2x_2 + s_1 = 50 \\
-            8x_1 + 3x_2 + s_2 = 240 \\
-            x_1, x_2, s_1, s_2 \ge 0 \\
-        \end{cases}    
-    \end{align*}
+          \begin{align*}
+               & \text{maximize } z = 3x_1 + 5x_2 \\
+               & \text{subject to }
+              \begin{cases}
+                  s_1 = 50 - x_1 - 2x_2    \\
+                  s_2 = 240 - 8x_1 - 3x_2  \\
+                  x_1, x_2, s_1, s_2 \ge 0 \\
+              \end{cases}
+          \end{align*}
 
-    A basic feasible solution is $(x_1, x_2, s_1, s_2) = (0, 0, 50, 240)$. We choose $x_2$ as the entering variable as it has the highest coefficient in the objective function. To choose the leaving variable, we find the tightest constraint on $x_2$. In the first constraint, $x_2$ is limited to 25, and in the second constraint it is limited to 80. Thus the leaving variable is $s_1$ We rewrite the problem by switching the entering and the leaving variable. $x_2 = 25 - \frac{x_1}{2} - \frac{s_1}{2}$
+          A basic feasible solution is $(x_1, x_2, s_1, s_2) = (0, 0, 50, 240)$. However, this solution is not optimal as the objective function can be improved by picker a greater $x_1$ or $x_2$. To do the first pivot, we choose $x_2$ as the entering variable because it has the highest coefficient in the objective function. To choose the leaving variable, we find the tightest constraint on $x_2$. In the first constraint, $x_2$ is limited to 25, and in the second constraint it is limited to 80. Thus the leaving variable is $s_1$, and we rewrite the problem with $x_2 = 25 - \frac{x_1}{2} - \frac{s_1}{2}$
 
-    \begin{align*}
-        &\text{maximize } z = 125 + \frac{x_1}{2} - \frac{5}{2}s_1 \\
-        &\text{subject to }
-        \begin{cases}
-            50-x_1-2x_2 = s_1 \\
-            8x_1 + 3x_2 + s_2 = 240 \\
-            x_1, x_2, s_1, s_2 \ge 0 \\
-        \end{cases}    
-    \end{align*}
+          \begin{align*}
+               & \text{maximize } z = 125 + \frac{x_1}{2} - \frac{5}{2}s_1 \\
+               & \text{subject to }s
+              \begin{cases}
+                  x_2 = 25 - \frac{x_1}{2} - \frac{s_1}{2}     \\
+                  s_2 = 165 - \frac{13}{2}x_1 + \frac{3}{2}s_1 \\
+                  x_1, x_2, s_1, s_2 \ge 0                     \\
+              \end{cases}
+          \end{align*}
 
-    The only remaining entering variable able to increase the objective function is $x_1$. 
+          The only remaining entering variable able to increase the objective function is $x_1$. Constraint 1 limits it to 50 and constraint 2 limits it to $\frac{330}{13} \approx 25.4$. The second constraint being tighter than the first, we choose $s_2$ as leaving variable and rewrite the problem with $x_1=\frac{330}{13}+\frac{3}{10}s_1-\frac{2}{13}s_2$
+
+          \begin{align*}
+               & \text{maximize } z = \frac{1790}{13} - \frac{47}{20}s_1 - \frac{1}{26}s_2 \\
+               & \text{subject to }s
+              \begin{cases}
+                  x_2 = \frac{160}{13}-\frac{8}{13}s_1+\frac{1}{13}s_2 \\
+                  x_1=\frac{330}{13}+\frac{3}{10}s_1-\frac{2}{13}s_2   \\
+                  x_1, x_2, s_1, s_2 \ge 0                             \\
+              \end{cases}
+          \end{align*}
 \end{enumerate}
 
 

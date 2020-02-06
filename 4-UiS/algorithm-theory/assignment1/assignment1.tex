@@ -118,7 +118,7 @@ Which can be simplified as
           \end{align*}
 
           \begin{center}
-            \includegraphics[width = .5\textwidth]{graph2.png}
+              \includegraphics[width = .5\textwidth]{graph2.png}
           \end{center}
 
           With the graph method, we can identify the three points delimiting the feasible region. We first determine their coordinates, and then evaluate the objective function at these points.
@@ -167,9 +167,9 @@ Which can be simplified as
 
 \begin{enumerate}[a)]
     \item Graph method
-    \begin{center}
-        \includegraphics[width = .5 \textwidth]{graph3.png}
-    \end{center}
+          \begin{center}
+              \includegraphics[width = .5 \textwidth]{graph3.png}
+          \end{center}
 
           \begin{align*}
               I_1 :
@@ -241,9 +241,21 @@ Which can be simplified as
               \end{cases}
           \end{align*}
 
-          At this stage, the basic feasible solution of the objective function cannot be increased further because there is only substractions of positive terms. Therefore, the optimal solution is $z = \frac{1790}{13} \approx 137$, obtained for the variables $x_1 = \frac{330}{13}$ and $x_2 = \frac{160}{13}$.
+          At this stage, the basic feasible solution of the objective function cannot be increased further because there is only substractions of positive terms. Therefore, the optimal solution is $z = \frac{1790}{13} \approx 137.7$, obtained for the variables $x_1 = \frac{330}{13}$ and $x_2 = \frac{160}{13}$.
 
-          \item Programming method
+    \item Programming method
+
+          Not wanting to run proprietary software, this problem was solved using GNU's GLPK. , the second is the resulting execution.
+          This first image shows the program used.
+          \begin{center}
+              \includegraphics[width = .5 \textwidth]{linprog_script.png}
+          \end{center}
+          This second image shows the output of the execution.
+          \begin{center}
+            \includegraphics[width = .5 \textwidth]{linprog_run.png}
+          \end{center}
+
+    We can see that with the three techniques, we get the same results. The optimal setting of variables to maximize the objective function is $x_1 = \frac{330}{13} \approx 25.4$ and $x_2 = \frac{160}{13} \approx 12.3$, for an objective value of $z = \frac{1790}{13} \approx 137.7.$
 \end{enumerate}
 
 \end{document}

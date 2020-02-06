@@ -73,10 +73,10 @@ Which can be simplified as
           \end{align*}
 
           \begin{center}
-              \includegraphics[width = .5 \textwidth]{graph.png}
+              \includegraphics[width = .5 \textwidth]{graph1.png}
           \end{center}
 
-          By graphing the feasible region, we see three candidate points. The first one $I_0 = (0, 0)$ can be trivially discarded as it leads to a profit of 0\$. Let's evaluate the objective function at the two other points. At $I_1 = (72, 0)$ the profit is 216\$. To compute the coordinates of the last point, we solve the following system.
+          By graphing the feasible region, we see three candidate points. The first one $I_0 = (0, 0)$ can be trivially discarded as it leads to a profit of 0\$. Let's evaluate the objective function at the two other points. At $I_1 = (0, 72)$ the profit is 216\$. To compute the coordinates of the last point, we solve the following system.
 
           %\begin{align*}
           %    \systeme{
@@ -95,9 +95,9 @@ Which can be simplified as
           %    }
           %\end{align*}
 
-          and at $I_2 = (81.8, 32.7)$ the profit is 408.9\$ which is the highest profit in this case. However, $n_A$ and $n_B$ are not integers. It is not specified in the exercise whether they should be or not, but as the problem is about a weekly production, we can assume that they do not need to be integer quantities as the weeks are continuous. If we wanted to optimal integer solution, we should pick $n_A = 81$ and $n_B = 33$, leading to a profit of 408\$.
+          and at $I_2 = (24.2, 60.4)$ the profit is 374.5\$ which is the highest profit in this case. However, $n_A$ and $n_B$ are not integers. It is not specified in the exercise whether they should be or not, but as the problem is about a weekly production, we can assume that they do not need to be integer quantities as the weeks are continuous. If we wanted to restrict the problem to an integer solution, we should pick $n_A = 24$ and $n_B = 60$, leading to a profit of 372\$.
 
-    \item By doubling the production capacity without modifying the other constraints, the resulting profit is doubled. The company should then pay less than 408\$ for renting an extra machine thath is profitable.
+    \item By doubling the production capacity without modifying the other constraints, the resulting profit is doubled. The company should then pay less than 374.5\$ for renting an extra machine in order to stay profitable.
 \end{enumerate}
 
 \section*{Problem 3}
@@ -116,6 +116,10 @@ Which can be simplified as
                   n_{A}, n_{B} \ge 0                           \\
               \end{cases}
           \end{align*}
+
+          \begin{center}
+            \includegraphics[width = .5\textwidth]{graph2.png}
+          \end{center}
 
           With the graph method, we can identify the three points delimiting the feasible region. We first determine their coordinates, and then evaluate the objective function at these points.
 
@@ -163,15 +167,18 @@ Which can be simplified as
 
 \begin{enumerate}[a)]
     \item Graph method
+    \begin{center}
+        \includegraphics[width = .5 \textwidth]{graph3.png}
+    \end{center}
 
           \begin{align*}
-              I_2 :
+              I_1 :
               \systeme[]{
                   x_1 = 0,
                   x_2 = 0
               }
               \implies \text{objective } = 0                             \\
-              I_3 :
+              I_2 :
               \systeme[]{
                   x_1 = 30,
                   x_2 = 0
@@ -183,7 +190,7 @@ Which can be simplified as
                   x_2 = 25
               }
               \implies \text{objective } = 125                           \\
-              I_1 :
+              I_4 :
               \systeme{
                   x_1+2x_2=50,
                   8x_1+3x_2=240
@@ -233,7 +240,10 @@ Which can be simplified as
                   x_1, x_2, s_1, s_2 \ge 0                             \\
               \end{cases}
           \end{align*}
-\end{enumerate}
 
+          At this stage, the basic feasible solution of the objective function cannot be increased further because there is only substractions of positive terms. Therefore, the optimal solution is $z = \frac{1790}{13} \approx 137$, obtained for the variables $x_1 = \frac{330}{13}$ and $x_2 = \frac{160}{13}$.
+
+          \item Programming method
+\end{enumerate}
 
 \end{document}

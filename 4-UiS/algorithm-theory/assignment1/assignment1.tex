@@ -30,29 +30,29 @@ We can compute profits for each of the products
     profit(Y) = 300 - (\frac{20}{60} \times 100 + \frac{30}{60} \times 20) = \frac{770}{3}
 \end{align*}
 
-And formulate the problem as a Linear Programming problem. Let $n_X$ and $n_Y$ be the number of products X and Y produced.
+And formulate the problem as a linear programming problem. Let $a$ and $b$ be the number of products X and Y produced.
 
 \begin{align*}
-     & \text{maximize } n_X \times profit(X) + n_Y \times profit(Y) \\
+     & \text{maximize } a \times profit(X) + b \times profit(Y) \\
      & \text{subject to }
     \begin{cases}
-        n_X \times time_{machine}(X) + n_Y \times time_{machine}(Y) \le 40 \times 60     \\
-        n_X \times time_{craftsman}(X) + n_Y \times time_{craftsman}(Y) \le 35 \times 60 \\
-        n_X \ge 10                                                                       \\
-        n_X, n_Y \ge 0                                                                   \\
+        a \times time_{machine}(X) + b \times time_{machine}(Y) \le 40 \times 60     \\
+        a \times time_{craftsman}(X) + b \times time_{craftsman}(Y) \le 35 \times 60 \\
+        a \ge 10                                                                       \\
+        a, b \ge 0                                                                   \\
     \end{cases}
 \end{align*}
 
 Which can be simplified as
 
 \begin{align*}
-     & \text{maximize } n_X \times \frac{505}{3} + n_Y \times \frac{770}{3} \\
+     & \text{maximize } \frac{505}{3}a + \frac{770}{3}b \\
      & \text{subject to }
     \begin{cases}
-        15 \times n_X + 20 \times n_Y \le 2400 \\
-        20 \times n_X + 30 \times n_Y \le 2100 \\
-        n_X \ge 10                             \\
-        n_Y \ge 0                              \\
+        15 a + 20 b \le 2400 \\
+        20 a + 30 b \le 2100 \\
+        a \ge 10                             \\
+        b \ge 0                              \\
     \end{cases}
 \end{align*}
 
@@ -60,15 +60,15 @@ Which can be simplified as
 \begin{enumerate}[a)]
     \item
 
-          Let $n_{A}$ and $n_{B}$ be the number of products A and B produced.
+          Let $x$ and $y$ be the number of products A and B produced.
 
           \begin{align*}
-               & \text{maximize } n_{A} \times 3 + n_{B} \times 5 \\
+               & \text{maximize } 3x + 5y \\
                & \text{subject to }
               \begin{cases}
-                  12 \times n_{A} + 25 \times n_{B} \le 30 \times 60 \\
-                  2 \times n_{B} - 5 \times n_{A} \ge 0              \\
-                  n_{A}, n_{B} \ge 0                                 \\
+                  12 x + 25 y \le 30 \times 60 \\
+                  2 y - 5 x \ge 0              \\
+                  x,y \ge 0                                 \\
               \end{cases}
           \end{align*}
 
@@ -78,24 +78,24 @@ Which can be simplified as
 
           By graphing the feasible region, we see three candidate points. The first one $I_0 = (0, 0)$ can be trivially discarded as it leads to a profit of 0\$. Let's evaluate the objective function at the two other points. At $I_1 = (0, 72)$ the profit is 216\$. To compute the coordinates of the last point, we solve the following system.
 
-          %\begin{align*}
-          %    \systeme{
-          %        12 \times n_{A} + 25 \times n_{B} = 1800,
-          %        2 \times n_{B} - 5 \times n_{A} = 0
-          %    }
-          %    \implies
-          %    \systeme{
-          %        22 \times n_{A} = 1800,
-          %        n_{B} = \frac{2}{5} \times n_{A}
-          %    }
-          %    \implies
-          %    \systeme{
-          %        n_{A} = 81.8,
-          %        n_{B} = 32.7
-          %    }
-          %\end{align*}
+          \begin{align*}
+              \systeme{
+                  12 x + 25 y = 1800,
+                  2 y - 5 x = 0
+              }
+              \implies
+              \systeme{
+                  22 x = 1800,
+                  y = \frac{2}{5} x
+              }
+              \implies
+              \systeme{
+                  x = 81.8,
+                  y = 32.7
+              }
+          \end{align*}
 
-          and at $I_2 = (24.2, 60.4)$ the profit is 374.5\$ which is the highest profit in this case. However, $n_A$ and $n_B$ are not integers. It is not specified in the exercise whether they should be or not, but as the problem is about a weekly production, we can assume that they do not need to be integer quantities as the weeks are continuous. If we wanted to restrict the problem to an integer solution, we should pick $n_A = 24$ and $n_B = 60$, leading to a profit of 372\$.
+          and at $I_2 = (24.2, 60.4)$ the profit is 374.5\$ which is the highest profit in this case. However, $x$ and $y$ are not integers. It is not specified in the exercise whether they should be or not, but as the problem is about a weekly production, we can assume that they do not need to be integer quantities as the weeks are continuous. If we wanted to restrict the problem to an integer solution, we should pick $x = 24$ and $y = 60$, leading to a profit of 372\$.
 
     \item By doubling the production capacity without modifying the other constraints, the resulting profit is doubled. The company should then pay less than 374.5\$ for renting an extra machine in order to stay profitable.
 \end{enumerate}
@@ -104,16 +104,16 @@ Which can be simplified as
 
 \begin{enumerate}[a)]
     \item We want to minimize the total cost of transportation, while respecting constraints on the flights. This problem can be formulated as the following linear programming problem.
-          Let $n_{A}$ and $n_{B}$ be the number of flights flown with aircrafts A and B respectively.
+          Let $x$ and $y$ be the number of flights flown with aircrafts A and B respectively.
 
           \begin{align*}
-               & \text{minimize } n_{A} \times 10000 + n_{B} \times 12000 \\
+               & \text{minimize } 10000x + 12000y \\
                & \text{subject to }
               \begin{cases}
-                  30 \times n_{A} + 15 \times n_{B} \ge 300    \\
-                  500 \times n_{A} - 750 \times n_{B} \ge 9000 \\
-                  n_{A} + n_{B} \le 16                         \\
-                  n_{A}, n_{B} \ge 0                           \\
+                  30 x + 15 y \ge 300    \\
+                  500 x - 750 y \ge 9000 \\
+                  x + y \le 16                         \\
+                  x, y \ge 0                           \\
               \end{cases}
           \end{align*}
 

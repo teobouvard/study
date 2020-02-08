@@ -1,6 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
+
 def problem_2():
     x = np.arange(-10, 40)
     y1 = (30*60 - 12*x)/25
@@ -9,10 +10,9 @@ def problem_2():
     fig, ax = plt.subplots()
     ax.plot(x, y1, label='Constraint 1')
     ax.plot(x, y2, label='Constraint 2')
-    
 
     constraints = x >= 0
-    constraints &= y1>y2
+    constraints &= y1 > y2
     ax.fill_between(x, y1, y2, where=constraints, color='grey', alpha=0.5)
 
     intersections = np.array([(0, 0), (0, 72), (3600/149, 9000/149)])
@@ -25,9 +25,10 @@ def problem_2():
     ax.axvline(0, color='black')
 
     ax.legend()
-    ax.set(xlabel='x_1', ylabel='x_2')
+    ax.set(xlabel='x', ylabel='y')
     fig.savefig('graph1.png')
     plt.show()
+
 
 def problem_3():
     x = np.arange(-5, 20)
@@ -39,7 +40,6 @@ def problem_3():
     ax.plot(x, y1, label='Constraint 1')
     ax.plot(x, y2, label='Constraint 2')
     ax.plot(x, y3, label='Constraint 3')
-    
 
     intersections = np.array([(4, 12), (6, 8), (12, 4)])
     ax.scatter(intersections.T[0], intersections.T[1], c='red', marker='o', zorder=5)
@@ -52,9 +52,10 @@ def problem_3():
     ax.axvline(0, color='black')
 
     ax.legend()
-    ax.set(xlabel='x_1', ylabel='x_2')
+    ax.set(xlabel='x', ylabel='y')
     fig.savefig('graph2.png')
     plt.show()
+
 
 def problem_4():
     x = np.arange(-5, 40, step=0.01)
@@ -64,7 +65,7 @@ def problem_4():
     fig, ax = plt.subplots()
     ax.plot(x, y1, label='Constraint 1')
     ax.plot(x, y2, label='Constraint 2')
-    
+
     intersections = np.array([(0, 0), (30, 0), (330/13, 160/13), (0, 25)])
     ax.scatter(intersections.T[0], intersections.T[1], c='red', marker='o', zorder=5)
     ax.fill(intersections.T[0], intersections.T[1], alpha=0.5, color='gray')
@@ -81,7 +82,8 @@ def problem_4():
     fig.savefig('graph3.png')
     plt.show()
 
+
 if __name__ == '__main__':
-    #problem_2()
-    #problem_3()
+    problem_2()
+    problem_3()
     problem_4()

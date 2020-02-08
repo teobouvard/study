@@ -60,7 +60,7 @@ Which can be simplified as
 \begin{enumerate}[a)]
     \item
 
-          Let $x$ and $y$ be the number of products A and B produced.
+          Let $x$ and $y$ be the number of products A and B produced. The problem can be formulated as such.
 
           \begin{align*}
                & \text{maximize } 3x + 5y \\
@@ -76,28 +76,29 @@ Which can be simplified as
               \includegraphics[width = .5 \textwidth]{graph1.png}
           \end{center}
 
-          By graphing the feasible region, we see three candidate points. The first one $I_0 = (0, 0)$ can be trivially discarded as it leads to a profit of 0\$. Let's evaluate the objective function at the two other points. At $I_1 = (0, 72)$ the profit is 216\$. To compute the coordinates of the last point, we solve the following system.
+          By graphing the feasible region, we see three candidate points. The first one $I_0 = (0, 0)$ can be trivially discarded as it leads to a profit of 0\$. Let's evaluate the objective function at the two other points. At $I_1 = (0, 72)$ the profit is 360\$. To compute the coordinates of the last point, we solve the following system of equations.
 
           \begin{align*}
+            I_2 : 
               \systeme{
                   12 x + 25 y = 1800,
                   2 y - 5 x = 0
               }
               \implies
               \systeme{
-                  22 x = 1800,
-                  y = \frac{2}{5} x
+                  \frac{149}{2}x = 1800,
+                  y = \frac{5}{2} x
               }
               \implies
               \systeme{
-                  x = 81.8,
-                  y = 32.7
+                  x = \frac{3600}{149} \approx 24.2,
+                  y = \frac{9000}{149} \approx 60.4
               }
           \end{align*}
 
-          and at $I_2 = (24.2, 60.4)$ the profit is 374.5\$ which is the highest profit in this case. However, $x$ and $y$ are not integers. It is not specified in the exercise whether they should be or not, but as the problem is about a weekly production, we can assume that they do not need to be integer quantities as the weeks are continuous. If we wanted to restrict the problem to an integer solution, we should pick $x = 24$ and $y = 60$, leading to a profit of 372\$.
+          and at $I_2 = (24.2, 60.4)$ the profit is 374.5\$ which is the highest profit in this case. However, $x$ and $y$ are not integers. It is not specified in the exercise whether they should be or not, but as the problem is about a weekly production, we can assume that they do not need to be integer quantities because weeks are continuous. If we wanted to restrict the problem to an integer solution, we should pick $x = 24$ and $y = 60$, leading to a profit of 372\$.
 
-    \item By doubling the production capacity without modifying the other constraints, the resulting profit is doubled. The company should then pay less than 374.5\$ for renting an extra machine in order to stay profitable.
+    \item By doubling the production capacity without modifying the other constraints, the resulting profit is doubled. The company should then pay less than 374.5\$ for renting an extra machine in order to stay profitable. (Assuming integer values, the rent should not exceed 372\$).
 \end{enumerate}
 
 \section*{Problem 3}
@@ -111,7 +112,7 @@ Which can be simplified as
                & \text{subject to }
               \begin{cases}
                   30 x + 15 y \ge 300    \\
-                  500 x - 750 y \ge 9000 \\
+                  500 x + 750 y \ge 9000 \\
                   x + y \le 16                         \\
                   x, y \ge 0                           \\
               \end{cases}
@@ -217,7 +218,7 @@ Which can be simplified as
               \end{cases}
           \end{align*}
 
-          A basic feasible solution is $(x_1, x_2, s_1, s_2) = (0, 0, 50, 240)$. However, this solution is not optimal as the objective function can be improved by picker a greater $x_1$ or $x_2$. To do the first pivot, we choose $x_2$ as the entering variable because it has the highest coefficient in the objective function. To choose the leaving variable, we find the tightest constraint on $x_2$. In the first constraint, $x_2$ is limited to 25, and in the second constraint it is limited to 80. Thus the leaving variable is $s_1$, and we rewrite the problem with $x_2 = 25 - \frac{x_1}{2} - \frac{s_1}{2}$
+          A basic feasible solution is $(x_1, x_2, s_1, s_2) = (0, 0, 50, 240)$. However, this solution is not optimal as the objective function can be improved by picking a greater $x_1$ or $x_2$. To do the first pivot, we choose $x_2$ as the entering variable because it has the highest coefficient in the objective function. To choose the leaving variable, we find the tightest constraint on $x_2$. In the first constraint, $x_2$ is limited to 25, and in the second constraint it is limited to 80. Thus the leaving variable is $s_1$, and we rewrite the problem with $x_2 = 25 - \frac{x_1}{2} - \frac{s_1}{2}$
 
           \begin{align*}
                & \text{maximize } z = 125 + \frac{x_1}{2} - \frac{5}{2}s_1 \\
@@ -241,11 +242,11 @@ Which can be simplified as
               \end{cases}
           \end{align*}
 
-          At this stage, the basic feasible solution of the objective function cannot be increased further because there is only substractions of positive terms. Therefore, the optimal solution is $z = \frac{1790}{13} \approx 137.7$, obtained for the variables $x_1 = \frac{330}{13}$ and $x_2 = \frac{160}{13}$.
+          At this stage, the basic feasible solution of the objective function cannot be increased further because there is only substractions of positive terms after the first constant term. Therefore, the optimal solution is $z = \frac{1790}{13} \approx 137.7$, obtained for the variables $x_1 = \frac{330}{13}$ and $x_2 = \frac{160}{13}$.
 
     \item Programming method
 
-          Not wanting to run proprietary software, this problem was solved using GNU's GLPK. , the second is the resulting execution.
+          Not wanting to run proprietary software, this problem was solved using GNU's GLPK.
           This first image shows the program used.
           \begin{center}
               \includegraphics[width = .5 \textwidth]{linprog_script.png}
@@ -255,7 +256,7 @@ Which can be simplified as
             \includegraphics[width = .5 \textwidth]{linprog_run.png}
           \end{center}
 
-    We can see that with the three techniques, we get the same results. The optimal setting of variables to maximize the objective function is $x_1 = \frac{330}{13} \approx 25.4$ and $x_2 = \frac{160}{13} \approx 12.3$, for an objective value of $z = \frac{1790}{13} \approx 137.7.$
+    We can see that we get the same results with the three techniques. The optimal setting of variables to maximize the objective function is $x_1 = \frac{330}{13} \approx 25.4$ and $x_2 = \frac{160}{13} \approx 12.3$, for an objective value of $z = \frac{1790}{13} \approx 137.7.$
 \end{enumerate}
 
 \end{document}

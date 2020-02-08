@@ -8,14 +8,14 @@ import (
 // Check adds basic error display, should do better error checking
 func Check(err error) {
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "[\033[31;1m ERROR \033[0m] %v", err)
+		fmt.Fprintf(os.Stderr, "[\033[31;1m ERROR \033[0m] %v\n", err)
 		os.Exit(0)
 	}
 }
 
 // Raise implements basice exception raising
 func Raise(message string) {
-	fmt.Fprintf(os.Stderr, "[\033[31;1m ERROR \033[0m] %v", message)
+	fmt.Fprintf(os.Stderr, "[\033[31;1m ERROR \033[0m] %v\n", message)
 	os.Exit(0)
 }
 

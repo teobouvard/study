@@ -3,6 +3,8 @@
 package detector
 
 import (
+	"log"
+	"sync"
 	"time"
 )
 
@@ -26,6 +28,7 @@ type EvtFailureDetector struct {
 	hbIn   chan Heartbeat   // channel for receiving incoming heartbeat messages
 	stop   chan struct{}    // channel for signaling a stop request to the main run loop
 
+	mutex       sync.Mutex
 	testingHook func() // DO NOT REMOVE THIS LINE. A no-op when not testing.
 }
 
@@ -66,6 +69,8 @@ func NewEvtFailureDetector(id int, nodeIDs []int, sr SuspectRestorer, delta time
 		hbIn:   make(chan Heartbeat, 8),
 		stop:   make(chan struct{}),
 
+		mutex: sync.Mutex{},
+
 		testingHook: func() {}, // DO NOT REMOVE THIS LINE. A no-op when not testing.
 	}
 }
@@ -81,11 +86,15 @@ func (e *EvtFailureDetector) Start() {
 			e.testingHook() // DO NOT REMOVE THIS LINE. A no-op when not testing.
 			select {
 			case hb := <-e.hbIn:
+				log.Printf("Received Heartbeat\n")
+				e.mutex.Lock()
 				e.handleHeartbeat(hb)
-				//log.Printf("Received Heartbeat\n")
+				e.mutex.Unlock()
 			case <-e.timeoutSignal.C:
-				//log.Printf("Failure detector timeout\n")
+				log.Printf("Failure detector timeout\n")
+				e.mutex.Lock()
 				e.timeout()
+				e.mutex.Unlock()
 			case <-e.stop:
 				return
 			}
@@ -108,7 +117,7 @@ func (e *EvtFailureDetector) timeout() {
 	for i := range e.nodeIDs {
 		if e.alive[i] && (e.alive[i] == e.suspected[i]) {
 			e.delay += e.delta
-			//log.Printf("Increasing delay\n")
+			log.Printf("Increasing delay\n")
 			break
 		}
 	}

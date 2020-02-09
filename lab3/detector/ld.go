@@ -3,6 +3,7 @@
 package detector
 
 import (
+	"log"
 	"sort"
 )
 
@@ -54,9 +55,8 @@ func (m *MonLeaderDetector) Leader() int {
 // the suspect indication result in a leader change the leader detector should
 // this publish this change its subscribers.
 func (m *MonLeaderDetector) Suspect(id int) {
-	// TODO(student): Implement
 	m.suspected[id] = true
-	//log.Printf("Node [%d] is suspected\n", id)
+	log.Printf("Node [%d] is suspected\n", id)
 	m.publish()
 }
 

@@ -3,7 +3,6 @@
 package detector
 
 import (
-	"log"
 	"sync"
 	"time"
 )
@@ -86,12 +85,12 @@ func (e *EvtFailureDetector) Start() {
 			e.testingHook() // DO NOT REMOVE THIS LINE. A no-op when not testing.
 			select {
 			case hb := <-e.hbIn:
-				log.Printf("Received Heartbeat\n")
+				//log.Printf("Received Heartbeat\n")
 				e.mutex.Lock()
 				e.handleHeartbeat(hb)
 				e.mutex.Unlock()
 			case <-e.timeoutSignal.C:
-				log.Printf("Failure detector timeout\n")
+				//log.Printf("Failure detector timeout\n")
 				e.mutex.Lock()
 				e.timeout()
 				e.mutex.Unlock()
@@ -117,7 +116,7 @@ func (e *EvtFailureDetector) timeout() {
 	for i := range e.nodeIDs {
 		if e.alive[i] && (e.alive[i] == e.suspected[i]) {
 			e.delay += e.delta
-			log.Printf("Increasing delay\n")
+			//log.Printf("Increasing delay\n")
 			break
 		}
 	}

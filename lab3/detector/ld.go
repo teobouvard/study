@@ -3,8 +3,8 @@
 package detector
 
 import (
-	"log"
 	"sort"
+	"sync"
 )
 
 // A MonLeaderDetector represents a Monarchical Eventual Leader Detector as
@@ -12,11 +12,12 @@ import (
 // Christian Cachin, Rachid Guerraoui, and Luís Rodrigues: "Introduction to
 // Reliable and Secure Distributed Programming" Springer, 2nd edition, 2011.
 type MonLeaderDetector struct {
-	// TODO(student): Add needed fields
 	nodeIDs     []int
 	suspected   map[int]bool
 	leader      int
 	subscribers []chan int
+
+	mutex sync.Mutex
 }
 
 // NewMonLeaderDetector returns a new Monarchical Eventual Leader Detector
@@ -27,6 +28,7 @@ func NewMonLeaderDetector(nodeIDs []int) *MonLeaderDetector {
 		suspected:   make(map[int]bool),
 		leader:      UnknownID,
 		subscribers: make([]chan int, len(nodeIDs)),
+		mutex:       sync.Mutex{},
 	}
 
 	m.leader = m.Leader()
@@ -55,8 +57,10 @@ func (m *MonLeaderDetector) Leader() int {
 // the suspect indication result in a leader change the leader detector should
 // this publish this change its subscribers.
 func (m *MonLeaderDetector) Suspect(id int) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
 	m.suspected[id] = true
-	log.Printf("Node [%d] is suspected\n", id)
+	//log.Printf("Node [%d] is suspected\n", id)
 	m.publish()
 }
 
@@ -64,6 +68,8 @@ func (m *MonLeaderDetector) Suspect(id int) {
 // the restore indication result in a leader change the leader detector should
 // this publish this change its subscribers.
 func (m *MonLeaderDetector) Restore(id int) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
 	delete(m.suspected, id)
 	m.publish()
 }
@@ -74,7 +80,9 @@ func (m *MonLeaderDetector) Restore(id int) {
 // slow subscribers. Note: Subscribe returns a unique channel to every
 // subscriber; it is not meant to be shared.
 func (m *MonLeaderDetector) Subscribe() <-chan int {
-	sub := make(chan int, 2)
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	sub := make(chan int, 10)
 	m.subscribers = append(m.subscribers, sub)
 	return sub
 }

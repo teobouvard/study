@@ -3,8 +3,8 @@ package network
 import (
 	"bytes"
 	"encoding/gob"
-	"fmt"
 	"net"
+	"strings"
 
 	"../detector"
 )
@@ -33,16 +33,18 @@ func (u *Server) Listen() chan detector.Heartbeat {
 		for {
 			n, _, err := u.conn.ReadFromUDP(buf[:])
 			if err != nil {
-				fmt.Println(err)
-			} else {
-				var hb detector.Heartbeat
-				decoder := gob.NewDecoder(bytes.NewReader(buf[:n]))
-				err := decoder.Decode(&hb)
-				if err != nil {
-					fmt.Println(err)
+				if strings.Contains(err.Error(), "use of closed network connection") {
+					return
 				}
-				u.notify <- hb
+				panic(err)
 			}
+			var hb detector.Heartbeat
+			decoder := gob.NewDecoder(bytes.NewReader(buf[:n]))
+			err = decoder.Decode(&hb)
+			if err != nil {
+				panic(err)
+			}
+			u.notify <- hb
 		}
 	}()
 
@@ -58,4 +60,8 @@ func (u *Server) Send(addr *net.UDPAddr, hb detector.Heartbeat) (n int, err erro
 	}
 	n, err = u.conn.WriteTo(buf.Bytes(), addr)
 	return n, err
+}
+
+func (u *Server) Stop() {
+	u.conn.Close()
 }

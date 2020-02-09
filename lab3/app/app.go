@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/signal"
 	"time"
 
 	"../detector"
@@ -59,15 +60,29 @@ func (app *App) Run() {
 	app.fd.Start()
 	sub := app.ld.Subscribe()
 	notify := app.server.Listen()
-	for {
-		select {
-		case leader := <-sub:
-			log.Printf("Change of leader : Node [%d] elected.\n", leader)
-		case hb := <-notify:
-			app.fd.DeliverHeartbeat(hb)
-		case hb := <-app.hbSend:
-			addr := app.registry[hb.To]
-			app.server.Send(addr, hb)
+
+	sig := make(chan os.Signal, 10)
+	signal.Notify(sig, os.Interrupt)
+
+	go func() {
+		for {
+			select {
+			case leader := <-sub:
+				log.Printf("Change of leader : Node [%d] elected.\n", leader)
+			case hb := <-notify:
+				app.fd.DeliverHeartbeat(hb)
+			case hb := <-app.hbSend:
+				addr := app.registry[hb.To]
+				_, err := app.server.Send(addr, hb)
+				if err != nil {
+					panic(err)
+				}
+			}
 		}
-	}
+	}()
+
+	<-sig
+	log.Printf("Received interrupt, shutting down app for node %d\n", app.id)
+	app.server.Stop()
+	app.fd.Stop()
 }

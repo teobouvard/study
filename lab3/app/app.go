@@ -73,8 +73,8 @@ func (app *App) Run() {
 				app.fd.DeliverHeartbeat(hb)
 			case hb := <-app.hbSend:
 				addr := app.registry[hb.To]
-				_, err := app.server.Send(addr, hb)
-				if err != nil {
+				n, err := app.server.Send(addr, hb)
+				if err != nil || n <= 0 {
 					panic(err)
 				}
 			}

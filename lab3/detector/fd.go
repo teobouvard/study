@@ -3,6 +3,7 @@
 package detector
 
 import (
+	"sync"
 	"time"
 )
 
@@ -25,6 +26,8 @@ type EvtFailureDetector struct {
 	hbSend chan<- Heartbeat // channel for sending outgoing heartbeat messages
 	hbIn   chan Heartbeat   // channel for receiving incoming heartbeat messages
 	stop   chan struct{}    // channel for signaling a stop request to the main run loop
+
+	mux sync.Mutex
 
 	testingHook func() // DO NOT REMOVE THIS LINE. A no-op when not testing.
 }
@@ -66,6 +69,8 @@ func NewEvtFailureDetector(id int, nodeIDs []int, sr SuspectRestorer, delta time
 		hbIn:   make(chan Heartbeat, 8),
 		stop:   make(chan struct{}),
 
+		mux: sync.Mutex{},
+
 		testingHook: func() {}, // DO NOT REMOVE THIS LINE. A no-op when not testing.
 	}
 }
@@ -82,10 +87,14 @@ func (e *EvtFailureDetector) Start() {
 			select {
 			case hb := <-e.hbIn:
 				//log.Printf("Received Heartbeat\n")
+				e.mux.Lock()
 				e.handleHeartbeat(hb)
+				e.mux.Unlock()
 			case <-e.timeoutSignal.C:
 				//log.Printf("Failure detector timeout\n")
+				e.mux.Lock()
 				e.timeout()
+				e.mux.Unlock()
 			case <-e.stop:
 				return
 			}

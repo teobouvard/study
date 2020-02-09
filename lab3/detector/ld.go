@@ -27,14 +27,11 @@ func NewMonLeaderDetector(nodeIDs []int) *MonLeaderDetector {
 		nodeIDs:     nodeIDs,
 		suspected:   make(map[int]bool),
 		leader:      UnknownID,
-		subscribers: make([]chan int, len(nodeIDs)),
+		subscribers: []chan int{},
 		mutex:       sync.Mutex{},
 	}
 
 	m.leader = m.Leader()
-	for i := range m.subscribers {
-		m.subscribers[i] = make(chan int, 10)
-	}
 
 	return m
 }

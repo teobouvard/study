@@ -15,7 +15,7 @@ type MonLeaderDetector struct {
 	nodeIDs     []int
 	suspected   map[int]bool
 	leader      int
-	subscribers map[int]chan int
+	subscribers []chan int
 
 	mutex sync.Mutex
 }
@@ -27,13 +27,13 @@ func NewMonLeaderDetector(nodeIDs []int) *MonLeaderDetector {
 		nodeIDs:     nodeIDs,
 		suspected:   make(map[int]bool),
 		leader:      UnknownID,
-		subscribers: make(map[int]chan int, len(nodeIDs)),
+		subscribers: make([]chan int, len(nodeIDs)),
 		mutex:       sync.Mutex{},
 	}
 
 	m.leader = m.Leader()
 	for i := range m.subscribers {
-		m.subscribers[i] = make(chan int, len(nodeIDs))
+		m.subscribers[i] = make(chan int, 10)
 	}
 
 	return m
@@ -79,18 +79,24 @@ func (m *MonLeaderDetector) Restore(id int) {
 // UnknownID if all nodes become suspected. Subscribe will drop publications to
 // slow subscribers. Note: Subscribe returns a unique channel to every
 // subscriber; it is not meant to be shared.
-func (m *MonLeaderDetector) Subscribe(id int) <-chan int {
+func (m *MonLeaderDetector) Subscribe() <-chan int {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 	sub := make(chan int, 10)
-	m.subscribers[id] = sub
+	m.subscribers = append(m.subscribers, sub)
 	return sub
 }
 
-func (m *MonLeaderDetector) Unsubscribe(id int) {
+func (m *MonLeaderDetector) Unsubscribe(c <-chan int) {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
-	delete(m.subscribers, id)
+	toDelete := -1
+	for i, sub := range m.subscribers {
+		if sub == c {
+			toDelete = i
+		}
+	}
+	m.subscribers = append(m.subscribers[:toDelete], m.subscribers[toDelete+1:]...)
 }
 
 func (m *MonLeaderDetector) publish() {

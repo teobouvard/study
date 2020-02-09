@@ -58,7 +58,7 @@ func NewApp(id int, configFile string) *App {
 func (app *App) Run() {
 	log.Printf("Starting up app for node %d\n", app.id)
 	app.fd.Start()
-	sub := app.ld.Subscribe(app.id)
+	sub := app.ld.Subscribe()
 	notify := app.server.Listen()
 
 	sig := make(chan os.Signal, 10)
@@ -83,7 +83,7 @@ func (app *App) Run() {
 
 	<-sig
 	log.Printf("Received interrupt, shutting down app for node %d\n", app.id)
-	app.ld.Unsubscribe(app.id)
+	app.ld.Unsubscribe(sub)
 	app.server.Stop()
 	app.fd.Stop()
 }

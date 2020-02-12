@@ -29,6 +29,19 @@ def problem_1():
     ax.legend()
     fig.savefig('graph3.png')
 
+def problem_2():
+    learning_rate = 0.5
+    theta_i = 1
+    theta = [1, 1, 1]
+    threshold = 1
+    y = [1, 1, 2, 2]
+    N = len(y)
+    i = 0
+    while learning_rate*() > threshold:
+        i = (i+1)%N
+        learning_rate = learning_rate/i
+        theta = theta 
+
 
 if __name__ == '__main__':
     problem_1()

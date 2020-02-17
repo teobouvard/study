@@ -309,7 +309,55 @@
 \section*{Problem 3}
 
 \begin{enumerate}[a)]
-    \item labels
+    \item Samples are labeled as +1 if they belong to $\omega_1$ and -1 if they belong to $\omega_2$.
+
+          \begin{align*}
+              y_1 = 1 &  & y_2 = 1 &  & y_3 = -1
+          \end{align*}
+
+    \item For each sample, we draw the decision boundary $\bm{\theta}_T x_i = 0$
+
+          \begin{figure}[h]
+              \centering
+              \begin{minipage}[t]{0.32\textwidth}
+                  \centering
+                  \includegraphics[width=\textwidth]{graph5.png}
+              \end{minipage}\hfill
+              \begin{minipage}[t]{0.32\textwidth}
+                  \centering
+                  \includegraphics[width=\textwidth]{graph7.png}
+              \end{minipage}\hfill
+              \begin{minipage}[t]{0.32\textwidth}
+                  \centering
+                  \includegraphics[width=\textwidth]{graph9.png}
+              \end{minipage}
+          \end{figure}
+
+    \item If we colour the positive side of the discriminant function in red and the negative side in blue, we get the following regions.
+
+          \begin{figure}[h]
+              \centering
+              \begin{minipage}[t]{0.32\textwidth}
+                  \centering
+                  \includegraphics[width=\textwidth]{graph6.png}
+              \end{minipage}\hfill
+              \begin{minipage}[t]{0.32\textwidth}
+                  \centering
+                  \includegraphics[width=\textwidth]{graph8.png}
+              \end{minipage}\hfill
+              \begin{minipage}[t]{0.32\textwidth}
+                  \centering
+                  \includegraphics[width=\textwidth]{graph10.png}
+              \end{minipage}
+          \end{figure}
+        
+          The solution region lies between the decision boundaries shown in the first and the third plot.
+
+    \item We apply the Batch Perceptron algorithm
+    
+    
+
+
 \end{enumerate}
 
 \end{document}

@@ -1,6 +1,7 @@
 \documentclass[a4paper, 10pt, twoside]{article}
 \usepackage[left=2cm, right=2cm, top=2cm, bottom=3cm]{geometry}
 \usepackage{amsmath}
+\usepackage{bm}
 \usepackage[shortlabels]{enumitem}
 \usepackage{bbold}
 \usepackage{cases}
@@ -97,8 +98,266 @@
           \end{center}
           We can see that decreasing the weight of a training sample moves the decison boundary closer to it.
 
-    \item We now compute $\theta$ with the LMS-method. For the sake of clarity, we will note the threshold value $\tau$, the learning rate $\mu$
+    \item We now compute $\theta$ with the LMS-method. We use $\mu$ to denote the the learning rate. The descent vector at each iteration is denoted $\nabla$.
+
+          Initialization
+
+          \begin{align*}
+              \mu^{(0)} = 0.5
+               &  &
+              \bm{\theta}^{(0)} =
+              \begin{bmatrix}
+                  1 \\ 1 \\ 1
+              \end{bmatrix}
+               &  &
+              \theta = 1
+          \end{align*}
+
+          Iteration 1
+
+          \begin{align*}
+              \nabla
+               & =
+              \mu^{(1)}(y_1-\bm{\theta}^{(0)T}y_1x_1)y_1x_1 \\
+               & =
+              \frac{0.5}{1}
+              \left(
+              \begin{bmatrix}
+                      -1
+                  \end{bmatrix}
+              -
+              \begin{bmatrix}
+                      1 & 1 & 1
+                  \end{bmatrix}
+              \begin{bmatrix}
+                      -1
+                  \end{bmatrix}
+              \begin{bmatrix}
+                      1 \\ 2 \\ 1
+                  \end{bmatrix}
+              \right)
+              \begin{bmatrix}
+                  -1
+              \end{bmatrix}
+              \begin{bmatrix}
+                  1 \\ 2 \\ 1
+              \end{bmatrix}                    \\
+               & =
+              -\frac{3}{2}
+              \begin{bmatrix}
+                  1 \\ 2 \\ 1
+              \end{bmatrix}
+          \end{align*}
+
+          \begin{align*}
+              \begin{vmatrix}
+                  \nabla
+              \end{vmatrix} = \frac{3\sqrt{6}}{2} \approx 3.7 > \theta
+          \end{align*}
+
+          $\begin{vmatrix} \nabla \end{vmatrix}$ is greater than the threshold, so $ \bm{\theta} $ is updated.
+
+          \begin{align*}
+              \bm{\theta}^{(1)}
+               & = \bm{\theta}^{(0)} + \nabla \\
+               & = -\frac{1}{2}
+              \begin{bmatrix}
+                  1 \\ 4 \\ 1
+              \end{bmatrix}
+          \end{align*}
+
+          Iteration 2
+
+          \begin{align*}
+              \nabla
+               & =
+              \mu^{(2)}(y_2-\bm{\theta}^{(1)T}y_2x_2)y_2x_2 \\
+               & =
+              \frac{0.5}{2}
+              \left(
+              \begin{bmatrix}
+                      -1
+                  \end{bmatrix}
+              -
+              \begin{bmatrix}
+                      -\frac{1}{2} & -2 & -\frac{1}{2}
+                  \end{bmatrix}
+              \begin{bmatrix}
+                      -1
+                  \end{bmatrix}
+              \begin{bmatrix}
+                      2 \\ 0 \\ 1
+                  \end{bmatrix}
+              \right)
+              \begin{bmatrix}
+                  -1
+              \end{bmatrix}
+              \begin{bmatrix}
+                  2 \\ 0 \\ 1
+              \end{bmatrix}                    \\
+               & =
+              \begin{bmatrix}
+                  \frac{5}{4} \\ 0 \\ \frac{5}{8}
+              \end{bmatrix}
+          \end{align*}
+
+          \begin{align*}
+              \begin{vmatrix}
+                  \nabla
+              \end{vmatrix} = \frac{5\sqrt{5}}{8} \approx 1.4 > \theta
+          \end{align*}
+
+          $\begin{vmatrix} \nabla \end{vmatrix}$ is greater than the threshold, so $ \bm{\theta} $ is updated.
+
+          \begin{align*}
+              \bm{\theta}^{(2)}
+               & = \bm{\theta}^{(1)} + \nabla \\
+               & =
+              \begin{bmatrix}
+                  \frac{3}{4} \\ -2 \\ \frac{1}{8}
+              \end{bmatrix}
+          \end{align*}
+
+          Iteration 3
+
+          \begin{align*}
+              \nabla
+               & =
+              \mu^{(3)}(y_3-\bm{\theta}^{(2)T}y_3x_3)y_3x_3 \\
+               & =
+              \frac{0.5}{3}
+              \left(
+              \begin{bmatrix}
+                      1
+                  \end{bmatrix}
+              -
+              \begin{bmatrix}
+                      \frac{3}{4} & -2 & \frac{1}{8}
+                  \end{bmatrix}
+              \begin{bmatrix}
+                      1
+                  \end{bmatrix}
+              \begin{bmatrix}
+                      3 \\ 1 \\ 1
+                  \end{bmatrix}
+              \right)
+              \begin{bmatrix}
+                  1
+              \end{bmatrix}
+              \begin{bmatrix}
+                  3 \\ 1 \\ 1
+              \end{bmatrix}                    \\
+               & =
+              \begin{bmatrix}
+                  \frac{5}{16} \\ \frac{5}{48} \\ \frac{5}{48}
+              \end{bmatrix}
+          \end{align*}
+
+          \begin{align*}
+              \begin{vmatrix}
+                  \nabla
+              \end{vmatrix} = \frac{5\sqrt{11}}{48} \approx 0.3 < \theta
+          \end{align*}
+
+          $\begin{vmatrix} \nabla \end{vmatrix}$ is smaller than the threshold, so $ \bm{\theta} $ is not updated and the algorithm terminates with $\bm{\theta}^{(2)} = \begin{bmatrix} \frac{3}{4} \\ -2 \\ \frac{1}{8} \end{bmatrix}$.
+
+          If we plot the resulting decision boundary, we observe that the converged value of $\bm{\theta}$ does not discriminate between the classes.
+
+          \begin{center}
+              \includegraphics[width=0.5\textwidth]{graph4.png}
+          \end{center}
+\end{enumerate}
+\section*{Problem 2}
+\begin{enumerate}[a)]
+    \item An analytical solution to the equation $\bm{X\theta}= \bm{y}$ would be to find the inverse of $\bm{X}$ and compute $\bm{\theta} = \bm{X^{-1}y}$ directly. However, this solution assume that $\bm{X}$ is invertible. In practice $\bm{X}$ is often rectangular, with more rows (samples) than columns (features). Trying to find an exact solution would lead to have more equations than unknowns which is not solvable in general.
+
+    \item  In order to find $\bm{\theta}$ minimizing the function $\Vert \bm{X \theta - y} \Vert^2$, we can differentiate this function with respect to $\bm{\theta}$ and find its root.
+
+          \begin{align*}
+              \frac{\partial \Vert \bm{X \theta} - \bm{y} \Vert^2}{\partial \bm{\theta}}
+              = 2 \bm{X}^T(\bm{X \theta - y})
+          \end{align*}
+
+          We now set the derivative to zero.
+
+          \begin{align*}
+              2 \bm{X}^T(\bm{X \theta} - \bm{y}) & = 0                                   \\
+              \bm{X}^T\bm{X \theta }             & = \bm{X^T y}                          \\
+              \bm{\theta}                        & = ( \bm{X}^T \bm{X} )^{-1} \bm{X^T y} \\
+          \end{align*}
+
+          In this case, $\bm{X}^T \bm{X}$ is guaranteed to be invertible because it is a square symmetric matrix.
+
+    \item Let $\bm{\theta_*}$ be the value of $\bm{\theta}$ minimizing the squared error. We can rewrite the distance function as such.
+
+          \begin{align*}
+              \Vert \bm{X \theta_* - y} \Vert^2 = \Vert \bm{X} (\bm{X}^T\bm{X})^{-1}\bm{X}^T \bm{y} - \bm{y} \Vert^2
+          \end{align*}
+
+    \item For the problem to be lineraly separable, the distance function should be equal to zero.
+
+          \begin{align*}
+              \Vert \bm{X} (\bm{X}^T\bm{X})^{-1}\bm{X}^T \bm{y} - \bm{y} \Vert^2 = 0
+              \implies
+              \bm{X} (\bm{X}^T\bm{X})^{-1}\bm{X}^T \bm{y} = \bm{y}
+              \implies
+              \bm{X} (\bm{X}^T\bm{X})^{-1}\bm{X}^T = \bm{I}
+          \end{align*}
+
 \end{enumerate}
 
+\section*{Problem 3}
+
+\begin{enumerate}[a)]
+    \item Samples are labeled as +1 if they belong to $\omega_1$ and -1 if they belong to $\omega_2$.
+
+          \begin{align*}
+              y_1 = 1 &  & y_2 = 1 &  & y_3 = -1
+          \end{align*}
+
+    \item For each sample, we draw the decision boundary $\bm{\theta}_T x_i = 0$
+
+          \begin{figure}[h]
+              \centering
+              \begin{minipage}[t]{0.32\textwidth}
+                  \centering
+                  \includegraphics[width=\textwidth]{graph5.png}
+              \end{minipage}\hfill
+              \begin{minipage}[t]{0.32\textwidth}
+                  \centering
+                  \includegraphics[width=\textwidth]{graph7.png}
+              \end{minipage}\hfill
+              \begin{minipage}[t]{0.32\textwidth}
+                  \centering
+                  \includegraphics[width=\textwidth]{graph9.png}
+              \end{minipage}
+          \end{figure}
+
+    \item If we colour the positive side of the discriminant function in red and the negative side in blue, we get the following regions.
+
+          \begin{figure}[h]
+              \centering
+              \begin{minipage}[t]{0.32\textwidth}
+                  \centering
+                  \includegraphics[width=\textwidth]{graph6.png}
+              \end{minipage}\hfill
+              \begin{minipage}[t]{0.32\textwidth}
+                  \centering
+                  \includegraphics[width=\textwidth]{graph8.png}
+              \end{minipage}\hfill
+              \begin{minipage}[t]{0.32\textwidth}
+                  \centering
+                  \includegraphics[width=\textwidth]{graph10.png}
+              \end{minipage}
+          \end{figure}
+        
+          The solution region lies between the decision boundaries shown in the first and the third plot.
+
+    \item We apply the Batch Perceptron algorithm
+    
+    
+
+
+\end{enumerate}
 
 \end{document}

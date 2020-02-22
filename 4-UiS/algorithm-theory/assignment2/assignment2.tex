@@ -4,19 +4,67 @@
 \usepackage[shortlabels]{enumitem}
 \usepackage{bbold}
 \usepackage{cases}
-\usepackage{systeme}
-\usepackage{graphicx}
+\usepackage{clrscode3e}
 
 \begin{document}
 
-\title{Machine Learning - Theoretical exercise X}
+\title{Algorithm Theory - Assignment 3}
 \author{T\'eo Bouvard}
 \maketitle
 
 \section*{Problem 1}
 \begin{enumerate}[a)]
-    \item 
+	\item If we can prove that $E$ has majority $e_m \implies E - \{e_i, e_j\}$ also has $e_m$ as majority, we can devise a simple algorithm that just removes pairs of different elements from the original sequence. At some point, one of two things is going to happen.
+
+	      \begin{itemize}
+		      \item We can't pick a pair of different elements because all elements in the sequence are identical. This implies that this repeating element is the majority of $E$.
+		      \item We have an empty sequence. This implies that $E$ has no majority.
+	      \end{itemize}
+
+	      Here is the algorithm in pseudo code, which returns $\const{true}$ if $E$ has a majority and $\const{false}$ otherwise.
+
+	      \begin{codebox}
+		      \Procname{$\proc{majority}(E)$}
+		      \zi \If $E = \emptyset$
+		      \zi \Then \Return $\const{false}$ \End
+		      \zi \If $\proc{all-equal(E)}$
+		      \zi \Then \Return $\const{true}$ \End
+		      \zi $pair \gets \proc{find-pair}(E)$
+		      \zi \Return $\proc{majority}(E \setminus pair)$ \End
+	      \end{codebox}
+
+	      The above algorithm uses two subroutines.
+
+	      \begin{itemize}
+		      \item $\proc{all-equal}$ returns $\const{true}$ if all elements of a sequence are equal, and $\const{false}$ otherwise. We do not check for empty sequences as this subroutine is called after this check in the $\proc{majority}$ algorithm.
+		      \item $\proc{find-pair}$ returns a sequence of two distinct elements from the input sequence. We only need to consider sequences who actually have at least two distinct elements, because we checked for empty sets and sets containing identical elements before calling this subroutine.
+	      \end{itemize}
+
+	      \begin{codebox}
+		      \Procname{$\proc{all-equal}(E)$}
+		      \zi $elem \gets E[0]$
+		      \zi \For $i \gets 1$ \To $\attrib{E}{length}$ \Do
+		      \zi \If $elem \neq E[i]$
+		      \zi \Then \Return $\const{false}$ \End \End
+		      \zi \Return $\const{true}$ \End
+	      \end{codebox}
+
+	      \begin{codebox}
+		      \Procname{$\proc{find-pair}(E)$}
+		      \zi $first \gets E[0]$
+		      \zi \For $k \gets 1$ \To $\attrib{E}{length}$ \Do
+		      \zi \If $first \neq E[k]$
+		      \zi \Then \Return $ \{ first, E[k] \} $ \End \End
+	      \end{codebox}
+
+	\item This problem has optimal substructure because the optimal solution is constructed from optimal solutions of its subproblems. However, there is no overlap among the subproblems. Dynamic programming requires both optimal substructure and overlapping subproblems to be applied, so we can't use it in this case. 
 \end{enumerate}
+
+\section*{Problem 2}
+
+This problem is an instance of the fractional knapsack problem. As Maria can get partial points if a problem is solved partially, her best strategy is to solve the problems with hihest point density first. That is, solve the problem with the highest $\frac{p_i}{t_i}$, until either the exam time runs out, in which case the algorithm exits, or the problem is solved, in which case she picks the next problem.
+
+\section*{Problem 3}
 
 
 \end{document}

@@ -74,19 +74,30 @@ Let $X = \{ x_0, \ldots, x_n \}$ be the sequence of coordinates of all houses al
 	\item As the coordinates are sorted in increasing order, we know that there are no houses before $x_0$ so choosing $b = x_0 -R $ would cover at most one house. However, there are possibly more houses after $x_0$, so choosing $b = x_0 + R$ is guaranteed to cover at least one house.
 \end{itemize}
 
-From the previous reasoning, we see that the optimal placement of the first base is $b = x_0 + R$.  We can then derive a recursive algorithm to solve this problem. We introduce the parameter $B$ which represent the coordinates of the base stations. The first call to this function uses an empty sequence as parameter, and B gets populated as it goes down the recursion calls. The number of base stations necessary can be obtained by checking the size of $B$ after the function call, but it could also be added as parameter incremented at each recursive call. 
+From the previous reasoning, we see that the optimal placement of the first base is $b = x_0 + R$.  We can then derive a recursive algorithm to solve this problem. The function $\proc{station-coordinates}$ return a sequence representing the coordinates of the base stations. The number of base stations to be placed can be determined by checking the size of the sequence returned by the function. If we were only interested in the number of base stations to place, we could replace the sequences returned by simple additions. This is demonstrated in the $\proc{stations-counter}$ function. 
 For clarity, this algorithm modifies $X$ in-place by removing all covered houses each time a base station is placed. However, it would be more efficient (implementaion-wise) to not modify the sequence and just keep track of which houses are already covered, by keeping an index for example.
 
 \begin{codebox}
-	\Procname{$\proc{stations}(X, R, B)$}
+	\Procname{$\proc{stations-coordinates}(X, R)$}
 	\zi \If $X = \emptyset$
-	\zi \Then \Return \End
+	\zi \Then \Return $\const{nil}$ \End
 	\zi $firstHouse \gets X[0]$
-	\zi $B \gets B \cup \{ firstHouse + R \}$
-	\zi \While $X \neq \emptyset \And X[0]  \leq firstHouse + R$
+	\zi \While $X \neq \emptyset \land X[0]  \leq firstHouse + R$
 	\zi \Then $X \gets X \setminus X[0]$ \End
-	\zi \Return $\proc{stations}(X, R, B)$ \End
+	\zi \Return $\proc{stations}(X, R) \cup \{ firstHouse + R \}$ \End
 \end{codebox}
+
+\begin{codebox}
+	\Procname{$\proc{stations-counter}(X, R)$}
+	\zi \If $X = \emptyset$
+	\zi \Then \Return 0 \End
+	\zi $firstHouse \gets X[0]$
+	\zi \While $X \neq \emptyset \land X[0]  \leq firstHouse + R$
+	\zi \Then $X \gets X \setminus X[0]$ \End
+	\zi \Return $\proc{stations}(X, R) + 1$ \End
+\end{codebox}
+
+\section*{Problem 4}
 
 
 \end{document}

@@ -66,5 +66,27 @@ This problem is an instance of the fractional knapsack problem. As Maria can get
 
 \section*{Problem 3}
 
+Let $X = \{ x_0, \ldots, x_n \}$ be the sequence of coordinates of all houses along the road, sorted in increasing order. Let $R$ be the coverage radius of a base station, in this case $R = 8$. If $X = \emptyset $, we do not need to place any base. If $X \neq \emptyset$, the first base we place should at least include $x_0$, and maximize the number of houses in its coverage radius in order to minimize the number of bases to place. These two conditions are sufficient to derive an efficient algorithm to solve this problem. Let $b$ be the coordinate of the optimally placed first base.
+
+\begin{itemize}
+	\item The base should at least include $x_0 \implies \Vert b - x_0 \Vert \leq R$, otherwise the house is not close enough to be included in the coverage radius of the base.
+	\item To maximize the area covered by the base, we should place it as far as possible from $x_0$. This implies $b = \begin{cases} x_0 + R \\ x_0 - R \end{cases}$
+	\item As the coordinates are sorted in increasing order, we know that there are no houses before $x_0$ so choosing $b = x_0 -R $ would cover at most one house. However, there are possibly more houses after $x_0$, so choosing $b = x_0 + R$ is guaranteed to cover at least one house.
+\end{itemize}
+
+From the previous reasoning, we see that the optimal placement of the first base is $b = x_0 + R$.  We can then derive a recursive algorithm to solve this problem. We introduce the parameter $B$ which represent the coordinates of the base stations. The first call to this function uses an empty sequence as parameter, and B gets populated as it goes down the recursion calls. The number of base stations necessary can be obtained by checking the size of $B$ after the function call, but it could also be added as parameter incremented at each recursive call. 
+For clarity, this algorithm modifies $X$ in-place by removing all covered houses each time a base station is placed. However, it would be more efficient (implementaion-wise) to not modify the sequence and just keep track of which houses are already covered, by keeping an index for example.
+
+\begin{codebox}
+	\Procname{$\proc{stations}(X, R, B)$}
+	\zi \If $X = \emptyset$
+	\zi \Then \Return \End
+	\zi $firstHouse \gets X[0]$
+	\zi $B \gets B \cup \{ firstHouse + R \}$
+	\zi \While $X \neq \emptyset \And X[0]  \leq firstHouse + R$
+	\zi \Then $X \gets X \setminus X[0]$ \End
+	\zi \Return $\proc{stations}(X, R, B)$ \End
+\end{codebox}
+
 
 \end{document}

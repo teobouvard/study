@@ -6,7 +6,7 @@ import (
 	"net"
 	"strings"
 
-	"../detector"
+	"github.com/dat520-2020/assignments/lab3/detector"
 )
 
 type Server struct {

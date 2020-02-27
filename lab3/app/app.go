@@ -8,8 +8,8 @@ import (
 	"os/signal"
 	"time"
 
-	"../detector"
-	"../network"
+	"github.com/dat520-2020/assignments/lab3/detector"
+	"github.com/dat520-2020/assignments/lab3/network"
 )
 
 type App struct {

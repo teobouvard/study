@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/dat520-2020/assignments/lab3/detector"
-	"github.com/dat520-2020/TeamPilots/lab3/network"
+	"github.com/dat520-2020/teampilots/lab3/network"
 )
 
 type App struct {

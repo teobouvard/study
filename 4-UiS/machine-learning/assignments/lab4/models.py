@@ -2,8 +2,8 @@ from collections import Counter
 
 import numpy as np
 from sklearn import datasets
-from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import train_test_split
+from utils import accuracy_score, confusion_matrix
 
 
 class MLClassifier:
@@ -37,11 +37,9 @@ class MLClassifier:
 
 
 class ParzenClassifer:
-    def __init__(self, h, kernel="cube"):
+    def __init__(self, h):
         self.classes = []
-        self.kernel = kernel
         self.h = h
-        self.n_training = {}
         self.points = {}
 
     def fit(self, x, y):
@@ -58,29 +56,15 @@ class ParzenClassifer:
         return max(self.classes, key=lambda label: self._discriminant(x, label))
 
     def _discriminant(self, x, label):
-        # TODO ask for parzen window function clarifications
         n_points = np.size(self.points[label])
         hn = self.h / np.sqrt(n_points)
-        centered = ((p - x) / hn for p in self.points[label])
-        return sum(self._phi(u) / hn for u in centered) / n_points
+        centered = ((p - x) for p in self.points[label])
+        return sum(self._phi(u, hn) for u in centered) / n_points
 
-    def _phi(self, u):
-        if self.kernel == "cube":
-            return self._hypercube(u)
-        elif self.kernel == "gaussian":
-            return self._gaussian(u)
-        else:
-            raise NotImplementedError(f"{self.kernel} kernel not implemented")
-
-    def _hypercube(self, u):
-        if max(np.abs(u)) <= 0.5:
-            return 1
-        return 0
-
-    def _gaussian(self, u):
-        if max(np.abs(u)) <= 0.5:
-            return 1
-        return 0
+    def _phi(self, u, hn):
+        # we don't need to take into account the constants
+        # which are identical for all classes
+        return hn ** 2 * np.exp(-(0.5 / hn) * u.T @ u)
 
 
 class KNNClassifier:
@@ -104,8 +88,8 @@ class KNNClassifier:
         for c in self.classes:
             for p in self.points[c]:
                 distances.append((np.linalg.norm(p - x), c))
-        neighbours = sorted(distances, key=lambda x: x[0])[: self.k]
-        neighbours = Counter(_[1] for _ in neighbours)
+        neighbours = sorted(distances, key=lambda x: x[0])
+        neighbours = Counter(_[1] for _ in neighbours[: self.k])
         return neighbours.most_common(1)[0][0]
 
 
@@ -113,26 +97,12 @@ if __name__ == "__main__":
     x, y = datasets.load_iris(return_X_y=True)
     x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=42)
 
-    # model = MLClassifier()
-    # model.fit(x_train, y_train)
-    # y_pred = model.predict(x_test)
-    # cm = confusion_matrix(y_pred, y_test)
-    # acc = accuracy_score(y_pred, y_test)
-    # print(f"Accuracy : {acc}")
-    # print(f"Confusion matrix : {cm}")
-
-    model = ParzenClassifer(h=5)
+    model = MLClassifier()
+    # model = KNNClassifier(k=5)
+    # model = ParzenClassifer(h=100)
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
-    cm = confusion_matrix(y_pred, y_test)
+    cm = confusion_matrix(y_pred, y_test, normalize=True)
     acc = accuracy_score(y_pred, y_test)
     print(f"Accuracy : {acc:.2f}")
     print(f"Confusion matrix : \n{cm}")
-
-    # model = KNNClassifier(k=3)
-    # model.fit(x_train, y_train)
-    # y_pred = model.predict(x_test)
-    # cm = confusion_matrix(y_pred, y_test)
-    # acc = accuracy_score(y_pred, y_test)
-    # print(f"Accuracy : {acc}")
-    # print(f"Confusion matrix : \n{cm}")

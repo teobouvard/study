@@ -7,6 +7,14 @@ package singlepaxos
 type Learner struct {
 	//TODO(student): Task 2 and 3 - algorithm and distributed implementation
 	// Add needed fields
+	id        int
+	nrOfNodes int
+
+	learned map[int]Value
+	val     Value
+	rnd     Round
+
+	valueOut chan<- Value
 }
 
 // NewLearner returns a new single-decree Paxos learner. It takes the
@@ -20,7 +28,16 @@ type Learner struct {
 // i.e. decided by the Paxos nodes.
 func NewLearner(id int, nrOfNodes int, valueOut chan<- Value) *Learner {
 	//TODO(student): Task 2 and 3 - algorithm and distributed implementation
-	return &Learner{}
+	return &Learner{
+		id:        id,
+		nrOfNodes: nrOfNodes,
+
+		learned: make(map[int]Value),
+		val:     ZeroValue,
+		rnd:     NoRound,
+
+		valueOut: valueOut,
+	}
 }
 
 // Start starts l's main run loop as a separate goroutine. The main run loop
@@ -50,7 +67,27 @@ func (l *Learner) DeliverLearn(lrn Learn) {
 // its zero value.
 func (l *Learner) handleLearn(learn Learn) (val Value, output bool) {
 	//TODO(student): Task 2 - algorithm implementation
-	return "FooBar", true
+	if learn.Rnd >= l.rnd {
+		if (l.val != ZeroValue && learn.Val != l.val) || (learn.Rnd > l.rnd) {
+			l.resetLearned()
+			l.rnd = learn.Rnd
+			l.val = learn.Val
+		}
+		l.learned[learn.From] = learn.Val
+	}
+
+	if l.consensus() {
+		l.resetLearned()
+		return l.val, true
+	}
+	return ZeroValue, false
 }
 
 //TODO(student): Add any other unexported methods needed.
+func (l *Learner) consensus() bool {
+	return len(l.learned) > l.nrOfNodes/2
+}
+
+func (l *Learner) resetLearned() {
+	l.learned = make(map[int]Value)
+}

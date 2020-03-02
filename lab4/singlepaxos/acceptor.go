@@ -7,6 +7,14 @@ package singlepaxos
 type Acceptor struct {
 	//TODO(student): Task 2 and 3 - algorithm and distributed implementation
 	// Add needed fields
+	id int
+
+	rnd  Round
+	vrnd Round
+	vval Value
+
+	promiseOut chan<- Promise
+	learnOut   chan<- Learn
 }
 
 // NewAcceptor returns a new single-decree Paxos acceptor.
@@ -19,7 +27,17 @@ type Acceptor struct {
 // learnOut: A send only channel used to send learns to other nodes.
 func NewAcceptor(id int, promiseOut chan<- Promise, learnOut chan<- Learn) *Acceptor {
 	//TODO(student): Task 2 and 3 - algorithm and distributed implementation
-	return &Acceptor{}
+
+	return &Acceptor{
+		id: id,
+
+		rnd:  NoRound,
+		vrnd: NoRound,
+		vval: ZeroValue,
+
+		promiseOut: promiseOut,
+		learnOut:   learnOut,
+	}
 }
 
 // Start starts a's main run loop as a separate goroutine. The main run loop
@@ -54,7 +72,11 @@ func (a *Acceptor) DeliverAccept(acc Accept) {
 // struct.
 func (a *Acceptor) handlePrepare(prp Prepare) (prm Promise, output bool) {
 	//TODO(student): Task 2 - algorithm implementation
-	return Promise{To: -1, From: -1, Vrnd: -2, Vval: "FooBar"}, true
+	if prp.Crnd > a.rnd {
+		a.rnd = prp.Crnd
+		return Promise{To: prp.From, From: a.id, Rnd: a.rnd, Vrnd: a.vrnd, Vval: a.vval}, true
+	}
+	return Promise{}, false
 }
 
 // Internal: handleAccept processes accept acc according to the single-decree
@@ -63,7 +85,13 @@ func (a *Acceptor) handlePrepare(prp Prepare) (prm Promise, output bool) {
 // handleAccept returns false as output, then lrn will be a zero-valued struct.
 func (a *Acceptor) handleAccept(acc Accept) (lrn Learn, output bool) {
 	//TODO(student): Task 2 - algorithm implementation
-	return Learn{From: -1, Rnd: -2, Val: "FooBar"}, true
+	if acc.Rnd >= a.rnd && acc.Rnd != a.vrnd {
+		a.rnd = acc.Rnd
+		a.vrnd = acc.Rnd
+		a.vval = acc.Val
+		return Learn{From: a.id, Rnd: a.rnd, Val: a.vval}, true
+	}
+	return Learn{}, false
 }
 
 //TODO(student): Add any other unexported methods needed.

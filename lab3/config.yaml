@@ -1,13 +1,13 @@
 nodes:
     -  
-        hostname: localhost
-        port: 8081
+        hostname: 192.168.1.1
+        port: 5001
         id: 1
     -   
-        hostname: localhost
-        port: 8082
+        hostname: 192.168.1.2
+        port: 5002
         id: 2
     -   
-        hostname: localhost
-        port: 8083
+        hostname: 192.168.1.3
+        port: 5003
         id: 3

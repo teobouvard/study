@@ -7,8 +7,8 @@ import (
 	"log"
 	"os"
 
-	"./app"
-	"./detector"
+	"github.com/dat520-2020/TeamPilots/lab3/app"
+	"github.com/dat520-2020/TeamPilots/lab3/detector"
 )
 
 var (

@@ -6,9 +6,10 @@ import (
 	"net"
 	"strings"
 
-	"github.com/dat520-2020/assignments/lab3/detector"
+	"github.com/dat520-2020/TeamPilots/lab3/detector"
 )
 
+// Server is the interface between the app and the outside world
 type Server struct {
 	conn   *net.UDPConn
 	notify chan detector.Heartbeat
@@ -51,6 +52,7 @@ func (u *Server) Listen() chan detector.Heartbeat {
 	return u.notify
 }
 
+// Send sends a heartbeat to a UDP adress
 func (u *Server) Send(addr *net.UDPAddr, hb detector.Heartbeat) (n int, err error) {
 	var buf bytes.Buffer
 	encoder := gob.NewEncoder(&buf)
@@ -62,6 +64,7 @@ func (u *Server) Send(addr *net.UDPAddr, hb detector.Heartbeat) (n int, err erro
 	return n, err
 }
 
+// Stop closes the connection
 func (u *Server) Stop() {
 	u.conn.Close()
 }

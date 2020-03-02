@@ -8,10 +8,11 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/dat520-2020/assignments/lab3/detector"
-	"github.com/dat520-2020/teampilots/lab3/network"
+	"github.com/dat520-2020/TeamPilots/lab3/detector"
+	"github.com/dat520-2020/TeamPilots/lab3/network"
 )
 
+// App is the abstraction of a node
 type App struct {
 	id       int
 	fd       *detector.EvtFailureDetector
@@ -21,6 +22,7 @@ type App struct {
 	hbSend   chan detector.Heartbeat
 }
 
+// NewApp creates an app by reading a config file
 func NewApp(id int, configFile string) *App {
 	config := Parse(configFile)
 	nodeIDs := []int{}
@@ -35,7 +37,7 @@ func NewApp(id int, configFile string) *App {
 	}
 
 	if !Contains(nodeIDs, id) {
-		Raise(fmt.Sprintf("Node [%d] is not present in config file. Change --id parameter\n", id))
+		Raise(fmt.Sprintf("Node [%d] is not present in config file. Fix --id parameter.\n", id))
 	}
 
 	hbSend := make(chan detector.Heartbeat, 100) // to not block
@@ -54,7 +56,7 @@ func NewApp(id int, configFile string) *App {
 	}
 }
 
-// Run runs app main loop
+// Run starts the app main loop
 func (app *App) Run() {
 	log.Printf("Starting up app for node %d\n", app.id)
 	app.fd.Start()

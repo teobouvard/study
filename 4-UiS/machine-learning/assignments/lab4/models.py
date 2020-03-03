@@ -127,16 +127,66 @@ class KNNClassifier:
 
 
 if __name__ == "__main__":
-    x, y = datasets.load_digits(return_X_y=True)
-    x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=42)
+    # x, y = datasets.load_digits(return_X_y=True)
+    # x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=42)
+    from utils import normalize_data
+
+    _, _, _, _, X_3D3cl_ms, _, _, _, _, Y_3D3cl_ms = np.load(
+        "data/lab4_2.p", allow_pickle=True
+    )
+    x_train, x_test, y_train, y_test = normalize_data(X_3D3cl_ms, Y_3D3cl_ms)
 
     # model = MLClassifier()
     # model = SKLParzenClassifier(h=1)
-    model = KNNClassifier(k=5)
-    # model = ParzenClassifer(h=100)
-    model.fit(x_train, y_train)
-    y_pred = model.predict(x_test)
-    cm = confusion_matrix(y_pred, y_test, normalize=True)
-    acc = accuracy_score(y_pred, y_test)
-    print(f"Accuracy : {acc:.2f}")
-    print(f"Confusion matrix : \n{cm}")
+    # model = KNNClassifier(k=5)
+    # model = ParzenClassifer(h=5)
+    # model.fit(x_train, y_train)
+    # y_pred = model.predict(x_test)
+    # cm = confusion_matrix(y_pred, y_test, normalize=True)
+    # acc = accuracy_score(y_pred, y_test)
+    # print(f"Accuracy : {acc:.2f}")
+    # print(f"Confusion matrix : \n{cm}")
+
+    import pandas as pd
+    from utils import error_score, confusion_matrix
+
+    def train_test_evaluate(models):
+        global x_train, x_test, y_train, y_test
+
+        results = {
+            "P(error)": {},
+        }
+
+        for desc, model in models.items():
+            model.fit(x_train, y_train)
+            y_pred_train = model.predict(x_train)
+            y_pred_test = model.predict(x_test)
+            err_train = error_score(y_pred_train, y_train)
+            err_test = error_score(y_pred_test, y_test)
+            cm_train = confusion_matrix(y_pred_train, y_train)
+            cm_test = confusion_matrix(y_pred_test, y_test)
+
+            variant = ["Reclassification", "Testing"]
+            error = [err_train, err_test]
+            confusion = [cm_train, cm_test]
+
+            for var, err, cm in zip(variant, error, confusion):
+                results["P(error)"][f"{desc} {var}"] = f"{err:.2f}"
+                for i, p_correct in enumerate(cm.diagonal()):
+                    true_positives = f"P( correct | w_{i+1})"
+                    if true_positives not in results:
+                        results[true_positives] = {}
+                    results[f"P( correct | w_{i+1})"][
+                        f"{desc} {var}"
+                    ] = f"{p_correct:.2f}"
+
+        return pd.DataFrame(results)
+
+    models = {
+        "Maximum likelihood": MLClassifier(),
+        "Parzen h1 = 0.1": ParzenClassifer(h=0.1),
+        "Parzen h1 = 5.0": ParzenClassifer(h=5.0),
+        "Nearest neighbours k = 1": KNNClassifier(k=1),
+        "Nearest neighbours k = 5": KNNClassifier(k=5),
+    }
+    train_test_evaluate(models)

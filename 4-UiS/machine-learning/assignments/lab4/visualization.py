@@ -8,6 +8,8 @@ colors = ["red", "blue", "green", "black"]
 def plot_2D(train, test):
     _, ax = plt.subplots(1, 2)
     for i, data in enumerate([train, test]):
+        title = "Test data" if i else "Train data"
+        ax[i].set(title=title)
         for c, class_ in enumerate(data):
             ax[i].scatter(*class_, c=colors[c], label=f"class {c+1}")
     plt.legend()
@@ -17,6 +19,8 @@ def plot_3D(train, test):
     fig = plt.figure(figsize=plt.figaspect(0.5))
     for i, data in enumerate([train, test]):
         ax = fig.add_subplot(1, 2, i + 1, projection="3d")
+        title = "Test data" if i else "Train data"
+        ax.set(title=title)
         for c, class_ in enumerate(data):
             ax.scatter(*class_, c=colors[c], label=f"class {c+1}")
     plt.legend()

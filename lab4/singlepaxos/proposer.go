@@ -2,7 +2,11 @@
 
 package singlepaxos
 
-import "dat520.github.io/lab3/detector"
+import (
+	"time"
+
+	"github.com/dat520-2020/TeamPilots/lab3/detector"
+)
 
 // Proposer represents a proposer as defined by the single-decree Paxos
 // algorithm.
@@ -10,14 +14,24 @@ type Proposer struct {
 	id        int
 	nrOfNodes int
 
+	quorumReached bool
+	quorumTimeout *time.Timer
+
 	crnd        Round
 	clientValue Value
 
 	mv map[int]Promise
 
-	ld         detector.LeaderDetector
+	ld detector.LeaderDetector
+
+	valueIn   chan Value
+	promiseIn chan Promise
+
 	prepareOut chan<- Prepare
 	acceptOut  chan<- Accept
+
+	stop chan struct{}
+
 	//TODO(student): Task 2 and 3 - algorithm and distributed implementation
 	// Add other needed fields
 }
@@ -38,16 +52,24 @@ type Proposer struct {
 func NewProposer(id int, nrOfNodes int, ld detector.LeaderDetector, prepareOut chan<- Prepare, acceptOut chan<- Accept) *Proposer {
 	//TODO(student): Task 2 and 3 - algorithm and distributed implementation
 	return &Proposer{
-		id:        id,
-		nrOfNodes: nrOfNodes,
+		id:            id,
+		nrOfNodes:     nrOfNodes,
+		quorumReached: false,
+		//quorumTimeout: nil,
 
 		crnd:        Round(id),
 		clientValue: ZeroValue,
 		mv:          make(map[int]Promise),
 
-		ld:         ld,
+		ld: ld,
+
+		valueIn:   make(chan Value, 10),
+		promiseIn: make(chan Promise, 10),
+
 		prepareOut: prepareOut,
 		acceptOut:  acceptOut,
+
+		stop: make(chan struct{}),
 	}
 }
 
@@ -57,6 +79,23 @@ func (p *Proposer) Start() {
 	go func() {
 		for {
 			//TODO(student): Task 3 - distributed implementation
+			select {
+			case prm := <-p.promiseIn:
+				acc, output := p.handlePromise(prm)
+				if output {
+					p.acceptOut <- acc
+					p.quorumReached = true
+				}
+			case val := <-p.valueIn:
+				p.prepareOut <- p.craftPrepare(val)
+				p.quorumTimeout = time.NewTimer(time.Second) // second is arbitrary
+			case <-p.quorumTimeout.C:
+				if !p.quorumReached {
+					p.DeliverClientValue(p.clientValue)
+				}
+			case <-p.stop:
+				return
+			}
 		}
 	}()
 }
@@ -64,16 +103,28 @@ func (p *Proposer) Start() {
 // Stop stops p's main run loop.
 func (p *Proposer) Stop() {
 	//TODO(student): Task 3 - distributed implementation
+	p.stop <- struct{}{}
 }
 
 // DeliverPromise delivers promise prm to proposer p.
 func (p *Proposer) DeliverPromise(prm Promise) {
 	//TODO(student): Task 3 - distributed implementation
+	p.promiseIn <- prm
 }
 
 // DeliverClientValue delivers client value val from to proposer p.
 func (p *Proposer) DeliverClientValue(val Value) {
 	//TODO(student): Task 3 - distributed implementation
+	if p.ld.Leader() == p.id {
+		p.valueIn <- val
+	}
+}
+
+func (p *Proposer) craftPrepare(val Value) Prepare {
+	p.clientValue = val
+	p.increaseCrnd()
+	p.quorumReached = false
+	return Prepare{From: p.id, Crnd: p.crnd}
 }
 
 // Internal: handlePromise processes promise prm according to the single-decree

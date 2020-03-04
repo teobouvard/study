@@ -14,7 +14,11 @@ type Learner struct {
 	val     Value
 	rnd     Round
 
+	learnIn chan Learn
+
 	valueOut chan<- Value
+
+	stop chan struct{}
 }
 
 // NewLearner returns a new single-decree Paxos learner. It takes the
@@ -36,7 +40,11 @@ func NewLearner(id int, nrOfNodes int, valueOut chan<- Value) *Learner {
 		val:     ZeroValue,
 		rnd:     NoRound,
 
+		learnIn: make(chan Learn, 10),
+
 		valueOut: valueOut,
+
+		stop: make(chan struct{}),
 	}
 }
 
@@ -45,6 +53,15 @@ func NewLearner(id int, nrOfNodes int, valueOut chan<- Value) *Learner {
 func (l *Learner) Start() {
 	go func() {
 		for {
+			select {
+			case lrn := <-l.learnIn:
+				val, output := l.handleLearn(lrn)
+				if output {
+					l.valueOut <- val
+				}
+			case <-l.stop:
+				return
+			}
 			//TODO(student): Task 3 - distributed implementation
 		}
 	}()
@@ -53,11 +70,13 @@ func (l *Learner) Start() {
 // Stop stops l's main run loop.
 func (l *Learner) Stop() {
 	//TODO(student): Task 3 - distributed implementation
+	l.stop <- struct{}{}
 }
 
 // DeliverLearn delivers learn lrn to learner l.
 func (l *Learner) DeliverLearn(lrn Learn) {
 	//TODO(student): Task 3 - distributed implementation
+	l.learnIn <- lrn
 }
 
 // Internal: handleLearn processes learn lrn according to the single-decree

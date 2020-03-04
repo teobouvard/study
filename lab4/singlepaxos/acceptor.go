@@ -13,8 +13,13 @@ type Acceptor struct {
 	vrnd Round
 	vval Value
 
+	prepareIn chan Prepare
+	acceptIn  chan Accept
+
 	promiseOut chan<- Promise
 	learnOut   chan<- Learn
+
+	stop chan struct{}
 }
 
 // NewAcceptor returns a new single-decree Paxos acceptor.
@@ -35,8 +40,13 @@ func NewAcceptor(id int, promiseOut chan<- Promise, learnOut chan<- Learn) *Acce
 		vrnd: NoRound,
 		vval: ZeroValue,
 
+		prepareIn: make(chan Prepare, 10),
+		acceptIn:  make(chan Accept, 10),
+
 		promiseOut: promiseOut,
 		learnOut:   learnOut,
+
+		stop: make(chan struct{}),
 	}
 }
 
@@ -46,6 +56,20 @@ func (a *Acceptor) Start() {
 	go func() {
 		for {
 			//TODO(student): Task 3 - distributed implementation
+			select {
+			case prp := <-a.prepareIn:
+				prm, output := a.handlePrepare(prp)
+				if output {
+					a.promiseOut <- prm
+				}
+			case acc := <-a.acceptIn:
+				lrn, output := a.handleAccept(acc)
+				if output {
+					a.learnOut <- lrn
+				}
+			case <-a.stop:
+				return
+			}
 		}
 	}()
 }
@@ -53,16 +77,19 @@ func (a *Acceptor) Start() {
 // Stop stops a's main run loop.
 func (a *Acceptor) Stop() {
 	//TODO(student): Task 3 - distributed implementation
+	a.stop <- struct{}{}
 }
 
 // DeliverPrepare delivers prepare prp to acceptor a.
 func (a *Acceptor) DeliverPrepare(prp Prepare) {
 	//TODO(student): Task 3 - distributed implementation
+	a.prepareIn <- prp
 }
 
 // DeliverAccept delivers accept acc to acceptor a.
 func (a *Acceptor) DeliverAccept(acc Accept) {
 	//TODO(student): Task 3 - distributed implementation
+	a.acceptIn <- acc
 }
 
 // Internal: handlePrepare processes prepare prp according to the single-decree

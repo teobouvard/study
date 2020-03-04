@@ -1,4 +1,4 @@
-package network
+package netlayer
 
 import (
 	"io/ioutil"
@@ -25,6 +25,6 @@ func Parse(config string) []Node {
 	file, err := ioutil.ReadFile(config)
 	util.Check(err)
 	err = yaml.Unmarshal(file, &c)
-	Check(err)
+	util.Check(err)
 	return c.Nodes
 }

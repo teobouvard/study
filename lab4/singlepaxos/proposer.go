@@ -3,6 +3,7 @@
 package singlepaxos
 
 import (
+	"log"
 	"time"
 
 	"github.com/dat520-2020/TeamPilots/lab3/detector"
@@ -55,7 +56,7 @@ func NewProposer(id int, nrOfNodes int, ld detector.LeaderDetector, prepareOut c
 		id:            id,
 		nrOfNodes:     nrOfNodes,
 		quorumReached: false,
-		//quorumTimeout: nil,
+		quorumTimeout: &time.Timer{},
 
 		crnd:        Round(id),
 		clientValue: ZeroValue,
@@ -114,6 +115,7 @@ func (p *Proposer) DeliverPromise(prm Promise) {
 
 // DeliverClientValue delivers client value val from to proposer p.
 func (p *Proposer) DeliverClientValue(val Value) {
+	log.Println("Looking good !")
 	//TODO(student): Task 3 - distributed implementation
 	if p.ld.Leader() == p.id {
 		p.valueIn <- val

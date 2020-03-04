@@ -18,13 +18,3 @@ func Raise(message string) {
 	fmt.Fprintf(os.Stderr, "[\033[31;1m ERROR \033[0m] %v\n", message)
 	os.Exit(0)
 }
-
-// Contains checks if an element is present in an array
-func Contains(arr []int, x int) bool {
-	for _, e := range arr {
-		if e == x {
-			return true
-		}
-	}
-	return false
-}

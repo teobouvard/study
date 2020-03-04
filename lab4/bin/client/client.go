@@ -27,10 +27,10 @@ func main() {
 	log.SetFlags(0)
 	log.SetPrefix("[\033[93;1m LOG \033[0m] ")
 
+	//TODO check that id is really a client ?
 	network := netlayer.NewNetwork(*config, *id)
 	network.Start()
 
-	client := client.NewClient()
-	client.Connect(network)
+	client := client.NewClient(network)
 	client.Run()
 }

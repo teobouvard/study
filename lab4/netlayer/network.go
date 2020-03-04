@@ -5,7 +5,6 @@ import (
 	"encoding/gob"
 	"fmt"
 	"net"
-	"os"
 
 	"github.com/dat520-2020/TeamPilots/lab3/detector"
 	"github.com/dat520-2020/TeamPilots/lab4/singlepaxos"
@@ -24,10 +23,10 @@ const (
 
 // Network TODO
 type Network struct {
-	conn *net.UDPConn
+	nodeID int
+	config *Config
 
-	registry map[int]*net.UDPAddr
-	nodeIDs  []int
+	conn *net.UDPConn
 
 	notifyHb      chan detector.Heartbeat
 	notifyValue   chan singlepaxos.Value
@@ -39,28 +38,20 @@ type Network struct {
 
 // NewNetwork creates a network from the config file passed
 func NewNetwork(configFile string, id int) *Network {
-	nodeIDs := []int{}
-	registry := make(map[int]*net.UDPAddr)
+	config := NewConfig(configFile)
 
-	for _, node := range Parse(configFile) {
-		fmt.Fprintf(os.Stderr, "[\033[32;1m CONFIG \033[0m] Node [%d] @ %v:%v\n", node.ID, node.Hostname, node.Port)
-		addr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%s:%d", node.Hostname, node.Port))
-		util.Check(err)
-		registry[node.ID] = addr
-		nodeIDs = append(nodeIDs, node.ID)
-	}
-
-	if !util.Contains(nodeIDs, id) {
+	if !config.Contains(id) {
 		util.Raise(fmt.Sprintf("Node [%d] is not present in config file. Make sure to correctly set the --id flag.\n", id))
 	}
 
-	conn, err := net.ListenUDP("udp", registry[id])
+	conn, err := net.ListenUDP("udp", config.AddrOf(id))
 	util.Check(err)
 
 	return &Network{
-		registry: registry,
-		nodeIDs:  nodeIDs,
-		conn:     conn,
+		nodeID: id,
+		config: config,
+
+		conn: conn,
 
 		notifyHb:      make(chan detector.Heartbeat),
 		notifyValue:   make(chan singlepaxos.Value),
@@ -73,7 +64,7 @@ func NewNetwork(configFile string, id int) *Network {
 
 // BroadcastValue sends a value to all nodes on the network
 func (net *Network) BroadcastValue(value singlepaxos.Value) {
-	for _, id := range net.nodeIDs {
+	for _, id := range net.config.ServerIDs() {
 		net.sendValue(id, value)
 	}
 }
@@ -85,7 +76,7 @@ func (net *Network) sendValue(id int, value singlepaxos.Value) {
 	err := encoder.Encode(value)
 	util.Check(err)
 	encoded := append([]byte{valueMessage}, buf.Bytes()...)
-	_, err = net.conn.WriteTo(encoded, net.registry[id])
+	_, err = net.conn.WriteTo(encoded, net.config.AddrOf(id))
 	util.Check(err)
 }
 
@@ -106,10 +97,12 @@ func (net *Network) ListenValue() <-chan singlepaxos.Value {
 
 func (net *Network) eventLoop() {
 	var buf [512]byte
+	// pretty sure this is the dumbest way of doing this, is there another ?
 	for {
 		n, _, err := net.conn.ReadFromUDP(buf[:])
 		util.Check(err)
 		decoder := gob.NewDecoder(bytes.NewReader(buf[1:n]))
+
 		switch buf[0] {
 		case heartbeatMessage:
 			var hb detector.Heartbeat
@@ -145,4 +138,14 @@ func (net *Network) eventLoop() {
 			util.Raise("Unknown message")
 		}
 	}
+}
+
+// ServerIDs is an accessor to ids of all server nodes
+func (net *Network) ServerIDs() []int {
+	return net.config.ServerIDs()
+}
+
+// NodeID is an accessor to the id of the current node
+func (net *Network) NodeID() int {
+	return net.nodeID
 }

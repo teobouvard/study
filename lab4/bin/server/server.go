@@ -30,7 +30,6 @@ func main() {
 	network := netlayer.NewNetwork(*config, *id)
 	network.Start()
 
-	server := server.NewServer()
-	server.Connect(network)
+	server := server.NewServer(network)
 	server.Run()
 }

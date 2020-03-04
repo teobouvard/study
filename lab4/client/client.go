@@ -19,16 +19,11 @@ type Client struct {
 }
 
 // NewClient TODO
-func NewClient() *Client {
+func NewClient(network *netlayer.Network) *Client {
 	return &Client{
 		valueIn: make(chan singlepaxos.Value),
-		network: nil,
+		network: network,
 	}
-}
-
-// Connect TODO
-func (c *Client) Connect(network *netlayer.Network) {
-	c.network = network
 }
 
 // Run starts client main loop
@@ -52,6 +47,7 @@ func (c *Client) eventLoop() {
 	}
 
 	notify := c.network.ListenLearn()
+
 	for {
 		fmt.Fprintf(os.Stderr, "[\033[34;1m INPUT \033[0m] Enter value : ")
 		select {

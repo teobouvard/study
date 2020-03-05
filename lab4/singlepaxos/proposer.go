@@ -31,9 +31,6 @@ type Proposer struct {
 	acceptOut  chan<- Accept
 
 	stop chan struct{}
-
-	//TODO(student): Task 2 and 3 - algorithm and distributed implementation
-	// Add other needed fields
 }
 
 // NewProposer returns a new single-decree Paxos proposer.
@@ -50,7 +47,8 @@ type Proposer struct {
 // The proposer's internal crnd field should initially be set to the value of
 // its id.
 func NewProposer(id int, nrOfNodes int, ld detector.LeaderDetector, prepareOut chan<- Prepare, acceptOut chan<- Accept) *Proposer {
-	//TODO(student): Task 2 and 3 - algorithm and distributed implementation
+	const bufferSize int = 100
+
 	return &Proposer{
 		id:            id,
 		nrOfNodes:     nrOfNodes,
@@ -63,8 +61,8 @@ func NewProposer(id int, nrOfNodes int, ld detector.LeaderDetector, prepareOut c
 
 		ld: ld,
 
-		valueIn:   make(chan Value, 10),
-		promiseIn: make(chan Promise, 10),
+		valueIn:   make(chan Value, bufferSize),
+		promiseIn: make(chan Promise, bufferSize),
 
 		prepareOut: prepareOut,
 		acceptOut:  acceptOut,
@@ -78,7 +76,6 @@ func NewProposer(id int, nrOfNodes int, ld detector.LeaderDetector, prepareOut c
 func (p *Proposer) Start() {
 	go func() {
 		for {
-			//TODO(student): Task 3 - distributed implementation
 			select {
 			case prm := <-p.promiseIn:
 				acc, output := p.handlePromise(prm)
@@ -102,19 +99,16 @@ func (p *Proposer) Start() {
 
 // Stop stops p's main run loop.
 func (p *Proposer) Stop() {
-	//TODO(student): Task 3 - distributed implementation
 	p.stop <- struct{}{}
 }
 
 // DeliverPromise delivers promise prm to proposer p.
 func (p *Proposer) DeliverPromise(prm Promise) {
-	//TODO(student): Task 3 - distributed implementation
 	p.promiseIn <- prm
 }
 
 // DeliverClientValue delivers client value val from to proposer p.
 func (p *Proposer) DeliverClientValue(val Value) {
-	//TODO(student): Task 3 - distributed implementation
 	if p.ld.Leader() == p.id {
 		p.valueIn <- val
 	}
@@ -133,7 +127,6 @@ func (p *Proposer) prepare(val Value) Prepare {
 // If handlePromise returns false as output, then acc will be a zero-valued
 // struct.
 func (p *Proposer) handlePromise(prm Promise) (acc Accept, output bool) {
-	//TODO(student): Task 2 - algorithm implementation
 	if prm.Rnd == p.crnd {
 		p.mv[prm.From] = prm
 		if p.consensus() {
@@ -148,18 +141,17 @@ func (p *Proposer) handlePromise(prm Promise) (acc Accept, output bool) {
 // of Paxos nodes.
 func (p *Proposer) increaseCrnd() {
 	p.crnd += Round(p.nrOfNodes)
-	//TODO(student): Task 2 - algorithm implementation
 }
 
-//TODO(student): Add any other unexported methods needed.
-
+// Internal: consensus checks if p received a majority of promises
 func (p *Proposer) consensus() bool {
 	return len(p.mv) > p.nrOfNodes/2
 }
 
+// Internal: pickValue picks a value amongst the received promises of p and updates
+// the clientValue of p
 func (p *Proposer) pickValue() {
 	var picked Promise
-
 	for _, promise := range p.mv {
 		if promise.Vrnd > picked.Vrnd {
 			picked = promise

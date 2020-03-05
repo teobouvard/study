@@ -12,13 +12,13 @@ import (
 	"github.com/dat520-2020/TeamPilots/lab4/util"
 )
 
-// Client TODO
+// Client is a paxos client
 type Client struct {
 	valueIn chan singlepaxos.Value
 	network *netlayer.Network
 }
 
-// NewClient TODO
+// NewClient assigns the client to the network
 func NewClient(network *netlayer.Network) *Client {
 	return &Client{
 		valueIn: make(chan singlepaxos.Value),
@@ -26,9 +26,9 @@ func NewClient(network *netlayer.Network) *Client {
 	}
 }
 
-// Run starts client main loop
+// Run runs the client until interruption
 func (c *Client) Run() {
-	log.Printf("Starting client\n")
+	log.Printf("Starting client [%v]\n", c.network.NodeID())
 
 	sig := make(chan os.Signal)
 	signal.Notify(sig, os.Interrupt)
@@ -38,9 +38,10 @@ func (c *Client) Run() {
 
 	<-sig
 	fmt.Fprintf(os.Stderr, "\n")
-	log.Printf("Received interrupt, shutting down client\n")
+	log.Printf("Received interrupt, shutting down client [%v]\n", c.network.NodeID())
 }
 
+// Internal : eventLoop broadcasts input value to the network and displays values voted by the network
 func (c *Client) eventLoop() {
 	if c.network == nil {
 		util.Raise("Client is not connected to a network.")
@@ -61,6 +62,8 @@ func (c *Client) eventLoop() {
 	}
 }
 
+// Internal : scanInputLoop reads the standard input and forwards newline
+// delimited strings to the client main loop
 func (c *Client) scanInputLoop() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {

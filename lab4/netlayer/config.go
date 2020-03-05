@@ -23,14 +23,14 @@ type YAMLConfig struct {
 	Clients []YAMLNode
 }
 
-// Config is the network configuration as specified by the config file
+// Config is the network configuration
 type Config struct {
 	serverIDs []int
 	servers   map[int]*net.UDPAddr
 	clients   map[int]*net.UDPAddr
 }
 
-// NewConfig reads a config file and contains the nodes in it
+// NewConfig creates a Config by reading the specified config file
 func NewConfig(configFile string) *Config {
 	var yamlConf YAMLConfig
 	file, err := ioutil.ReadFile(configFile)
@@ -64,7 +64,7 @@ func NewConfig(configFile string) *Config {
 	}
 }
 
-// Contains returns true if the config file has a node with the specified id
+// Contains returns true if id is present in the config file
 func (c *Config) Contains(id int) bool {
 	if _, ok := c.servers[id]; ok {
 		return true
@@ -75,13 +75,13 @@ func (c *Config) Contains(id int) bool {
 	return false
 }
 
-// AddrOf returns the UDP address mapped to the specified id
+// AddrOf returns the network address mapped to the specified id
 func (c *Config) AddrOf(id int) *net.UDPAddr {
 	if !c.Contains(id) {
 		util.Raise("id lookup failed because requested id is not in the config")
 	}
-	if addr, ok := c.servers[id]; ok {
-		return addr
+	if c.IsServer(id) {
+		return c.servers[id]
 	}
 	return c.clients[id]
 }
@@ -89,4 +89,12 @@ func (c *Config) AddrOf(id int) *net.UDPAddr {
 // ServerIDs is an accessor to ids of server nodes
 func (c *Config) ServerIDs() []int {
 	return c.serverIDs
+}
+
+// IsServer checks if id is a server
+func (c *Config) IsServer(id int) bool {
+	if _, ok := c.servers[id]; ok {
+		return true
+	}
+	return false
 }

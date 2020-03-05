@@ -11,7 +11,7 @@ import (
 	"github.com/dat520-2020/TeamPilots/lab4/singlepaxos"
 )
 
-// Server TODO
+// Server is a Paxos server
 type Server struct {
 	fd *detector.EvtFailureDetector
 	ld *detector.MonLeaderDetector
@@ -30,7 +30,7 @@ type Server struct {
 	valueOut   <-chan singlepaxos.Value
 }
 
-//NewServer constructs a server
+// NewServer constructs a server assigned to the network
 func NewServer(network *netlayer.Network) *Server {
 	const bufferSize int = 100
 
@@ -71,9 +71,9 @@ func NewServer(network *netlayer.Network) *Server {
 	}
 }
 
-// Run TODO
+// Run runs the server until interruption. It handles the start and stop of the paxos components of s.
 func (s *Server) Run() {
-	log.Printf("Starting paxos server\n")
+	log.Printf("Starting paxos server [%v]\n", s.network.NodeID())
 
 	sig := make(chan os.Signal)
 	signal.Notify(sig, os.Interrupt)
@@ -85,7 +85,7 @@ func (s *Server) Run() {
 
 	go s.eventLoop()
 	<-sig
-	log.Printf("Received interrupt, shutting down server\n")
+	log.Printf("Received interrupt, shutting down server [%v]\n", s.network.NodeID())
 
 	s.learner.Stop()
 	s.acceptor.Stop()
@@ -93,6 +93,8 @@ func (s *Server) Run() {
 	s.fd.Stop()
 }
 
+// Internal : s subscribes to the notification channels of its network, and forwards the objects to its paxos components.
+// The event loop also forwards the objects returned by its paxos components to the server for broadcasting
 func (s *Server) eventLoop() {
 	hbIn := s.network.ListenHeartbeat()
 	valueIn := s.network.ListenValue()
@@ -110,7 +112,6 @@ func (s *Server) eventLoop() {
 		case val := <-valueIn:
 			s.proposer.DeliverClientValue(val)
 		case val := <-s.valueOut:
-			log.Println(val)
 			s.network.BroadcastVotedValue(val)
 		case prp := <-s.prepareOut:
 			s.network.BroadcastPrepare(prp)

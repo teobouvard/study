@@ -11,7 +11,8 @@ import (
 	"github.com/dat520-2020/TeamPilots/lab4/util"
 )
 
-// byte constants for different message types
+// Byte constants for different message types
+// The corresponding value is prepended to each message being sent
 const (
 	heartbeatMessage byte = iota
 	valueMessage
@@ -21,7 +22,8 @@ const (
 	learnMessage
 )
 
-// Network TODO
+// Network implements the network layer, by providing read-only
+// notification channels and sending methods
 type Network struct {
 	nodeID int
 	config *Config
@@ -62,7 +64,7 @@ func NewNetwork(configFile string, id int) *Network {
 	}
 }
 
-// BroadcastRequestedValue sends a value to all servers on the network
+// BroadcastRequestedValue sends a value to all *servers* on the network
 func (net *Network) BroadcastRequestedValue(value singlepaxos.Value) {
 	var buf bytes.Buffer
 	encoder := gob.NewEncoder(&buf)
@@ -75,7 +77,7 @@ func (net *Network) BroadcastRequestedValue(value singlepaxos.Value) {
 	}
 }
 
-// BroadcastVotedValue sends a value to all clients on the network
+// BroadcastVotedValue sends a value to all *clients* on the network
 func (net *Network) BroadcastVotedValue(value singlepaxos.Value) {
 	var buf bytes.Buffer
 	encoder := gob.NewEncoder(&buf)
@@ -88,7 +90,7 @@ func (net *Network) BroadcastVotedValue(value singlepaxos.Value) {
 	}
 }
 
-// BroadcastPrepare sends a prepare message to all servers
+// BroadcastPrepare sends a prepare message to all servers on the network
 func (net *Network) BroadcastPrepare(prp singlepaxos.Prepare) {
 	var buf bytes.Buffer
 	encoder := gob.NewEncoder(&buf)
@@ -102,7 +104,7 @@ func (net *Network) BroadcastPrepare(prp singlepaxos.Prepare) {
 	}
 }
 
-// BroadcastAccept sends an accept message to all servers
+// BroadcastAccept sends an accept message to all servers on the network
 func (net *Network) BroadcastAccept(acc singlepaxos.Accept) {
 	var buf bytes.Buffer
 	encoder := gob.NewEncoder(&buf)
@@ -115,7 +117,7 @@ func (net *Network) BroadcastAccept(acc singlepaxos.Accept) {
 	}
 }
 
-// BroadcastLearn sends a learn message to all servers
+// BroadcastLearn sends a learn message to all servers on the network
 func (net *Network) BroadcastLearn(lrn singlepaxos.Learn) {
 	var buf bytes.Buffer
 	encoder := gob.NewEncoder(&buf)
@@ -156,7 +158,7 @@ func (net *Network) Start() {
 	go net.eventLoop()
 }
 
-// ListenHeartbeat returns a notification channel for heartbeat messages
+// ListenHeartbeat returns a notification channel for Heartbeat messages
 func (net *Network) ListenHeartbeat() <-chan detector.Heartbeat {
 	return net.notifyHb
 }
@@ -166,26 +168,28 @@ func (net *Network) ListenValue() <-chan singlepaxos.Value {
 	return net.notifyValue
 }
 
-// ListenPrepare returns a notification channel for prepare messages
+// ListenPrepare returns a notification channel for Prepare messages
 func (net *Network) ListenPrepare() <-chan singlepaxos.Prepare {
 	return net.notifyPrepare
 }
 
-// ListenPromise returns a notification channel for promise messages
+// ListenPromise returns a notification channel for Promise messages
 func (net *Network) ListenPromise() <-chan singlepaxos.Promise {
 	return net.notifyPromise
 }
 
-// ListenAccept returns a notification channel for accept messages
+// ListenAccept returns a notification channel for Accept messages
 func (net *Network) ListenAccept() <-chan singlepaxos.Accept {
 	return net.notifyAccept
 }
 
-// ListenLearn returns a notification channel for learn messages
+// ListenLearn returns a notification channel for Learn messages
 func (net *Network) ListenLearn() <-chan singlepaxos.Learn {
 	return net.notifyLearn
 }
 
+// Internal : net's event loop reads all incoming UDP packets and forwards the decoded objects to the notification channels.
+// The first byte of each packet discriminates between the different messages types.
 func (net *Network) eventLoop() {
 	var buf [512]byte
 	// pretty sure this is the dumbest way of doing this, is there another ?
@@ -245,4 +249,9 @@ func (net *Network) ServerIDs() []int {
 // NodeID is an accessor to the id of the current node
 func (net *Network) NodeID() int {
 	return net.nodeID
+}
+
+// IsServer checks if id is a server
+func (net *Network) IsServer(id int) bool {
+	return net.config.IsServer(id)
 }

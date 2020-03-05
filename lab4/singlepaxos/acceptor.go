@@ -5,8 +5,6 @@ package singlepaxos
 // Acceptor represents an acceptor as defined by the single-decree Paxos
 // algorithm.
 type Acceptor struct {
-	//TODO(student): Task 2 and 3 - algorithm and distributed implementation
-	// Add needed fields
 	id int
 
 	rnd  Round
@@ -31,8 +29,7 @@ type Acceptor struct {
 //
 // learnOut: A send only channel used to send learns to other nodes.
 func NewAcceptor(id int, promiseOut chan<- Promise, learnOut chan<- Learn) *Acceptor {
-	//TODO(student): Task 2 and 3 - algorithm and distributed implementation
-
+	const bufferSize int = 100
 	return &Acceptor{
 		id: id,
 
@@ -40,8 +37,8 @@ func NewAcceptor(id int, promiseOut chan<- Promise, learnOut chan<- Learn) *Acce
 		vrnd: NoRound,
 		vval: ZeroValue,
 
-		prepareIn: make(chan Prepare, 10),
-		acceptIn:  make(chan Accept, 10),
+		prepareIn: make(chan Prepare, bufferSize),
+		acceptIn:  make(chan Accept, bufferSize),
 
 		promiseOut: promiseOut,
 		learnOut:   learnOut,
@@ -55,7 +52,6 @@ func NewAcceptor(id int, promiseOut chan<- Promise, learnOut chan<- Learn) *Acce
 func (a *Acceptor) Start() {
 	go func() {
 		for {
-			//TODO(student): Task 3 - distributed implementation
 			select {
 			case prp := <-a.prepareIn:
 				prm, output := a.handlePrepare(prp)
@@ -76,19 +72,16 @@ func (a *Acceptor) Start() {
 
 // Stop stops a's main run loop.
 func (a *Acceptor) Stop() {
-	//TODO(student): Task 3 - distributed implementation
 	a.stop <- struct{}{}
 }
 
 // DeliverPrepare delivers prepare prp to acceptor a.
 func (a *Acceptor) DeliverPrepare(prp Prepare) {
-	//TODO(student): Task 3 - distributed implementation
 	a.prepareIn <- prp
 }
 
 // DeliverAccept delivers accept acc to acceptor a.
 func (a *Acceptor) DeliverAccept(acc Accept) {
-	//TODO(student): Task 3 - distributed implementation
 	a.acceptIn <- acc
 }
 
@@ -98,7 +91,6 @@ func (a *Acceptor) DeliverAccept(acc Accept) {
 // If handlePrepare returns false as output, then prm will be a zero-valued
 // struct.
 func (a *Acceptor) handlePrepare(prp Prepare) (prm Promise, output bool) {
-	//TODO(student): Task 2 - algorithm implementation
 	if prp.Crnd > a.rnd {
 		a.rnd = prp.Crnd
 		return Promise{To: prp.From, From: a.id, Rnd: a.rnd, Vrnd: a.vrnd, Vval: a.vval}, true
@@ -111,7 +103,6 @@ func (a *Acceptor) handlePrepare(prp Prepare) (prm Promise, output bool) {
 // corresponding learn, then output will be true and lrn contain the learn.  If
 // handleAccept returns false as output, then lrn will be a zero-valued struct.
 func (a *Acceptor) handleAccept(acc Accept) (lrn Learn, output bool) {
-	//TODO(student): Task 2 - algorithm implementation
 	if acc.Rnd >= a.rnd && acc.Rnd != a.vrnd {
 		a.rnd = acc.Rnd
 		a.vrnd = acc.Rnd
@@ -120,5 +111,3 @@ func (a *Acceptor) handleAccept(acc Accept) (lrn Learn, output bool) {
 	}
 	return Learn{}, false
 }
-
-//TODO(student): Add any other unexported methods needed.

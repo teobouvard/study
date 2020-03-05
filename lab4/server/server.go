@@ -24,7 +24,9 @@ type Server struct {
 
 	hbOut      <-chan detector.Heartbeat
 	prepareOut <-chan singlepaxos.Prepare
+	promiseOut <-chan singlepaxos.Promise
 	acceptOut  <-chan singlepaxos.Accept
+	learnOut   <-chan singlepaxos.Learn
 	valueOut   <-chan singlepaxos.Value
 }
 
@@ -62,7 +64,9 @@ func NewServer(network *netlayer.Network) *Server {
 
 		hbOut:      hbOut,
 		prepareOut: prepareOut,
+		promiseOut: promiseOut,
 		acceptOut:  acceptOut,
+		learnOut:   learnOut,
 		valueOut:   valueOut,
 	}
 }
@@ -90,12 +94,40 @@ func (s *Server) Run() {
 }
 
 func (s *Server) eventLoop() {
+	hbIn := s.network.ListenHeartbeat()
 	valueIn := s.network.ListenValue()
+	prepareIn := s.network.ListenPrepare()
+	promiseIn := s.network.ListenPromise()
+	acceptIn := s.network.ListenAccept()
+	learnIn := s.network.ListenLearn()
 
 	for {
 		select {
+		case hb := <-hbIn:
+			s.fd.DeliverHeartbeat(hb)
+		case hb := <-s.hbOut:
+			s.network.SendHeartbeat(hb)
 		case val := <-valueIn:
 			s.proposer.DeliverClientValue(val)
+		case val := <-s.valueOut:
+			log.Println(val)
+			s.network.BroadcastVotedValue(val)
+		case prp := <-s.prepareOut:
+			s.network.BroadcastPrepare(prp)
+		case prp := <-prepareIn:
+			s.acceptor.DeliverPrepare(prp)
+		case prm := <-promiseIn:
+			s.proposer.DeliverPromise(prm)
+		case prm := <-s.promiseOut:
+			s.network.SendPromise(prm)
+		case acc := <-acceptIn:
+			s.acceptor.DeliverAccept(acc)
+		case acc := <-s.acceptOut:
+			s.network.BroadcastAccept(acc)
+		case lrn := <-learnIn:
+			s.learner.DeliverLearn(lrn)
+		case lrn := <-s.learnOut:
+			s.network.BroadcastLearn(lrn)
 		}
 	}
 }

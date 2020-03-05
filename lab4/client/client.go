@@ -46,16 +46,17 @@ func (c *Client) eventLoop() {
 		util.Raise("Client is not connected to a network.")
 	}
 
-	notify := c.network.ListenLearn()
+	voted := c.network.ListenValue()
 
 	for {
 		fmt.Fprintf(os.Stderr, "[\033[34;1m INPUT \033[0m] Enter value : ")
 		select {
 		case val := <-c.valueIn:
-			c.network.BroadcastValue(val)
+			c.network.BroadcastRequestedValue(val)
 			log.Printf("Sent value : %v\n", val)
-		case val := <-notify:
-			log.Printf("Received value : %v\n", val)
+		case val := <-voted:
+			fmt.Println()
+			log.Printf("Voted value : %v\n", val)
 		}
 	}
 }

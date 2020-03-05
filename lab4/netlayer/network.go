@@ -62,21 +62,92 @@ func NewNetwork(configFile string, id int) *Network {
 	}
 }
 
-// BroadcastValue sends a value to all nodes on the network
-func (net *Network) BroadcastValue(value singlepaxos.Value) {
-	for _, id := range net.config.ServerIDs() {
-		net.sendValue(id, value)
-	}
-}
-
-// SendValue TODO
-func (net *Network) sendValue(id int, value singlepaxos.Value) {
+// BroadcastRequestedValue sends a value to all servers on the network
+func (net *Network) BroadcastRequestedValue(value singlepaxos.Value) {
 	var buf bytes.Buffer
 	encoder := gob.NewEncoder(&buf)
 	err := encoder.Encode(value)
 	util.Check(err)
 	encoded := append([]byte{valueMessage}, buf.Bytes()...)
-	_, err = net.conn.WriteTo(encoded, net.config.AddrOf(id))
+	for _, addr := range net.config.servers {
+		_, err = net.conn.WriteTo(encoded, addr)
+		util.Check(err)
+	}
+}
+
+// BroadcastVotedValue sends a value to all clients on the network
+func (net *Network) BroadcastVotedValue(value singlepaxos.Value) {
+	var buf bytes.Buffer
+	encoder := gob.NewEncoder(&buf)
+	err := encoder.Encode(value)
+	util.Check(err)
+	encoded := append([]byte{valueMessage}, buf.Bytes()...)
+	for _, addr := range net.config.clients {
+		_, err = net.conn.WriteTo(encoded, addr)
+		util.Check(err)
+	}
+}
+
+// BroadcastPrepare sends a prepare message to all servers
+func (net *Network) BroadcastPrepare(prp singlepaxos.Prepare) {
+	var buf bytes.Buffer
+	encoder := gob.NewEncoder(&buf)
+	err := encoder.Encode(prp)
+	util.Check(err)
+	encoded := buf.Bytes()
+	encoded = append([]byte{prepareMessage}, encoded...)
+	for _, addr := range net.config.servers {
+		_, err = net.conn.WriteTo(encoded, addr)
+		util.Check(err)
+	}
+}
+
+// BroadcastAccept sends an accept message to all servers
+func (net *Network) BroadcastAccept(acc singlepaxos.Accept) {
+	var buf bytes.Buffer
+	encoder := gob.NewEncoder(&buf)
+	err := encoder.Encode(acc)
+	util.Check(err)
+	encoded := append([]byte{acceptMessage}, buf.Bytes()...)
+	for _, addr := range net.config.servers {
+		_, err = net.conn.WriteTo(encoded, addr)
+		util.Check(err)
+	}
+}
+
+// BroadcastLearn sends a learn message to all servers
+func (net *Network) BroadcastLearn(lrn singlepaxos.Learn) {
+	var buf bytes.Buffer
+	encoder := gob.NewEncoder(&buf)
+	err := encoder.Encode(lrn)
+	util.Check(err)
+	encoded := append([]byte{learnMessage}, buf.Bytes()...)
+	for _, addr := range net.config.servers {
+		_, err = net.conn.WriteTo(encoded, addr)
+		util.Check(err)
+	}
+}
+
+// SendHeartbeat sends a hearbeat message to its recipient
+func (net *Network) SendHeartbeat(hb detector.Heartbeat) {
+	var buf bytes.Buffer
+	encoder := gob.NewEncoder(&buf)
+	err := encoder.Encode(hb)
+	util.Check(err)
+	encoded := append([]byte{heartbeatMessage}, buf.Bytes()...)
+	_, err = net.conn.WriteTo(encoded, net.config.AddrOf(hb.To))
+	util.Check(err)
+
+}
+
+// SendPromise sends a promise message to its recipient
+func (net *Network) SendPromise(prm singlepaxos.Promise) {
+	var buf bytes.Buffer
+	encoder := gob.NewEncoder(&buf)
+	err := encoder.Encode(prm)
+	util.Check(err)
+	encoded := append([]byte{promiseMessage}, buf.Bytes()...)
+	_, err = net.conn.WriteTo(encoded, net.config.AddrOf(prm.To))
 	util.Check(err)
 }
 
@@ -85,14 +156,34 @@ func (net *Network) Start() {
 	go net.eventLoop()
 }
 
-// ListenLearn returns a notification channel for learn messages
-func (net *Network) ListenLearn() <-chan singlepaxos.Learn {
-	return net.notifyLearn
+// ListenHeartbeat returns a notification channel for heartbeat messages
+func (net *Network) ListenHeartbeat() <-chan detector.Heartbeat {
+	return net.notifyHb
 }
 
 // ListenValue returns a notification channel for Value messages
 func (net *Network) ListenValue() <-chan singlepaxos.Value {
 	return net.notifyValue
+}
+
+// ListenPrepare returns a notification channel for prepare messages
+func (net *Network) ListenPrepare() <-chan singlepaxos.Prepare {
+	return net.notifyPrepare
+}
+
+// ListenPromise returns a notification channel for promise messages
+func (net *Network) ListenPromise() <-chan singlepaxos.Promise {
+	return net.notifyPromise
+}
+
+// ListenAccept returns a notification channel for accept messages
+func (net *Network) ListenAccept() <-chan singlepaxos.Accept {
+	return net.notifyAccept
+}
+
+// ListenLearn returns a notification channel for learn messages
+func (net *Network) ListenLearn() <-chan singlepaxos.Learn {
+	return net.notifyLearn
 }
 
 func (net *Network) eventLoop() {
@@ -108,31 +199,37 @@ func (net *Network) eventLoop() {
 			var hb detector.Heartbeat
 			err = decoder.Decode(&hb)
 			util.Check(err)
+			//log.Printf("NETWORK : %v\n", hb)
 			net.notifyHb <- hb
 		case valueMessage:
 			var val singlepaxos.Value
 			err = decoder.Decode(&val)
 			util.Check(err)
+			//log.Printf("NETWORK : Value '%s'\n", val)
 			net.notifyValue <- val
 		case prepareMessage:
 			var prp singlepaxos.Prepare
 			err = decoder.Decode(&prp)
 			util.Check(err)
+			//log.Printf("NETWORK : '%s'\n", prp)
 			net.notifyPrepare <- prp
 		case promiseMessage:
 			var prm singlepaxos.Promise
 			err = decoder.Decode(&prm)
 			util.Check(err)
+			//log.Printf("NETWORK : '%s'\n", prm)
 			net.notifyPromise <- prm
 		case acceptMessage:
 			var acc singlepaxos.Accept
 			err = decoder.Decode(&acc)
 			util.Check(err)
+			//log.Printf("NETWORK : '%s'\n", acc)
 			net.notifyAccept <- acc
 		case learnMessage:
 			var lrn singlepaxos.Learn
 			err = decoder.Decode(&lrn)
 			util.Check(err)
+			//log.Printf("NETWORK : '%s'\n", lrn)
 			net.notifyLearn <- lrn
 		default:
 			util.Raise("Unknown message")

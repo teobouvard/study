@@ -3,7 +3,6 @@
 package singlepaxos
 
 import (
-	"log"
 	"time"
 
 	"github.com/dat520-2020/TeamPilots/lab3/detector"
@@ -88,8 +87,8 @@ func (p *Proposer) Start() {
 					p.quorumReached = true
 				}
 			case val := <-p.valueIn:
-				p.prepareOut <- p.craftPrepare(val)
-				p.quorumTimeout = time.NewTimer(time.Second) // second is arbitrary
+				p.prepareOut <- p.prepare(val)
+				p.quorumTimeout = time.NewTimer(time.Second) // timeout value is arbitrary
 			case <-p.quorumTimeout.C:
 				if !p.quorumReached {
 					p.DeliverClientValue(p.clientValue)
@@ -115,14 +114,13 @@ func (p *Proposer) DeliverPromise(prm Promise) {
 
 // DeliverClientValue delivers client value val from to proposer p.
 func (p *Proposer) DeliverClientValue(val Value) {
-	log.Println("Looking good !")
 	//TODO(student): Task 3 - distributed implementation
 	if p.ld.Leader() == p.id {
 		p.valueIn <- val
 	}
 }
 
-func (p *Proposer) craftPrepare(val Value) Prepare {
+func (p *Proposer) prepare(val Value) Prepare {
 	p.clientValue = val
 	p.increaseCrnd()
 	p.quorumReached = false

@@ -6,6 +6,7 @@
 \usepackage{cases}
 \usepackage{systeme}
 \usepackage{graphicx}
+\usepackage{clrscode3e}
 
 \begin{document}
 
@@ -15,7 +16,34 @@
 
 \section*{Problem 1}
 \begin{enumerate}[a)]
-    \item 
+	\item We compute the m-table and the s-table according to the \proc{matrix-chain-order} procedure, with a slight modification. Rather than replacing a value if the computational cost is lower, we replace it when the cost is higher. By doing this, we find the product order which maximizes the number of scalar multiplications.
+
+	      \begin{table}[!htb]
+		      \begin{minipage}{.66\textwidth}
+			      \centering
+			      \caption{m-table}
+			      \begin{tabular}{|c|c|c|c|c|}
+				      \hline
+				      0 & 15750 & 18000 & 21000 & 43875 \\ \hline
+				        & 0     & 2625  & 6000  & 17625 \\ \hline
+				        &       & 0     & 750   & 4500  \\ \hline
+				        &       &       & 0     & 1250  \\ \hline
+				        &       &       &       & 0     \\ \hline
+			      \end{tabular}
+		      \end{minipage}
+		      \begin{minipage}{.33\textwidth}
+			      \centering
+			      \caption{s-table}
+			      \begin{tabular}{|c|c|c|c|c|}
+				      \hline
+				       & 0 & 1 & 1 & 0 \\ \hline
+				       &   & 1 & 1 & 1 \\ \hline
+				       &   &   & 2 & 3 \\ \hline
+				       &   &   &   & 3 \\ \hline
+				       &   &   &   &   \\ \hline
+			      \end{tabular}
+		      \end{minipage}
+	      \end{table}
 \end{enumerate}
 
 

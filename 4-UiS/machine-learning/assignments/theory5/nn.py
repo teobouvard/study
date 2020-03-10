@@ -1,11 +1,13 @@
+# useful resources
+# https://sudeepraja.github.io/Neural/
+# http://cs231n.stanford.edu/slides/2018/cs231n_2018_ds02.pdf
+
 import numpy as np
 
 
 def to_latex(a):
-    """Returns a LaTeX bmatrix
-
-    :a: numpy array
-    :returns: LaTeX bmatrix as a string
+    """
+    Returns a LaTeX bmatrix from a 2D numpy array
     """
     if len(a.shape) > 2:
         raise ValueError("bmatrix can at most display two dimensions")
@@ -51,39 +53,53 @@ theta_2 = np.column_stack([bias_2, theta_2])
 
 y_11 = theta_1 @ x_1
 
-print("Weight matrix\n", theta_1)
-print("Training vector\n", x_1)
-print("Multiplication output\n", y_11)
+# print("Weight matrix\n", theta_1)
+# print("Training vector\n", x_1)
+# print("Multiplication output\n", y_11)
 
 y_11 = activation(y_11)
 
-print("Activation pass\n", y_11)
+# print("Activation pass\n", y_11)
 
 y_11 = np.vstack([[1], y_11])
 y_21 = theta_2 @ y_11
 
-print("Weight matrix\n", theta_2)
-print("Hidden vector\n", y_11)
-print("Multiplication output\n", y_21)
+# print("Weight matrix\n", theta_2)
+# print("Hidden vector\n", y_11)
+# print("Multiplication output\n", y_21)
 
 y_21 = activation(y_21)
 
-print("Output layer\n", y_21)
+# print("Output layer\n", y_21)
 
 loss = 0.5 * np.linalg.norm(y_21 - y_1) ** 2
 
-print("J(theta)\n", loss)
+# print("J(theta)\n", loss)
 
-sigprime = activation_prime(theta_2 @ y_11)
-print(f"{sigprime=}")
+sigprime_2 = activation_prime(theta_2 @ y_11)
 
-delta_2 = np.multiply((y_21 - y_1), sigprime)
-print(f"{delta_2=}")
+delta_2 = np.multiply((y_21 - y_1), sigprime_2)
 
+sigprime_1 = activation_prime(theta_1 @ x_1)
+diff = theta_2 @ delta_2
+delta_1 = np.multiply(diff[1:, :], sigprime_1)
+
+
+delta_theta_1 = -mu * delta_1 @ x_1.T
 delta_theta_2 = -mu * delta_2 @ y_11.T
 
-print(f"{delta_theta_2=}")
-
+new_theta_1 = theta_1 + delta_theta_1
 new_theta_2 = theta_2 + delta_theta_2
-print(f"{theta_2=}")
-print(to_latex(new_theta_2))
+
+# print(new_theta_1)
+# print(new_theta_2)
+
+y_test_1 = activation(new_theta_1 @ x_1)
+y_test_1 = np.vstack([[1], y_test_1])
+y_test = activation(new_theta_2 @ y_test_1)
+
+print(y_test)
+
+loss = 0.5 * np.linalg.norm(y_test - y_1) ** 2
+
+print("J(theta)\n", loss)

@@ -37,7 +37,8 @@ We see that this result is equivalent to a single layer network having $k^2\bm{\
 \section*{Problem 2}
 
 \begin{enumerate}[a)]
-	\item The network has the following structure.
+	\item The network has the following structure. The $+1$ neurons indicate the bias units.
+
 	      \begin{figure}[h]
 		      \includegraphics[width=0.8 \textwidth]{nn.png}
 	      \end{figure}
@@ -52,19 +53,19 @@ We see that this result is equivalent to a single layer network having $k^2\bm{\
 	      \end{align*}
 
 	\item
-	      Let $\sigma$ be the sigmoid function used as activation function for the network. We could compute the consecutive outputs by performing a matrix multiplication and then a matrix addition.
+	      Let $\sigma$ be the activation function used in the network. We could compute the consecutive outputs by performing a matrix multiplication and then a matrix addition.
 
 	      \[
 		      \bm{y} = \sigma(\bm{\Theta}\bm{x} + \bm{b})
 	      \]
 
-	      but it is easier to incorporate the bias to our weight matrix, and add a unit component to each of our training vectors, as this allows us to perform a single matrix multiplication. In the following, this augmented weight matrix will be denoted $\bm{\Theta}$. The first column of $\bm{\Theta}$ corresponds to the bias weights, and the remaining columns to the $\bm{\theta}_i$ weight values. The normalized training vector are prepended with a unit row, corresponding to the bias component.
+	      but it is easier to incorporate the bias to our weight matrix, and prepend a unit component to each of our training vectors, as this allows us to perform a single matrix multiplication. In the following, this augmented weight matrix will be denoted $\bm{\Theta}$. The first column of $\bm{\Theta}$ corresponds to the bias weights, and the remaining columns to the given $\bm{\theta}$ values. The normalized training vectors are prepended with a unit row, corresponding to the bias component. We denote an augmented vector with the hat notation $\bm{x} \rightarrow \bm{\hat x}$.
 
 	      We first compute the output at the first hidden layer.
 
 	      \begin{align*}
 		      \bm{y}_1^{(1)}
-		       & = \sigma\left(\bm{\Theta}^{(1)}\bm{x}_1\right) \\
+		       & = \sigma\left(\bm{\Theta}^{(1)}\bm{\hat x}_1\right) \\
 		       & = \sigma
 		      \left(
 		      \begin{bmatrix}
@@ -75,13 +76,13 @@ We see that this result is equivalent to a single layer network having $k^2\bm{\
 		      \begin{bmatrix}
 				      1 \\ 1 \\ 0.25 \\ 0.25
 			      \end{bmatrix}
-		      \right)                                           \\
+		      \right)                                                \\
 		       & = \sigma
 		      \left(
 		      \begin{bmatrix}
 				      0.5 \\ -0.125 \\ 0.125
 			      \end{bmatrix}
-		      \right)                                           \\
+		      \right)                                                \\
 		       & =
 		      \begin{bmatrix}
 			      0.378 \\ 0.531 \\ 0.469
@@ -92,32 +93,32 @@ We see that this result is equivalent to a single layer network having $k^2\bm{\
 
 	      \begin{align*}
 		      \bm{y}_1^{(2)}
-		       & = \sigma\left(\bm{\Theta}^{(2)}\bm{y}_1^{(1)}\right) \\
+		       & = \sigma\left(\bm{\Theta}^{(2)}\bm{\hat y}_1^{(1)}\right) \\
 		       & = \sigma
 		      \left(
 		      \begin{bmatrix}
 				      -0.5 & 0.5  & -0.5 & 0.5  \\
 				      0.5  & 0    & -0.5 & 0.5  \\
-				      -0.5 & -0.5 & 0.5  & 0.   \\
+				      -0.5 & -0.5 & 0.5  & 0    \\
 				      0.5  & 0.5  & 0    & -0.5 \\
 			      \end{bmatrix}
 		      \begin{bmatrix}
 				      1 \\ 0.378 \\ 0.531 \\ 0.469
 			      \end{bmatrix}
-		      \right)                                                 \\
+		      \right)                                                      \\
 		       & = \sigma
 		      \left(
 		      \begin{bmatrix}
 				      -0.342 \\ 0.469 \\ -0.423 \\ 0.454
 			      \end{bmatrix}
-		      \right)                                                 \\
+		      \right)                                                      \\
 		       & =
 		      \begin{bmatrix}
 			      0.585 \\ 0.385 \\ 0.604 \\ 0.388
 		      \end{bmatrix}
 	      \end{align*}
 
-	      We can now compute the loss of this training sample.
+	      We can now compute the loss for this training sample.
 
 	      \begin{align*}
 		      J(\bm{\theta})
@@ -138,7 +139,7 @@ We see that this result is equivalent to a single layer network having $k^2\bm{\
 		      \sigma(u) = \frac{1}{1+e^u} \implies \sigma'(u) = - \frac{e^u}{\left(1+e^u\right)^2} = \sigma(u)(\sigma(u)-1)
 	      \end{align*}
 
-	      We start by computing the weights update for the last layer.
+	      We start by computing the gradients for both layers.
 
 	      \begin{align*}
 		      \delta^{(2)}
@@ -167,6 +168,71 @@ We see that this result is equivalent to a single layer network having $k^2\bm{\
 	      \end{align*}
 
 	      \begin{align*}
+		      \delta^{(1)}
+		       & = \bm{\Theta}^{(2)} \delta^{(2)} \circ \sigma' \left(\bm{\Theta}^{(1)} \bm{x_1} \right) \\
+		       & =
+		      \begin{bmatrix}
+			      -0.5 & 0.5  & -0.5 & 0.5  \\
+			      0.5  & 0    & -0.5 & 0.5  \\
+			      -0.5 & -0.5 & 0.5  & 0    \\
+			      0.5  & 0.5  & 0    & -0.5 \\
+		      \end{bmatrix}
+		      \begin{bmatrix}
+			      0.100 \\ -0.091 \\ -0.144 \\ -0.092
+		      \end{bmatrix}
+		      \circ
+		      \sigma'\left(
+		      \begin{bmatrix}
+				      0.5  & 0    & -0.5 & 0.5 \\
+				      -0.5 & 0.5  & -0.5 & 0   \\
+				      0.5  & -0.5 & 0    & 0.5 \\
+			      \end{bmatrix}
+		      \begin{bmatrix}
+				      1 \\ 1 \\ 0.25 \\ 0.25
+			      \end{bmatrix}
+		      \right)                                                                                    \\
+		       & =
+		      \begin{bmatrix}
+			      -0.070 \\
+			      0.077  \\
+			      -0.077 \\
+			      0.051  \\
+		      \end{bmatrix}
+		      \circ
+		      \begin{bmatrix}
+			      -0.235 \\
+			      -0.249 \\
+			      -0.249 \\
+		      \end{bmatrix}                                                                 \\
+	      \end{align*}
+
+	      As we can see, the dimensions do not seem to match for taking the Hadamard product between $\bm{\Theta}^{(2)} \delta^{(2)}$ and $\sigma' \left(\bm{\Theta}^{(1)} \bm{x_1} \right)$. That's because the gradient of the bias unit does not get backpropagated, as shown in the network structure graph. Therefore, we should not consider the first component of $\bm{\Theta}^{(2)} \delta^{(2)}$.
+
+	      \begin{align*}
+		      \delta^{(1)}
+		       & =
+		      \begin{bmatrix}
+			      0.077  \\
+			      -0.077 \\
+			      0.051  \\
+		      \end{bmatrix}
+		      \circ
+		      \begin{bmatrix}
+			      -0.235 \\
+			      -0.249 \\
+			      -0.249 \\
+		      \end{bmatrix} \\
+		       & =
+		      \begin{bmatrix}
+			      -0.018 \\
+			      0.019  \\
+			      -0.013 \\
+		      \end{bmatrix}
+	      \end{align*}
+
+	      We now use the gradients to compute the weights update for each layer.
+
+	      \begin{align*}
 		      \Delta\bm{\Theta}^{(2)}
 		       & = - \mu \delta^{(2)} \bm{y}_1^{(1)T} \\
 		       & = -
@@ -185,7 +251,27 @@ We see that this result is equivalent to a single layer network having $k^2\bm{\
 		      \end{bmatrix}
 	      \end{align*}
 
-	      Finally, we update the weights in $\bm{\Theta}^{(2)}$.
+	      \begin{align*}
+		      \Delta\bm{\Theta}^{(1)}
+		       & = - \mu \delta^{(1)} \bm{x}_1^{(1)T} \\
+		       & = -
+		      \begin{bmatrix}
+			      -0.018 \\
+			      0.019  \\
+			      -0.013 \\
+		      \end{bmatrix}
+		      \begin{bmatrix}
+			      1 & 1 & 0.25 & 0.25
+		      \end{bmatrix}              \\
+		       & =
+		      \begin{bmatrix}
+			      0.018  & 0.018  & 0.004  & 0.004  \\
+			      -0.019 & -0.019 & -0.005 & -0.005 \\
+			      0.013  & 0.013  & 0.003  & 0.003  \\
+		      \end{bmatrix}
+	      \end{align*}
+
+	      Finally, we update the weights matrices.
 
 	      \begin{align*}
 		      \bm{\Theta}^{(2)} & = \bm{\Theta}^{(2)} + \Delta\bm{\Theta}^{(2)} \\
@@ -195,13 +281,17 @@ We see that this result is equivalent to a single layer network having $k^2\bm{\
 			      0.591  & 0.034  & -0.452 & 0.543  \\
 			      -0.356 & -0.445 & 0.577  & 0.068  \\
 			      0.592  & 0.535  & 0.049  & -0.457 \\
-              \end{bmatrix}
-          \end{align*}
-          
-          We now use the same process to compute the weights update in the first layer.
+		      \end{bmatrix}
+	      \end{align*}
 
-          \begin{align*}
-              \delta^{(1)} &= \bm{\Theta}^{(2)} \delta^{(2)} \circ \sigma' \left(\bm{\Theta}^{(1)} \bm{x_1} \right)\\
-          \end{align*}
+	      \begin{align*}
+		      \bm{\Theta}^{(1)} & = \bm{\Theta}^{(1)} + \Delta\bm{\Theta}^{(1)} \\
+		                        & =
+		      \begin{bmatrix}
+			      0.518  & 0.018  & -0.496 & 0.504  \\
+			      -0.519 & 0.481  & -0.505 & -0.005 \\
+			      0.513  & -0.487 & 0.003  & 0.503  \\
+		      \end{bmatrix}
+	      \end{align*}
 \end{enumerate}
 \end{document}

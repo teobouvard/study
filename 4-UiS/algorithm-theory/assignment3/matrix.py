@@ -38,7 +38,7 @@ def inverse_matrix_chain_order(p):
 
 def print_optimal_parens(s, i, j):
     if i == j:
-        print(f"A_{i+1}", end="")
+        print(f"A_{i}", end="")
     else:
         print("(", end="")
         print_optimal_parens(s, i, s[i, j])
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     print(m)
     print(s)
     print(f"Optimal cost : {m[0, -1]}")
-    print_optimal_parens(s, 0, len(s) - 1)
+    # print_optimal_parens(s, 0, len(s) - 1)
     print()
 
     p = [30, 35, 15, 5, 10, 25]

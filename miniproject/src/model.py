@@ -1,5 +1,3 @@
-# https://arxiv.org/pdf/1608.06037.pdf
-
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -75,83 +73,13 @@ class SimpleNet(models.Sequential):
     def save_training_history(self, fname):
         pd.DataFrame(self.history.history).to_csv(fname)
 
-    def old_initialize_layers(self):
-        kernel_size = 3
-        drop_rate = 0.2
-        pool_size = 2
-
-        # Block 1
-        self.add(Conv2D(64, kernel_size, padding="same", input_shape=(32, 32, 3)))
-        self.add(BatchNormalization())
-        self.add(ReLU())
-        self.add(Dropout(drop_rate))
-
-        # Block 2
-        for _ in range(3):
-            self.add(Conv2D(128, kernel_size, padding="same"))
-            self.add(BatchNormalization())
-            self.add(ReLU())
-            self.add(Dropout(drop_rate))
-        self.add(MaxPooling2D())
-
-        # Block 3
-        for _ in range(2):
-            self.add(Conv2D(128, kernel_size, padding="same"))
-            self.add(BatchNormalization())
-            self.add(ReLU())
-            self.add(Dropout(drop_rate))
-
-        # Block 4
-        self.add(Conv2D(128, kernel_size, padding="same"))
-        self.add(BatchNormalization())
-        self.add(ReLU())
-        self.add(Dropout(drop_rate))
-        self.add(MaxPooling2D())
-
-        # Block 5
-        for _ in range(2):
-            self.add(Conv2D(128, kernel_size, padding="same"))
-            self.add(BatchNormalization())
-            self.add(ReLU())
-            self.add(Dropout(drop_rate))
-        self.add(MaxPooling2D())
-
-        # Block 6
-        self.add(Conv2D(128, kernel_size, padding="same"))
-        self.add(BatchNormalization())
-        self.add(ReLU())
-        self.add(Dropout(drop_rate))
-
-        # Block 7
-        self.add(Conv2D(128, 1, padding="same"))
-        self.add(BatchNormalization())
-        self.add(ReLU())
-        self.add(Dropout(drop_rate))
-
-        # Block 8
-        self.add(Conv2D(128, 1, padding="same"))
-        self.add(BatchNormalization())
-        self.add(ReLU())
-        self.add(Dropout(drop_rate))
-        self.add(MaxPooling2D())
-
-        # Block 9
-        self.add(Conv2D(128, kernel_size, padding="same"))
-        self.add(BatchNormalization())
-        self.add(ReLU())
-        self.add(Dropout(drop_rate))
-
-        # Classifier block
-        self.add(Flatten()),
-        self.add(Dense(10, activation="softmax"))
-
     def initialize_layers(self):
-        n_filters = 32
         kernel_size = 3
-        drop_rate = 0.25
         pool_size = 2
 
-        for i in range(3):
+        for i in range(4):
+            drop_rate = (i+2) / 10 # 0.2, 0.3, 0.4
+            n_filters = (2**i) * 32 # 32, 64, 128
             self.add(Conv2D(n_filters, kernel_size, padding="same", input_shape=(32, 32, 3)))
             self.add(BatchNormalization())
             self.add(ReLU())
@@ -160,20 +88,11 @@ class SimpleNet(models.Sequential):
             self.add(ReLU())
             self.add(MaxPooling2D(pool_size))
             self.add(Dropout(drop_rate))
-            n_filters *= 2
-
-        self.add(Conv2D(n_filters, kernel_size, padding="same", input_shape=(32, 32, 3)))
-        self.add(BatchNormalization())
-        self.add(ReLU())
-        self.add(Conv2D(n_filters, kernel_size, padding="same", input_shape=(32, 32, 3)))
-        self.add(BatchNormalization())
-        self.add(ReLU())
-        self.add(MaxPooling2D(pool_size))
-        self.add(Dropout(drop_rate))
 
         # Classifier block
         self.add(Flatten())
-        self.add(Dense(512, activation="relu"))
-        self.add(Dropout(2*drop_rate))
+        self.add(Dense(128, activation="relu"))
+        self.add(BatchNormalization())
+        self.add(Dropout(0.5))
         self.add(Dense(10, activation="softmax"))
 

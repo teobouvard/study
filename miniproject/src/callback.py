@@ -11,4 +11,4 @@ class WeightsFreezer(Callback):
         self.sig = signature
 
     def on_batch_end(self, batch, logs):
-        self.sig.apply(self.model)
+        self.sig.sign(self.model)

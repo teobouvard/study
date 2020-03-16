@@ -2,33 +2,34 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from tensorflow.keras import models
-from tensorflow.keras.layers import (
-    BatchNormalization,
-    Conv2D,
-    Dense,
-    Dropout,
-    Flatten,
-    MaxPooling2D,
-    ReLU,
-)
+from tensorflow.keras.layers import (BatchNormalization, Conv2D, Dense,
+                                     Dropout, Flatten, MaxPooling2D, ReLU)
 from tensorflow.keras.losses import SparseCategoricalCrossentropy
 from tensorflow.keras.models import load_model
-from tensorflow.keras.optimizers import Adam
 
 from .callback import WeightsFreezer
+from .metrics import F1Score
 
 
 class SimpleNet(models.Sequential):
     def __init__(self):
         super().__init__()
         self.initialize_layers()
-        # opt = Adam()
         loss_fn = SparseCategoricalCrossentropy()
-        self.compile(optimizer="adam", loss=loss_fn, metrics=["accuracy"])
+        self.compile(
+            optimizer="adam",
+            loss=loss_fn,
+            metrics=[
+                "accuracy",
+                F1Score(average="macro"),
+            ],
+        )
         self.training_records = []
-    
+
     def n_weights(self):
-        return np.add.reduce([np.multiply.reduce(l.shape) for l in self.trainable_weights])
+        return np.add.reduce(
+            [np.multiply.reduce(l.shape) for l in self.trainable_weights]
+        )
 
     def fit(self, *args, signature=None, **kwargs):
         if signature is not None:
@@ -81,12 +82,16 @@ class SimpleNet(models.Sequential):
 
         # Convolution blocks
         for i in range(4):
-            drop_rate = (i+2) / 10 # 0.2, 0.3, 0.4
-            n_filters = (2**i) * 32 # 32, 64, 128
-            self.add(Conv2D(n_filters, kernel_size, padding="same", input_shape=(32, 32, 3)))
+            drop_rate = (i + 2) / 10  # 0.2, 0.3, 0.4
+            n_filters = (2 ** i) * 32  # 32, 64, 128
+            self.add(
+                Conv2D(n_filters, kernel_size, padding="same", input_shape=(32, 32, 3))
+            )
             self.add(BatchNormalization())
             self.add(ReLU())
-            self.add(Conv2D(n_filters, kernel_size, padding="same", input_shape=(32, 32, 3)))
+            self.add(
+                Conv2D(n_filters, kernel_size, padding="same", input_shape=(32, 32, 3))
+            )
             self.add(BatchNormalization())
             self.add(ReLU())
             self.add(MaxPooling2D(pool_size))
@@ -98,4 +103,3 @@ class SimpleNet(models.Sequential):
         self.add(BatchNormalization())
         self.add(Dropout(0.5))
         self.add(Dense(10, activation="softmax"))
-

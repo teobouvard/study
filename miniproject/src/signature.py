@@ -43,7 +43,6 @@ class Signature:
         self.weights = self._gen_weights()
         self.masks = []
         self.frozen = []
-        print(f"Create signature with {self.length} parameters")
 
     def _gen_state(self, data, hash_fn):
         """

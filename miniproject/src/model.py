@@ -25,8 +25,10 @@ class SimpleNet(models.Sequential):
         # opt = Adam()
         loss_fn = SparseCategoricalCrossentropy()
         self.compile(optimizer="adam", loss=loss_fn, metrics=["accuracy"])
-        print(f"Compile model with {self.count_params():,} parameters")
         self.training_records = []
+    
+    def n_weights(self):
+        return np.add.reduce([np.multiply.reduce(l.shape) for l in self.trainable_weights])
 
     def fit(self, *args, signature=None, **kwargs):
         if signature is not None:
@@ -77,6 +79,7 @@ class SimpleNet(models.Sequential):
         kernel_size = 3
         pool_size = 2
 
+        # Convolution blocks
         for i in range(4):
             drop_rate = (i+2) / 10 # 0.2, 0.3, 0.4
             n_filters = (2**i) * 32 # 32, 64, 128

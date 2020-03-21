@@ -21,6 +21,30 @@ for i, p in enumerate(points):
 	else:
 		cluster_2.append(i+1)
 
-print('bork')
+print(f'{cluster_1=}')
+print(f'{cluster_2=}')
 
-rng = [1, 2, 3, 7, 6, 4, 5]
+m_1 = np.array([9/4, 29/8])
+m_2 = np.array([13/6, 7/6])
+
+
+distances = np.zeros((len(points), len(points)))
+for i, p1 in enumerate(points):
+	for j, p2 in enumerate(points):
+		distances[i, j] = np.linalg.norm(p1 - p2)**2
+print(distances)
+
+chosen = x_1 
+
+increase = len(cluster_1)/(len(cluster_1)+1) * np.linalg.norm(chosen - m_1)**2
+decrease = len(cluster_2)/(len(cluster_2)-1) * np.linalg.norm(chosen - m_2)**2
+
+print(decrease)
+print(increase)
+
+if decrease > increase:
+	print('Transfer x_1')
+	cluster_2.remove(1)
+	cluster_1.append(1)
+	
+

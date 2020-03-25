@@ -5,7 +5,7 @@ You should write down your answers to the
 for Lab 4 in this file. 
 
 1. Is it possible that Paxos enters an infinite loop? Explain.
-Yes, it is possible when the majority of the nodes prepare at the same time and keep retring to prepare at the same time over and over again.
+Yes, it is possible when the majority of the nodes propose at the same time and keep retring to propose at the same time over and over again.
 For example:
 A sends a prepare(1) message.
 Simultaneously, B sends a prepare(1) message.
@@ -18,11 +18,11 @@ No, the value is not included in the prepare message. It is included in the subs
 
 3. Does Paxos rely on an increasing proposal/round number in order to work? Explain.
 Yes.
-Every time a node prepares to become the leader, the round number is increased. This ensures that the previous leader will not longer be considered as leader by the other nodes as the round number is not equivalent to the current round number. Therefore Paxos relies on round numbers to identify the current leader if more than one node pretend being the leader.
+Every time a node prepares to become the leader, the round number is increased. When the new node becomes the leader, this ensures that the previous leader will not longer be considered as leader by the other nodes as the round number is not equivalent to the current round number. Therefore Paxos relies on round numbers to identify the current leader if more than one node pretends being the leader.
 
 4. Look at this description for Phase 1B: If the proposal number N is larger than any previous proposal, then each Acceptor promises not to accept proposals less than N, and sends the value it last accepted for this instance to the Proposer. What is meant by “the value it last accepted”? And what is an “instance” in this case?
 The value it last accepted means the value that last was sent from the acceptor of this node to the learners of all nodes. In other words it's the value that was last processed to the end and was sent out from the acceptor to the learners.
-An instance can also be called a slot. It describes the number of executions that can be made after the proposer is accepted for this instance.
+An instance can also be called a slot. It describes the number of rounds that can be executed after the proposer is accepted for this instance.
 
 5. Explain, with an example, what will happen if there are multiple proposers.
 Given a network of three nodes A, B and C.
@@ -30,15 +30,17 @@ A and B propose.
 A cannot promise the lead to B, as it already promised the lead to itself and B cannot promise the lead to A due to the same reason.
 The proposal of A reaches C first and C promises the lead to A.
 A receives the promise of C and obtains a majority of promises. Therefore A is the new leader.
+The proposer of B cannot become leader, because it doesnt have the majority. The acceptor of B can still accept the value of A's accept message.
 
 6. What happens if two proposers both believe themselves to be the leader and send Prepare messages simultaneously?
-There's the following possibilities:
+There's the following possibilities if the prepare messages have the same round number:
 - One of them still reaches a majority of promises and can be the leader
-- Noone receives a majority of promises. After some time another prepare message has to be sent out to retry the precedure.
+- Noone receives a majority of promises. With a higher round number another prepare message has to be sent out to retry the precedure.
+If they have different round numbers, the highest will be chosen.
 
 7. What can we say about system synchrony if there are multiple proposers (or leaders)?
-This means that there are communication issues inside the network, because some messages between proposers and acceptors were lost.
-Consequently, the system is not synchron anymore.
+If the system works correctly, it is not possible to have two leaders at the same time.
+Even if two leaders occur, the learners will never learn and therefore the network will still be synchronous as it doesn't oppose it's unsynchronity.
 
 8. Can an acceptor accept one value in round 1 and another value in round 2? Explain.
 Yes. An acceptor can accept new values every new round.

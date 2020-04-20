@@ -1,0 +1,237 @@
+\documentclass[a4paper, 10pt, twoside]{article}
+\usepackage[left=2cm, right=2cm, top=2cm, bottom=3cm]{geometry}
+\usepackage{amsmath}
+\usepackage[shortlabels]{enumitem}
+\usepackage{bbold}
+\usepackage{cases}
+\usepackage{systeme}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+
+\begin{document}
+
+\title{Machine Learning - Theoretical exercise 3}
+\author{T\'eo Bouvard}
+\maketitle
+
+\section*{Problem 1}
+\begin{enumerate}[a)]
+    \item Assuming an gaussian distribution $X \sim \mathcal{N}(\mu, \Sigma)$ the maximum likelihood method states that for a set of measurements $\chi = \left\{x_1, \dots, x_N\right\}$,
+
+          \begin{align}
+              \mu    & = \frac{1}{N}\sum_{k=1}^N x_k \label{eq:1}                       \\
+              \Sigma & = \frac{1}{N}\sum_{k=1}^N (x_k - \mu) (x_k - \mu)^T \label{eq:2}
+          \end{align}
+
+          We first estimate the mean vectors of the two distributions using \eqref{eq:1}
+
+          \begin{align*}
+              \mu_1 & = \frac{1}{4}
+              \left(
+              \begin{bmatrix}2 \\ 6\end{bmatrix} +
+              \begin{bmatrix}3 \\ 4\end{bmatrix} +
+              \begin{bmatrix}3 \\ 8\end{bmatrix} +
+              \begin{bmatrix}4 \\ 6\end{bmatrix}
+              \right)
+              = \frac{1}{4}\begin{bmatrix}12 \\ 24\end{bmatrix}
+              = \begin{bmatrix}3 \\ 6\end{bmatrix}  \\
+              \mu_2 & = \frac{1}{4}
+              \left(
+              \begin{bmatrix}1 \\ -2\end{bmatrix} +
+              \begin{bmatrix}2.7 \\ -4\end{bmatrix} +
+              \begin{bmatrix}3.3 \\ 0\end{bmatrix} +
+              \begin{bmatrix}5 \\ -2\end{bmatrix}
+              \right)
+              = \frac{1}{4}\begin{bmatrix}12 \\ -8\end{bmatrix}
+              = \begin{bmatrix}3 \\ -2\end{bmatrix} \\
+          \end{align*}
+
+          We use the estimated mean vectors to compute the covariance matrices according to \eqref{eq:2}
+
+          \begin{align*}
+              \Sigma_1 & = \frac{1}{4}
+              \left(
+              \begin{bmatrix}1 & 0 \\ 0 & 0\end{bmatrix} +
+              \begin{bmatrix}0 & 0 \\ 0 & 4\end{bmatrix} +
+              \begin{bmatrix}0 & 0 \\ 0 & 4\end{bmatrix} +
+              \begin{bmatrix}1 & 0 \\ 0 & 1\end{bmatrix}
+              \right)
+              = \frac{1}{4}\begin{bmatrix}2 & 0 \\ 0 & 8\end{bmatrix}
+              = \begin{bmatrix}\frac{1}{2} & 0 \\ 0 & 2\end{bmatrix} \\
+              \Sigma_2 & = \frac{1}{4}
+              \left(
+              \begin{bmatrix}4 & 0 \\ 0 & 0\end{bmatrix} +
+              \begin{bmatrix}0.09 & 0.6 \\ 0.6 & 4\end{bmatrix} +
+              \begin{bmatrix}0.09 & 0.6 \\ 0.6 & 4\end{bmatrix} +
+              \begin{bmatrix}4 & 0 \\ 0 & 0\end{bmatrix}
+              \right)
+              = \frac{1}{4}\begin{bmatrix}8.18 & 1.2 \\ 1.2 & 8.18\end{bmatrix}
+              = \begin{bmatrix}2.045 & 0.3 \\ 0.3 & 2\end{bmatrix} \\
+          \end{align*}
+
+    \item We use the log discriminant function to compute the decision boundary. Let $x = (x_1 \, x_2)^T$ be on the decision boundary between the two distributions $\implies g_1(x) = g_2(x)$
+
+          \begin{align}
+              - \frac{1}{2} \ln \begin{vmatrix} \Sigma_1 \end{vmatrix}
+              - \frac{1}{2} (x - \mu_1)^T \Sigma_1^{-1}(x - \mu_1)
+              =
+              - \frac{1}{2} \ln \begin{vmatrix} \Sigma_2 \end{vmatrix}
+              - \frac{1}{2} (x - \mu_2)^T \Sigma_2^{-1}(x - \mu_2)\label{eq:3}
+          \end{align}
+
+          We use the following properties of the covariances matrices $\Sigma_1$ and $\Sigma_2$ to simplify this equation.
+
+          \begin{align*}
+              \begin{vmatrix}\Sigma_1\end{vmatrix} = 1 & \implies \frac{1}{2} \ln \begin{vmatrix}\Sigma_1\end{vmatrix} = 0     \\
+              \begin{vmatrix}\Sigma_2\end{vmatrix} = 4 & \implies \frac{1}{2} \ln \begin{vmatrix}\Sigma_1\end{vmatrix} = \ln 2
+          \end{align*}
+
+          We then compute the two remaining terms independently.
+
+          \begin{align*}
+              \frac{1}{2} (x - \mu_1)^T \Sigma_1^{-1}(x - \mu_1)
+               & =
+              \frac{1}{2}
+              \begin{bmatrix}x_1-3 & x_2-6\end{bmatrix}
+              \begin{bmatrix}2 & 0 \\ 0 & \frac{1}{2}\end{bmatrix}
+              \begin{bmatrix}x_1-3 \\ x_2-6\end{bmatrix} \\
+               & =
+              \frac{1}{2}\left((2(x_1-3)^2 + \frac{1}{2}(x_2-6)^2\right)
+          \end{align*}
+
+          And
+
+          \begin{align*}
+              \frac{1}{2} (x - \mu_2)^T \Sigma_2^{-1}(x - \mu_2)
+               & =
+              \frac{1}{2}
+              \begin{bmatrix}x_1-3 & x_2+2\end{bmatrix}
+              \begin{bmatrix}\frac{1}{2} & -\frac{3}{40} \\ -\frac{3}{40} & \frac{409}{800}\end{bmatrix}
+              \begin{bmatrix}x_1-3 \\ x_2+2\end{bmatrix} \\
+               & =
+              \frac{1}{2}\left(\frac{1}{2}(x_1-3)^2 - \frac{3}{20}(x_1-3)(x_2+2)+\frac{409}{800}(x_2+2)^2\right)
+          \end{align*}
+
+          Which gives us the final decision boundary equation
+
+          \begin{align}
+              -\frac{3}{4} (x_1-3)^2 - \frac{1}{4} (x_2-6)^2 + \frac{409}{1600} (x_2+2)^2 - \frac{3}{40} (x_1-3)(x_2+2) + \ln 2 = 0 \label{eq:E}
+          \end{align}
+
+          This equation describes a hyperbola whose upper part is slightly tilted towards the left. This is due to the samples of $\chi_2$ not describing a circle, and thus orienting the decision border sideways.
+
+    \item In order to match more closely a parabolic decision boundary, one should gather more data samples in $\chi_1$ and $\chi_2$, which would smooth out irregularities in the samples.
+
+\end{enumerate}
+
+\section*{Problem 2}
+\begin{enumerate}[a)]
+    \item Equation \eqref{eq:E} can be used as a classifier by considering the inequality between the two discriminant functions. This leads to the following decision rule
+          \begin{align*}
+              \text{decide}
+              \begin{cases}
+                  \omega_1 \text{ if \eqref{eq:E}} > 0 \\
+                  \omega_2 \text{ otherwise}
+              \end{cases}
+          \end{align*}
+          For $x = (2.5 \, 2.0)^T$ we have $\eqref{eq:E} = 0.745..$, which means $x$ would be classified as belonging to $\omega_1$. In this case, we did not properly prove that the inequality leading to decision rule was in the right direction. This is done in the following question.
+    \item
+          To classify $x$ with a Parzen window technique, we are going to make the assumption that $x \in \omega_2$, and show that this leads to a contradiction. First, we write down the inequality between the two probability density functions in the case $x \in \omega_2$.
+          \begin{align*}
+              p_1(x)                                                & < p_2(x)                                                \\
+              \frac{1}{N_1}\sum_{i=1}^{N_1}\frac{1}{V_{N_1}}\phi(u) & < \frac{1}{N_2}\sum_{j=1}^{N_2}\frac{1}{V_{N_2}}\phi(u)
+          \end{align*}
+
+          In our case, $N_1=N_2=N$ so these factors cancel out. Furthermore, $V_N = h_N^2 = \frac{h_1^2}{N}$ so this factor cancels out too.
+
+          \begin{align*}
+              \sum_{i=1}^N \phi(u)                                                                              & < \sum_{j=1}^N \phi(u)                                                                              \\
+              \sum_{i=1}^N \frac{1}{2 \pi \begin{vmatrix}I\end{vmatrix}^\frac{1}{2}} e^{-\frac{1}{2} u^T I^{-1} u} & < \sum_{j=1}^N \frac{1}{2 \pi \begin{vmatrix}I\end{vmatrix}^\frac{1}{2}} e^{-\frac{1}{2} u^T I^{-1} u} \\
+              \sum_{i=1}^N e^{-\frac{1}{2} \Vert u \Vert^2}                                                     & < \sum_{j=1}^N e^{-\frac{1}{2} \Vert u \Vert^2}                                                     \\
+              \sum_{i=1}^N e^{-\frac{1}{2} \Vert \frac{x - x_i}{h_N} \Vert^2}                                   & < \sum_{j=1}^N e^{-\frac{1}{2} \Vert  \frac{x - x_j}{h_N} \Vert^2}                                  \\
+              \sum_{i=1}^N e^{-\frac{N}{2h_1^2} \Vert x - x_i \Vert^2}                                          & < \sum_{j=1}^N e^{-\frac{N}{2h_1^2} \Vert x - x_j \Vert^2}                                          \\
+          \end{align*}
+
+          To compute the numerical values appearing in this equation, we must first compute the squared distances between the test point $x$ and each other data point.
+
+          \begin{align*}
+              \Vert x - x_{11} \Vert^2 & = \frac{65}{4} & \Vert x - x_{12} \Vert^2 & = \frac{17}{4}   & \Vert x - x_{13} \Vert^2 & = \frac{145}{4}  & \Vert x - x_{14} \Vert^2 & = \frac{73}{4} \\
+              \Vert x - x_{21} \Vert^2 & = \frac{73}{4} & \Vert x - x_{22} \Vert^2 & = \frac{901}{25} & \Vert x - x_{23} \Vert^2 & = \frac{116}{25} & \Vert x - x_{24} \Vert^2 & = \frac{89}{4}
+          \end{align*}
+
+          Which leads to the following inequality at the test point, for $h_1 = 0.5$.
+
+          \begin{align*}
+              1.714 \times 10^{-15} < 7.568 \times 10^{-17}
+          \end{align*}
+
+          This equation is a contradiction, which means that our hypothesis $x \in \omega_2$ is false. Therefore, $x \in \omega_1$.
+    \item We can evaluate the previous inequality with $h_1 = 5$
+          \begin{align*}
+              1.272 < 1.147
+          \end{align*}
+
+          Which is also false, proving that $x \in \omega_1$ with this greater window size too. However the ratio of the probability densities has greatly decreased. With $h_1 = 0.5$, we had $\frac{p_2(x)}{p_1(x)} = 0.04$, whereas with $h_1 = 5$ we have $\frac{p_2(x)}{p_1(x)} = 0.9$. This is because increasing the window size leads to a smoother contribution of each sample, and therefore to a greater overlap of the two probability density functions. In other terms, the resulting probability density functions are less `spiky' at the sample locations when increasing the window size.
+    \item We can use the squared distances computed in the previous question to build a k-nearest neighbors classifier. In the case $k = 1$, $x$ is classified as $\omega_1$ because the closest data sample $x_{12}$ belongs to $\chi_1$.
+    \item If we extend the previous classifier to the three closest neighbors, we have $x_{12}$ and $x_{11}$ from $\chi_1$ in first and third position, and $x_{23}$ from $\chi_2$ in second position. That means $x$ will also be classified as belonging to $\omega_1$ because two of the three closest neighbors are from this class.
+\end{enumerate}
+
+\section*{Problem 3}
+Let $x$ be a $l$-dimensional random vector following a multivariate gaussian distribution described by the probability density function $p$ such that
+
+\begin{align*}
+    p(x) =
+    \frac{1}{(2\pi)^\frac{l}{2} \begin{vmatrix} \Sigma \end{vmatrix}^\frac{1}{2}}
+    e^{-\frac{1}{2} (x-\mu)^T \Sigma^{-1} (x-\mu)}
+\end{align*}
+
+Let $L$ be the likelihood function which describes the probability that a a set of samples $\chi = \left\{x_1, \dots, x_N\right\}$ was generated by the parameters $(\mu, \theta)$. As our goal is to find the maximum of $L$, we use its natural logarithm in order to make differentiation easier. This does not change the location of the maximum as the natural logarithm is monotonically increasing over $]0, +\infty$[ and therefore over the image domain of $p$. In the following, we denote this natural logarithm of the likelihood function as $\mathcal{L}$.
+
+\begin{align*}
+    \mathcal{L}(\mu, \theta)
+     & = \ln p(\chi; \mu, \theta)                                                                                                               \\
+     & = \ln \prod_{k=1}^N p(x_k; \mu, \theta)                                                                                                  \\
+     & = \sum_{k=1}^N \ln p(x_k; \mu, \theta)                                                                                                   \\
+     & = \sum_{k=1}^N \left[-\frac{l}{2} \ln 2\pi -\frac{1}{2} \begin{vmatrix} \Sigma \end{vmatrix} -\frac{1}{2} (x_k-\mu)^T \Sigma^{-1} (x_k-\mu)\right] \\
+     & = -\frac{Nl}{2} \ln 2\pi -\frac{N}{2} \begin{vmatrix} \Sigma \end{vmatrix} -\frac{1}{2} \sum_{k=1}^N (x_k-\mu)^T \Sigma^{-1} (x_k-\mu)             \\
+\end{align*}
+
+In order to find the maximum likelihood estimate of $\mu$, denoted $\hat{\mu}$ in the following, we find the root of $\frac{\partial \mathcal{L}}{\partial \mu}$.
+
+\begin{align*}
+    \frac{\partial \mathcal{L}}{\partial \mu}
+     & =
+    -\frac{1}{2} \frac{\partial{Nl \ln 2\pi}}{\partial \mu}
+    -\frac{1}{2} \frac{\partial \begin{vmatrix} \Sigma \end{vmatrix}}{\partial \mu}
+    -\frac{1}{2} \frac{\partial \sum_{k=1}^N (x_k-\mu)^T \Sigma^{-1} (x_k-\mu)}{\partial \mu} \\
+     & =
+    -\frac{1}{2} \sum_{k=1}^N \frac{\partial (x_k-\mu)^T \Sigma^{-1} (x_k-\mu)}{\partial \mu}
+\end{align*}
+
+We use the matrix differentiation identity $\frac{\partial \mathbf{x}^T\mathbf{Ax}}{\partial \mathbf{x}} = 2\mathbf{x}^T\mathbf{A}$, with $\mathbf{x} = (x_k-\mu)$ and $\mathbf{A} = \Sigma^{-1}$ which holds if $\mathbf{A}$ is symmetric and $\mathbf{A}$ is not a function of $\mathbf{x}$. In this case, $\Sigma^{-1}$ is a covariance matrix and is therefore symmetric, furthermore $\Sigma$ is not a function of $\mu$, so we can safely use this identity.
+
+\begin{align*}
+    \frac{\partial \mathcal{L}}{\partial \mu}
+     & =
+    -\frac{1}{2} \sum_{k=1}^N 2 (x_k-\mu)^T \Sigma^{-1} \\
+     & =
+    - \Sigma^{-1} \sum_{k=1}^N (x_k-\mu)^T
+\end{align*}
+
+We now find the root of this equation to find $\hat{\mu}$.
+
+\begin{align*}
+    \frac{\partial \mathcal{L}}{\partial \mu}  & = 0 \\
+    \Sigma^{-1} \sum_{k=1}^N (x_k-\hat{\mu})^T & = 0
+\end{align*}
+
+If we consider the case where the covariance matrix is not equivalent to a null matrix, the previous equality becomes
+
+\begin{align*}
+    \sum_{k=1}^N (x_k-\hat{\mu})^T & = 0                            \\
+    \sum_{k=1}^N\hat{\mu}          & = \sum_{k=1}^N x_k             \\
+    N\hat{\mu}                     & = \sum_{k=1}^N x_k             \\
+    \hat{\mu}                      & = \frac{1}{N} \sum_{k=1}^N x_k \\
+\end{align*}
+
+\end{document}

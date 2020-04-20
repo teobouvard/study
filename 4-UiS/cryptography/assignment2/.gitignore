@@ -1,0 +1,7 @@
+__pycache__
+keys/
+src/files/decrypted_file.txt
+src/files/encrypted_file.bin
+src/img
+*.gz
+teo_bouvard_a2

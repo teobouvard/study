@@ -1,0 +1,41 @@
+
+body
+{
+    background: rgb(197, 197, 197)
+}
+
+
+button.joli-bouton
+{
+    float: center;
+    padding: 20px 80px;
+    background-color: blue;
+    cursor: pointer;
+    color: white;
+    margin: 10px 10px;
+    border-width: 2px;
+    border-color: black;
+    border-bottom-style: solid;
+    transition-duration: 1s
+}
+
+button.joli-bouton:hover
+{
+    background-color: rgb(0, 0, 131);
+}
+
+
+
+input.champ-connexion
+{
+    width: 500px;
+    padding: 10px 10px;
+    margin-bottom: 25px;
+}
+
+.champ-inscription
+{
+    width: 25%;
+    padding: 10px 10px;
+    margin-bottom: 15px;
+}

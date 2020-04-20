@@ -1,6 +1,0 @@
-FROM golang
-
-WORKDIR /go/src/github.com/dat520-2020/TeamPilots/lab3
-ADD . .
-RUN go get ./cmd
-RUN go build ./cmd/lab3.go

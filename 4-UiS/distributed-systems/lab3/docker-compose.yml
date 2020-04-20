@@ -1,0 +1,40 @@
+version: "3.7"
+
+services:
+  node1:
+    container_name: node1
+    build:
+      context: .
+    expose: 
+      - "5001"
+    entrypoint: ./lab3 --id 1
+    networks:
+      default:
+        ipv4_address: 192.168.1.1
+
+  node2:
+    container_name: node2
+    build:
+      context: .
+    expose: 
+      - "5002"
+    entrypoint: ./lab3 --id 2
+    networks:
+      default:
+        ipv4_address: 192.168.1.2
+
+  node3:
+    container_name: node3
+    build:
+      context: .
+    expose: 
+      - "5003"
+    entrypoint: ./lab3 --id 3
+    networks:
+      default:
+        ipv4_address: 192.168.1.3
+  
+networks:
+  default:
+    external:
+      name: lab3

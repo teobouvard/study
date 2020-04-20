@@ -1,0 +1,50 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "benchmark",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/classifier.py",
+            "args": [
+                "--mode",
+                "benchmark",
+                "--model_path",
+                "models/model1"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "train",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/classifier.py",
+            "args": [
+                "--mode",
+                "train",
+                "--data",
+                "data/train_data.pkl",
+                "--model_path",
+                "models/model0"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "eval",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/classifier.py",
+            "args": [
+                "--mode",
+                "eval",
+                "--data",
+                "data/test_data.pkl",
+                "--model_path",
+                "models/model0",
+                "--output",
+                "predictions/test_predictions.csv"
+            ],
+            "console": "integratedTerminal"
+        },
+    ]
+}

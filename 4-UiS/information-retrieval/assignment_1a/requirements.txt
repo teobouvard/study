@@ -1,0 +1,2 @@
+sklearn # to compute confusion matrix
+tqdm # to display loading bars of training and predictions

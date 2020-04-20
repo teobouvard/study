@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Positif</title>
+    <meta charset="UTF-8">
+
+    <!-- Librairie Javascript: jQuery (v3.3.1) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://craig.global.ssl.fastly.net/js/mousetrap/mousetrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/CSS" href="stylesheet.css">
+</head>
+
+<body>
+
+    <h1 style="text-align:center"> <b> AstroNet </b> </h1>
+    <p style="text-align:center"> Authentification </p>
+    <div style="text-align:center">
+        <input type="text" class="champ moustrap" id="champ-login" name="login" placeholder="Identifiant" /><br>
+        <input type="password" class="champ mousetrap" id="champ-password" name="password"
+            placeholder="Mot de passe" /><br>
+        <button id="bouton-connexion" class="joli-bouton" onclick="connexion()"> <b> Connexion </b> </button>
+        <button id="bouton-inscription" class="joli-bouton" onclick="location='inscription.html'"> <b> Inscription</b>
+        </button>
+    </div>
+
+    <div style="text-align:center" id="message"></div>
+
+    <script>
+
+        function connexion() {
+
+            var champLogin = $('#champ-login').val();
+            var champPassword = $('#champ-password').val();
+
+            if (champLogin == "" || champPassword == "") {
+                $('#message').html('Veuillez renseigner tous les champs !');
+            }
+            else {
+                // Message d'information dans la div #message :
+                $('#message').html('Connexion en cours...');
+                // Requête AJAX
+                $.ajax({
+
+                    url: './ActionServlet', // URL
+                    method: 'POST',         // Méthode
+                    data: {                 // Paramètres
+                        todo: 'connecter',
+                        login: champLogin,
+                        password: champPassword
+                    },
+                    dataType: 'json'        // Type de retour attendu
+
+                }).done(function (response) {  // Appel OK => "response" contient le resultat JSON
+                    $('#message').html(response.message);
+                    if (response.personne === 'client') {
+                        window.location = "client.html";
+                    }
+                    else if (response.personne === 'employe') {
+                        window.location = "employe.html";
+                    }
+
+
+                }).fail(function (error) { // Appel KO => erreur a gérer
+
+                    // Popup avec message d'erreur :
+                    alert('Erreur lors de l\'appel: HTTP Code ' + error.status + ' ~ ' + error.statusText + ' ~ ' + error.getResponseHeader('Content-Type'));
+                    // Message d'erreur dans la div #message :
+                    $('#message').html('Erreur lors de l\'appel: HTTP Code ' + error.status + ' ~ ' + error.statusText + ' ~ ' + error.getResponseHeader('Content-Type'));
+
+                });
+            }
+        }
+
+        Mousetrap.bind('enter', connexion);
+
+    </script>
+</body>
+
+</html>

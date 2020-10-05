@@ -22,7 +22,16 @@ Graphes planaires -> existence d'un algorithme polynomial pour l'isomorphisme
 Formal system (axiom set + inference rules) :
 
 - consistency (cohérent)
-- decidability
-- completeness
+- decidability : there exists an algo which answers the question within a finite number of instructions
+- completeness (termination ?)
 
 Godel : a formal system cannot demonstrate **its own** consistency
+
+Turing machine but other tools with same expressibility
+
+## Abtractions
+
+![abstractions](img/abstractions.png)
+
+Attaques en cryptographie -> concrétisation d'abstractions
+Choix d'abstractions effectives suffisamment grossières pour être calculables et mais assez précises pour éviter les fausses alarmes permet de vaincre l'indécidabilité

@@ -1,0 +1,6 @@
+- les habitants
+- les représentants de la communauté musulmanes
+- les donateurs principaux
+- les auditeurs de l'émission
+- membres de H2O
+- réseaux sociaux

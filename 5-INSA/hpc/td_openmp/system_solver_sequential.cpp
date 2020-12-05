@@ -87,9 +87,10 @@ public:
         if (m_variable_value_prev_t[i] > max) {
           max = m_variable_value_prev_t[i];
         }
-        range = max - min;
       }
-
+      range = max - min;
+      printf("[%d] range=%f\n", t, range); 
+      
       // update variable values
       for (int i = 0; i < m_system_size; ++i) {
         for (int j = 0; j < m_system_size; ++j) {
@@ -117,15 +118,15 @@ public:
 
       if (valid != result) {
         system_is_valid = false;
-        printf("%d -- %10.10e != %10.10e (%10.10e)\n", i, valid, result,
-               m_variable_value_prev_t[i]);
+        fprintf(stderr, "%d -- %10.10e != %10.10e (%10.10e)\n", i, valid,
+                result, m_variable_value_prev_t[i]);
       }
     }
 
     if (system_is_valid)
-      printf("System is valid\n");
+      std::cerr << "System is valid" << std::endl;
     else {
-      printf("System is NOT valid\n");
+      std::cerr << "System is NOT valid" << std::endl;
     }
     return system_is_valid;
   }
@@ -140,8 +141,10 @@ private:
 int main(int argc, char **argv) {
   // check command line arguments
   if (argc < 4) {
-    printf("USAGE: %s input_file nb_steps validation_file\n", argv[0]);
-    exit(-1);
+    std::cerr << "USAGE: " << argv[0]
+              << " input_file nb_steps validation_file\n"
+              << std::endl;
+    exit(EXIT_FAILURE);
   }
 
   // number of timesteps
@@ -173,7 +176,7 @@ int main(int argc, char **argv) {
   auto t2 = std::chrono::high_resolution_clock::now();
   auto duration =
       std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
-  std::cout << "DURATION," << system.size() << "," << n_steps << "," << duration
+  std::cout << "1," << system.size() << "," << n_steps << "," << duration
             << std::endl;
 
   // check system solution

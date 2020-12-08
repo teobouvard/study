@@ -1,4 +1,4 @@
-n_threads, matrix_size, n_steps, time
+n_threads,matrix_size,n_steps,time
 1,128,100,942
 1,256,100,4225
 1,512,100,17945

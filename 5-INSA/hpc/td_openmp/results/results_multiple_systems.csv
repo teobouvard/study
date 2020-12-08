@@ -1,4 +1,4 @@
-g++ -std=c++17 -Wall -Wextra multiple_system_solver_parallel.cpp -O3 -fopenmp -o solve_multiple 
+schedule,n_threads,n_systems,n_steps,time
 guided-1,1,64,100,1769726
 guided-1,1,128,100,3074786
 guided-1,1,256,100,6421516

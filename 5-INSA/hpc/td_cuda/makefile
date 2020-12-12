@@ -1,2 +1,5 @@
 ex1:
 	nvcc cuda_td_1.cu -o bin/td_1 && ./bin/td_1 dataset/vector/input0.raw dataset/vector/input1.raw dataset/vector/output.raw
+
+ex2:
+	nvcc cuda_td_2.cu -o bin/td_2 && ./bin/td_2 dataset/images/logo-insa-lyon-p6.ppm dataset/images/logo-insa-lyon-bw.ppm

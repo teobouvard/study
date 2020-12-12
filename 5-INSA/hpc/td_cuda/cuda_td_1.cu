@@ -3,8 +3,6 @@
 
 __global__ void vecAdd(float *in1, float *in2, float *out, int len) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  // printf("blockDim=%d, blockIdx=%d, threadIdx=%d\n", blockDim.x, blockIdx.x,
-  //       threadIdx.x);
   if (i < len) {
     out[i] = in1[i] + in2[i];
   }
@@ -46,6 +44,7 @@ int main(int argc, char **argv) {
   wbTime_stop(GPU, "Copying input memory to the GPU.");
 
   // initialize grid and block dimensions
+  // hard to decide which execution configuration should be chosen
   int numBlocks = 1;
   int threadsPerBlock = inputLength;
 

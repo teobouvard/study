@@ -12,39 +12,36 @@ int main(int argc, char **argv) {
   // read arguments
   wbArg_t args = wbArg_read(argc, argv);
 
-  int inputLength;
-  float *hostInput1;
-  float *hostInput2;
-  float *hostOutput;
-  float *deviceInput1;
-  float *deviceInput2;
-  float *deviceOutput;
-
   // read input data
   wbTime_start(Generic, "Importing data and creating memory on host");
-  hostInput1 = (float *)wbImport(wbArg_getInputFile(args, 0), &inputLength);
-  hostInput2 = (float *)wbImport(wbArg_getInputFile(args, 1), &inputLength);
-  hostOutput = (float *)malloc(inputLength * sizeof(float));
+  int inputLength;
+  float *hostInput1 = wbImport(wbArg_getInputFile(args, 0), &inputLength);
+  float *hostInput2 = wbImport(wbArg_getInputFile(args, 1), &inputLength);
+  float *hostOutput = (float *)malloc(inputLength * sizeof(float));
   wbTime_stop(Generic, "Importing data and creating memory on host");
   wbLog(TRACE, "The input length is ", inputLength);
 
   // allocate GPU memory
-  wbTime_start(GPU, "Allocating GPU memory.");
+  wbTime_start(GPU, "Allocating GPU memory");
+  float *deviceInput1;
+  float *deviceInput2;
+  float *deviceOutput;
   cudaMalloc(&deviceInput1, inputLength * sizeof(float));
   cudaMalloc(&deviceInput2, inputLength * sizeof(float));
   cudaMalloc(&deviceOutput, inputLength * sizeof(float));
-  wbTime_stop(GPU, "Allocating GPU memory.");
+  wbTime_stop(GPU, "Allocating GPU memory");
 
   // copy memory to the GPU
-  wbTime_start(GPU, "Copying input memory to the GPU.");
+  wbTime_start(GPU, "Copying input memory to the GPU");
   cudaMemcpy(deviceInput1, hostInput1, inputLength * sizeof(float),
              cudaMemcpyHostToDevice);
   cudaMemcpy(deviceInput2, hostInput2, inputLength * sizeof(float),
              cudaMemcpyHostToDevice);
-  wbTime_stop(GPU, "Copying input memory to the GPU.");
+  wbTime_stop(GPU, "Copying input memory to the GPU");
 
   // initialize grid and block dimensions
   // hard to decide which execution configuration should be chosen
+  // as long as vector size is less than 1024, we can use a single block
   int numBlocks = 1;
   int threadsPerBlock = inputLength;
 

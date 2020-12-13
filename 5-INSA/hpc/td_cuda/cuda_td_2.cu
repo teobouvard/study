@@ -1,4 +1,5 @@
 #include "wb.hpp"
+#include <stdlib.h>
 
 __global__ void grayscale(float *inputImage, float *outputImage,
                           int imageSize) {
@@ -12,14 +13,11 @@ __global__ void grayscale(float *inputImage, float *outputImage,
 }
 
 int main(int argc, char *argv[]) {
-  float *deviceInputImageData;
-  float *deviceOutputImageData;
-
   // parse input arguments
   wbArg_t args = wbArg_read(argc, argv);
-  char *inputImageFile = wbArg_getInputFile(args, 0);
 
   // read input image
+  char *inputImageFile = wbArg_getInputFile(args, 0);
   wbImage_t inputImage = wbImport(inputImageFile);
   int imageWidth = wbImage_getWidth(inputImage);
   int imageHeight = wbImage_getHeight(inputImage);
@@ -36,6 +34,8 @@ int main(int argc, char *argv[]) {
   wbTime_start(GPU, "Doing GPU Computation (memory + compute)");
 
   wbTime_start(GPU, "Doing GPU memory allocation");
+  float *deviceInputImageData;
+  float *deviceOutputImageData;
   cudaMalloc(&deviceInputImageData,
              imageWidth * imageHeight * imageChannels * sizeof(float));
   cudaMalloc(&deviceOutputImageData, imageWidth * imageHeight * sizeof(float));
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
 
   wbTime_stop(GPU, "Doing GPU Computation (memory + compute)");
 
-  //
+  // scale image from (0.0, 1.0) to (0, 255)
   unsigned char grayScale[imageHeight][imageWidth];
   for (int j = 0; j < imageHeight; ++j) {
     for (int i = 0; i < imageWidth; ++i) {
@@ -77,6 +77,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  // write output image to PPM file
   char *outputImageFile = wbArg_getInputFile(args, 1);
   FILE *fp = fopen(outputImageFile, "wb"); /* b - binary mode */
   fprintf(fp, "P5\n%d %d\n255\n", imageWidth, imageHeight);
@@ -90,5 +91,6 @@ int main(int argc, char *argv[]) {
   // free host memory
   wbImage_delete(outputImage);
   wbImage_delete(inputImage);
-  return 0;
+
+  return EXIT_SUCCESS;
 }

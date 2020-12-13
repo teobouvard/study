@@ -1,18 +1,55 @@
 #include "wb.hpp"
+#include <cmath>
 #include <stdlib.h>
 
-#define BLUR_SIZE 10
-
-__global__ void blur(float *inputImage, float *outputImage, int imageSize) {
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  if (i < imageSize) {
-    float blurredPixel = 0.0;
-    for (int s = -BLUR_SIZE; s < BLUR_SIZE; ++s) {
-      blurredPixel += inputImage[i + 3 * s];
+void gaussian_kernel_fill(float sigma, float K, int kernelSize, float *kernel) {
+  float sum = 0.0;
+  for (int i = 0; i < kernelSize; i++) {
+    for (int j = 0; j < kernelSize; j++) {
+      float x = i - (kernelSize - 1) / 2.0;
+      float y = j - (kernelSize - 1) / 2.0;
+      kernel[i * kernelSize + j] =
+          K * std::exp(-(x * x + y * y) / (2.0 * sigma * sigma));
+      sum += kernel[i * kernelSize + j];
     }
-    blurredPixel /= 2 * BLUR_SIZE;
+  }
+  for (int i = 0; i < kernelSize * kernelSize; i++) {
+    kernel[i] /= sum;
+  }
+  // print kernel for debugging purposes
+  // for (int i = 0; i < kernelSize; i++) {
+  //  for (int j = 0; j < kernelSize; j++) {
+  //    printf("%f ", kernel[i * kernelSize + j]);
+  //  }
+  //  printf("\n");
+  //}
+}
 
-    outputImage[i] = blurredPixel;
+__global__ void blur(float *inputImage, float *outputImage, int imageWidth,
+                     int numElements, float *gaussianKernel, int kernelSize) {
+  int idx = blockIdx.x * blockDim.x + threadIdx.x;
+  if (idx < numElements) {
+    float blurredElement = 0.0;
+    float kernelElement;
+    float imageElement;
+    int imageIndex;
+    /// TODO handle even kernel sizes
+    int halfKernelSize = (kernelSize - 1) / 2.0;
+    for (int i = 0; i < kernelSize; ++i) {
+      for (int j = 0; j < kernelSize; ++j) {
+        kernelElement = gaussianKernel[i * kernelSize + j];
+        imageIndex = idx + 3 * (i - halfKernelSize) * imageWidth +
+                     3 * (j - halfKernelSize);
+        if (imageIndex > 0 && imageIndex < numElements) {
+          imageElement = inputImage[imageIndex];
+        } else {
+          imageElement = 0.0;
+        }
+        blurredElement += kernelElement * imageElement;
+      }
+    }
+
+    outputImage[idx] = blurredElement;
   }
 }
 
@@ -34,21 +71,38 @@ int main(int argc, char *argv[]) {
   float *hostInputImageData = wbImage_getData(inputImage);
   float *hostOutputImageData = wbImage_getData(outputImage);
 
+  // create gaussian kernel for filtering
+  int kernelSize = 50;
+  float sigma = 10;
+  float K = 1.0;
+  float *hostGaussianKernel =
+      (float *)malloc(kernelSize * kernelSize * sizeof(float));
+  if (hostGaussianKernel == NULL) {
+    fprintf(stderr, "Could not allocate gaussian kernel memory");
+    return EXIT_FAILURE;
+  }
+  gaussian_kernel_fill(sigma, K, kernelSize, hostGaussianKernel);
+  printf("kernel_element=%f\n", hostGaussianKernel[1250]);
+
   wbTime_start(GPU, "Doing GPU Computation (memory + compute)");
 
   wbTime_start(GPU, "Doing GPU memory allocation");
   float *deviceInputImageData;
   float *deviceOutputImageData;
+  float *deviceGaussianKernel;
   cudaMalloc(&deviceInputImageData,
              imageWidth * imageHeight * imageChannels * sizeof(float));
   cudaMalloc(&deviceOutputImageData,
              imageWidth * imageHeight * imageChannels * sizeof(float));
+  cudaMalloc(&deviceGaussianKernel, kernelSize * kernelSize * sizeof(float));
   wbTime_stop(GPU, "Doing GPU memory allocation");
 
   wbTime_start(Copy, "Copying data to the GPU");
   cudaMemcpy(deviceInputImageData, hostInputImageData,
              imageWidth * imageHeight * imageChannels * sizeof(float),
              cudaMemcpyHostToDevice);
+  cudaMemcpy(deviceGaussianKernel, hostGaussianKernel,
+             kernelSize * kernelSize * sizeof(float), cudaMemcpyHostToDevice);
   wbTime_stop(Copy, "Copying data to the GPU");
 
   // initialize grid and block dimensions
@@ -57,13 +111,14 @@ int main(int argc, char *argv[]) {
   // threads per block which can be retrieved with the deviceQuery script (1024)
   // still not sure of how high it should be to be the most efficient?
   int threadsPerBlock = 256;
-  int numPixels = imageWidth * imageHeight * imageChannels;
-  int numBlocks = (numPixels + threadsPerBlock - 1) / threadsPerBlock;
+  int numElements = imageWidth * imageHeight * imageChannels;
+  int numBlocks = (numElements + threadsPerBlock - 1) / threadsPerBlock;
   wbLog(TRACE, "Using ", numBlocks, " blocks");
 
   wbTime_start(Compute, "Doing the computation on the GPU");
-  blur<<<numBlocks, threadsPerBlock>>>(deviceInputImageData,
-                                       deviceOutputImageData, numPixels);
+  blur<<<numBlocks, threadsPerBlock>>>(
+      deviceInputImageData, deviceOutputImageData, imageWidth, numElements,
+      deviceGaussianKernel, kernelSize);
   wbTime_stop(Compute, "Doing the computation on the GPU");
 
   wbTime_start(Copy, "Copying data from the GPU");
@@ -99,6 +154,7 @@ int main(int argc, char *argv[]) {
   // free host memory
   wbImage_delete(outputImage);
   wbImage_delete(inputImage);
+  free(hostGaussianKernel);
 
   return EXIT_SUCCESS;
 }

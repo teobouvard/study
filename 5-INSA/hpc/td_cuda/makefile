@@ -5,4 +5,4 @@ ex2:
 	nvcc cuda_td_2.cu -o bin/td_2 && ./bin/td_2 dataset/images/logo-insa-lyon-p6.ppm dataset/images/logo-insa-lyon-bw.ppm
 
 ex3:
-	nvcc cuda_td_3.cu -o bin/td_3 && ./bin/td_3 dataset/images/logo-insa-lyon-p6.ppm dataset/images/logo-insa-lyon-blurred.ppm
+	nvcc -Xcompiler -Wall -Xcompiler -Werror cuda_td_3.cu -o bin/td_3 && ./bin/td_3 dataset/images/logo-insa-lyon-p6.ppm dataset/images/logo-insa-lyon-blurred.ppm

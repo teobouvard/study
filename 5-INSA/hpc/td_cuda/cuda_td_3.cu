@@ -3,6 +3,8 @@
 #include <stdlib.h>
 
 void gaussian_kernel_fill(float sigma, float K, int kernelSize, float *kernel) {
+  // 1 hour of undefined behaviour debugging later : without initializing sum to
+  // 0, it starts with the value which was at this address
   float sum = 0.0;
   for (int i = 0; i < kernelSize; i++) {
     for (int j = 0; j < kernelSize; j++) {

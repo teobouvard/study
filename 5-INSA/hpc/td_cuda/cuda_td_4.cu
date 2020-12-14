@@ -6,11 +6,13 @@ __global__ void matrixMultiply(float *A, float *B, float *C, int numARows,
                                int numCRows, int numCColumns) {
   int idx = blockDim.x * blockIdx.x + threadIdx.x;
   if (idx < numCRows * numCColumns) {
-    int row = idx / numAColumns;
-    int column = idx % numBRows;
+    int row = idx / numCColumns;
+    int column = idx % numCRows;
     float result = 0.0;
     for (int i = 0; i < numAColumns; ++i) {
-      result += A[row * numARows + i] * B[column + (row + i) * numBRows];
+      result += A[row * numARows + i] * B[column + i * numBRows];
+      // TODO why do both lines compute the same result ?
+      // result += A[row * numARows + i] * B[column + (i+row) * numBRows];
     }
     C[row * numCRows + column] = result;
   }

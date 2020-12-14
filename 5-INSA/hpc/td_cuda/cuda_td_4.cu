@@ -10,11 +10,11 @@ __global__ void matrixMultiply(float *A, float *B, float *C, int numARows,
     int column = idx % numCRows;
     float result = 0.0;
     for (int i = 0; i < numAColumns; ++i) {
-      result += A[row * numARows + i] * B[column + i * numBRows];
+      // result += A[row * numARows + i] * B[column + i * numBRows];
       // TODO why do both lines compute the same result ?
-      // result += A[row * numARows + i] * B[column + (i+row) * numBRows];
+      result += A[row * numAColumns + i] * B[(i + row) * numBRows + column];
     }
-    C[row * numCRows + column] = result;
+    C[row * numCColumns + column] = result;
   }
 }
 

@@ -21,6 +21,7 @@
 #include <list>
 #include <sstream>
 #include <string>
+#include <sys/types.h>
 #include <vector>
 
 // CUDA
@@ -441,6 +442,52 @@ float *wbImport(const char *fName, int *numElements) {
   return fBuf;
 }
 
+// For assignments MP1, MP4, MP5 & MP12
+u_char *wbImportChar(const char *fName, int *numElements) {
+  std::ifstream inFile(fName);
+
+  if (!inFile.is_open()) {
+    std::cerr << "Error opening input file " << fName << ". "
+              << wbInternal::wbStrerror(errno) << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+
+  inFile >> *numElements;
+
+  std::string sVal;
+  std::vector<u_char> fVec;
+
+  fVec.reserve(*numElements);
+
+  while (inFile >> sVal) {
+    std::istringstream iss(sVal);
+    u_char fVal;
+    iss >> fVal;
+    fVec.push_back(fVal);
+  }
+
+  inFile.close();
+
+  if (*numElements != static_cast<int>(fVec.size())) {
+    std::cerr << "Error reading contents of file " << fName << ". Expecting "
+              << *numElements << " elements but got " << fVec.size()
+              << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+
+  u_char *fBuf = (u_char *)malloc(*numElements * sizeof(u_char));
+
+  if (!fBuf) {
+    std::cerr << "Unable to allocate memory for an array of size "
+              << *numElements * sizeof(char) << " bytes" << std::endl;
+    inFile.close();
+    std::exit(EXIT_FAILURE);
+  }
+
+  std::copy(fVec.begin(), fVec.end(), fBuf);
+
+  return fBuf;
+}
 // For assignments MP1, MP4, MP5 & MP12
 int *wbImport(const char *fName, int *numElements, std::string type) {
   std::ifstream inFile(fName);
@@ -968,6 +1015,44 @@ void wbSolution(const wbArg_t args, const T &t, const S &s) {
 
     for (int item = 0; item < solnItems; ++item) {
       if (!wbInternal::wbFPCloseEnough(soln[item], t[item])) {
+        if (errCnt < wbInternal::kErrorReportLimit) {
+          std::cout
+              << "The solution did not match the expected result at element "
+              << item << ". ";
+          std::cout << "Expecting " << soln[item] << " but got " << t[item]
+                    << ".\n";
+        }
+
+        ++errCnt;
+      }
+    }
+
+    if (!errCnt)
+      std::cout << "Solution is correct.\n";
+    else
+      std::cout << errCnt << " tests failed!\n";
+  }
+
+  free(soln);
+}
+
+template <typename T, typename S>
+void wbSolutionEqual(const wbArg_t args, const T &t, const S &s) {
+  int solnItems;
+  int *soln =
+      wbImport(wbArg_getInputFile(args, args.argc - 2), &solnItems, "integer");
+
+  if (solnItems != s) {
+    std::cout << "Number of elements in solution file "
+              << wbArg_getInputFile(args, args.argc - 2) << " does not match. ";
+    std::cout << "Expecting " << s << " but got " << solnItems << ".\n";
+  }
+  // Check solution
+  else {
+    int errCnt = 0;
+
+    for (int item = 0; item < solnItems; ++item) {
+      if (soln[item] != t[item]) {
         if (errCnt < wbInternal::kErrorReportLimit) {
           std::cout
               << "The solution did not match the expected result at element "

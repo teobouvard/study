@@ -12,3 +12,6 @@ ex4:
 
 ex5:
 	nvcc -Xcompiler -Wall -Xcompiler -Werror cuda_td_5.cu -o bin/td_5 && ./bin/td_5 dataset/matrix/input0.raw dataset/matrix/input1.raw dataset/matrix/output.raw
+
+ex6:
+	nvcc -Xcompiler -Wall -Xcompiler -Werror cuda_td_6.cu -o bin/td_6 && ./bin/td_6 dataset/histogram/char/5input.raw dataset/histogram/char/5output.raw

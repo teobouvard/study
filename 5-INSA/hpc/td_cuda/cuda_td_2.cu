@@ -52,6 +52,7 @@ int main(int argc, char *argv[]) {
   // to maximize efficiency and should be less than the maximum number of
   // threads per block which can be retrieved with the deviceQuery script (1024)
   // still not sure of how high it should be to be the most efficient?
+  // trial&error + occupancy calculator
   int threadsPerBlock = 256;
   int numPixels = imageWidth * imageHeight;
   int numBlocks = (numPixels + threadsPerBlock - 1) / threadsPerBlock;

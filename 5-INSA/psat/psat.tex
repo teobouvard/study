@@ -1,0 +1,316 @@
+\documentclass[runningheads]{llncs}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{epigraph}
+\usepackage{dirtytalk}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage{tabularx}
+\usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
+
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\pagestyle{plain}
+
+% display URLs in blue roman font according to Springer's eBook style
+\renewcommand\UrlFont{\color{blue}\rmfamily}
+
+\begin{document}
+
+\title{Analyse du ciblage géographique} 
+
+\author{
+    Ludovic Richoux \and
+    Aymeric Cousaert \and
+    Téo Bouvard \and 
+    Mathis Guilhin
+}
+
+% First names are abbreviated in the running head.
+% If there are more than two authors, 'et al.' is used.
+%
+\authorrunning{F. Author et al.}
+
+\institute{
+    \href{https://www.insa-lyon.fr/}{INSA Lyon}
+    \email{\href{mailto:psat01@protonmail.com}{psat01@protonmail.com}}
+}
+
+\maketitle
+
+\epigraph{
+    Arguing that you don't care about the right to privacy because you have nothing to hide is no different than saying you don't care about free speech because you have nothing to say. \cite{edward_snowden_riama_2015}}{\textit{Edward Snowden}
+}
+
+\begin{abstract}
+
+L'adoption massive des smartphones a permis l'émergence de services et d'applications dont la valeur repose sur une connaissance contextuelle de l'utilisateur. L'utilisation de technologies liées à la géolocalisation permet d'alimenter cette connaissance, mais entraîne également un traçage de l'utilisateur, bien souvent à son insu. À travers nos travaux, nous proposons une analyse du ciblage publicitaire sur smartphone. Pour cela, nous abordons, dans un premier temps, les techniques mises en place afin d'instrumentaliser un téléphone pour générer une position fictive cohérente. Nous proposons ensuite des méthodes de collecte de données publicitaires présentes sur les applications mobiles de réseaux sociaux. Enfin nous analysons les liens entre les données publicitaires collectées et la position de l'utilisateur. 
+%Ajouter qq chiffres si possible
+
+
+\keywords{Ciblage publicitaire \and Géolocalisation}
+
+\end{abstract}
+
+\section{Introduction}
+
+L'adoption massive des smartphones~\cite{pew_research_center_demographics_2019} a fait apparaître de plus en plus de services et d'applications personnalisés. Afin de proposer le meilleur service possible, certaines plateformes comme Google Maps, Facebook ou encore Uber reposent sur une connaissance approfondie de l'utilisateur. L'utilisation de technologies telles que le GPS, le Wi-Fi, le Bluetooth et les données mobiles permettent de déterminer et transmettre des informations géolocalisées en temps réel à ces services et ainsi offrir à l'utilisateur une expérience personnalisée en fonction de sa position. % un monde de possibilités juste au bout des doigts. 
+
+Cependant l'utilisation de ces technologies permet également un traçage de l'utilisateur, bien souvent à son insu~\cite{almuhimedi_your_2015}. Depuis quelques années, notamment avec les évènements liés aux élections américaines de 2016~\cite{robert_mueller_report_2019} ou le scandale du Cambridge Analytica~\cite{isaak_user_2018}, on observe une prise de conscience concernant l'utilisation des données personnelles, qui incluent les données de localisation. Il reste néanmoins difficile de savoir qui collecte ces données et quelle utilisation en est faite. Ces données peuvent notamment être utilisées par des compagnies publicitaires qui sont capables d'affiner leur filtrage d'audience utilisant les lieux visités par les utilisateurs à l'aide du \textit{geofencing}~\cite{google_geofencing_2020}. Ces publicités peuvent être diffusées sur des réseaux sociaux comme Facebook~\cite{facebook_for_buisness_a_2020}, Twitter~\cite{twitter_geo_2020} ou encore Instagram. Ces plates-formes sont utilisées massivement dans le monde entier et sont majoritairement financées par la publicité. Aussi, il est possible d'observer certaines dérives liées à l'utilisation de la publicité ciblée. Par exemple, la présence d'un utilisateur à proximité d'évènements politiques peut aboutir à une proposition de contenu sponsorisé pour un candidat ou un parti politique et ainsi potentiellement l'influencer lors d'élections~\cite{bradshaw_challenging_nodate}.
+
+Cette problématique d'actualité, ravivée par les élections présidentielles aux États-Unis en Novembre 2020, est d'ailleurs à l'origine du bannissement permanent des contenus sponsorisés à caractère politique par Twitter et la prolongation de celui-ci par Google et Facebook~\cite{facebook_facebook_2020}. Plusieurs études proposent des méthodes d'extraction et d'analyse de contenus publicitaires résultant d'un ciblage géographique afin de comprendre les pratiques mises en place~\cite{}. Cependant, ces études reposent sur des publicités extraites depuis un ordinateur grâce à des méthodes de web scraping. Hors, les clients web fournissent des données de localisation moins fines que les smartphones. De plus, l'utilisation d'appareils mobile pour accéder à internet est en plein essor. En effet, en février 2019, 48\% du trafic internet mondial était issu d'appareils mobiles~\cite{jclement_topic_2019}.
+
+
+L'objectif de ces travaux est donc d'étudier les liens entre le ciblage publicitaire et les systèmes de géolocalisation. Pour cela, nous devons dans un premier temps instrumentaliser la position d'un smartphone. Nous avons couplé l'utilisation d'une radio logicielle pour générer un signal GPS fictif, a l'émission de points d'accès Wi-Fi et Bluetooth à proximité de cette position et d'un VPN. L'utilisation simultanée de ces techniques permet d'augmenter la cohérence de la position simulée et de diminuer la probabilité d'être détecté comme position fictive. Dans un deuxième temps, nous avons organisé une collecte de contenus sponsorisés sur smartphone. L'objectif est de collecter les données publicitaires sur des applications de réseaux sociaux comme Facebook ou Twitter. L'utilisation des API de ces sites ne nous permettant pas l'accès à ces données, nous avons mis en place deux techniques différentes de collecte. La première consiste à réaliser des impressions écrans des fils d'actualités et d'en extraire les contenus sponsorisés à l'aide de reconnaissance visuelle automatique. La seconde repose sur l'interception des paquets grâce à une attaque de type \textit{Man In The Middle}.
+
+ Dans ce papier, nous dressons tout d'abord l'état de l'art sur les technologies de géolocalisation et d'instrumentalisation de la position d'un smartphone (Section~\ref{instrumentalisation_position}). Nous étudions ensuite les méthodes de collecte de données publicitaires existantes sur ordinateur (Section~\ref{collecte_web}). Nous proposons ensuite de nouvelles méthodes d'instrumentalisation de la position et de collecte de contenu sponsorisé sur smartphone (Section~\ref{collecte_mobile}). Nous évoquons enfin des méthodes d'analyse des données collectées (Section~\ref{analyse_dataset}), avant de conclure (Section~\ref{conclusion}).
+
+\section{État de l'art}
+
+\subsection{Géolocalisation}
+
+L'adoption massive des smartphones a permis le développement à grande échelle des systèmes de géolocalisation embarqués. Ainsi, les systèmes d'exploitation Android~\cite{google_how_2020} et iOS~\cite{apple_location_2020} proposent des services de géolocalisation avancés permettant de déterminer précisément la position d'un utilisateur en utilisant non seulement le module GPS du smartphone, mais aussi l'adresse IP qui lui est assignée, les appareils Bluetooth et les points d'accès Wi-Fi environnants, ainsi que les antennes relais de téléphonie mobile captés. À l'origine, ces données complémentaires étaient collectées de manière centralisée comme lors de l'initiative Street View~\cite{peter_fleischer_data_2010}. 
+Cependant, ces informations sont désormais collectées de manière distribuée par les utilisateurs des services de géolocalisation. Cette collecte continue permet de constituer un maillage d'adresses MAC mondial mis à jour en temps réel qui permet de déterminer avec précision la position d'un appareil sans même avoir recours au GPS~\cite{google_overview_2020}.
+Ces bases de données sont privées, mais il existe des initiatives publiques telles que le projet WiGLE \cite{bobzilla_wigle_2020}, qui permet à des utilisateurs de publier volontairement les informations que Google et Apple collectent automatiquement. Depuis 2001, cette base de données a permis de collecter 696 millions de points d'accès Wi-Fi uniques, 351 millions d'appareils Bluetooth et 14 millions d'antennes relais, et ceci grâce à seulement 292 000 utilisateurs. Ces statistiques permettent d'imaginer l'importance des bases de données de d'Apple ou de Google qui sont mises à jour en temps réel par plusieurs milliards d'appareils.~\cite{google_google_2019} \\
+
+Cependant, ces systèmes de géolocalisation sont susceptibles d'être manipulés. L'instrumentalisation de la position consiste à manipuler les données reçues par un appareil afin que ce dernier détermine une position fictive choisie par l'attaquant. Cette attaque peut être basée uniquement sur la diffusion d'un signal GPS malicieux~\cite{huang_low-cost_2015}\cite{liu_all_2018}, mais elle peut aussi être augmentée en utilisant les informations complémentaires utilisées par les systèmes de géolocalisation tel que les informations émanant du Wi-Fi, du Bluetooth, ou du GSM. C'est l'approche que nous tentons d'explorer dans ce projet. Cependant, l'algorithme de détermination de la position qui utilise ces différentes données reste inconnu, et nous devons donc le traiter comme une boîte noire.\\
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\linewidth]{geolocation_vectors.pdf}
+\caption{L'algorithme de détermination de la position reste une boite noire}
+\end{figure}
+
+De plus, certaines subtilités nous échappent encore, notamment en relation avec les permissions du téléphone. Dans les paramètres, il est possible de choisir entre plusieurs modes pour que le téléphone détermine notre localisation (GPS uniquement, Wifi/Bluetooth/Réseaux mobiles, Fused Location : les deux options précédentes combinées). Cependant, même en sélectionnant la première option (GPS uniquement) et en désactivant le GPS, nous arrivons à obtenir une position très précise sur Google Maps. Le champ d'application de ces permissions n'est donc pas parfaitement défini et nous ne pouvons pas nous reposer dessus pour limiter les variables influant sur la détection de notre localisation.
+
+L'exposition grandissante des données de géolocalisation soulève de nouveaux problèmes éthiques. Malgré le fait que ces informations peuvent avoir un réel intérêt pour le bien commun, comme c'est le cas pour la modélisation des flux de déplacements urbains~\cite{calacci_tradeoff_2019}, elles peuvent aussi menacer la vie privée des individus. Daniel le Metayer, directeur de recherche au centre de recherche Inria Grenoble et spécialiste en protection de la vie privée dit \say{la valeur de la vie privée ne se réduit pas à la possibilité de cacher des choses répréhensibles ou honteuses: la possession d’une aire intime, privée, est nécessaire au développement de la personnalité, à l’émancipation de chacun}. En effet, en rendant accessible nos informations de mobilité, qui sont des données à la fois personnelles et sensibles, nous réduisons encore plus notre aire intime. De plus, le traitement et le croisement de ces informations de mobilité avec des connaissances auxiliaires (statistiques INSEE, modèles d'apprentissage) permet d'inférer de multiples informations sur une personne, comme par exemple son lieu d'habitation et de travail, son sexe, mais aussi ses traits de caractères et ses centres d'intérêts~\cite{boutet_inspect_2019}.
+
+D'autre part, cette collecte de données géolocalisées peut avoir des conséquences néfastes majeures sur la vie privée : nous n'avons pas de contrôle sur l'utilisation de ces données, qui peuvent être utilisées par des gouvernements, institutions et entreprises. Par exemple, aux Etats-Unis, la police peut faire recours à des \textit{Geofence warrant} (mandat de géorepérage) afin de pouvoir identifier les personnes présentes à une manifestation qui aurait dégénéré. Dès lors, une personne passant par cette endroit sans forcément être impliquée dans les délits peut-être incriminée \cite{chatrie_united_2019}. En Europe cependant, le RGPD permet aux utilisateurs finaux d'avoir un meilleur contrôle sur leurs données personnelles, et limite strictement l'accès à ces données par des acteurs extérieurs.
+
+Une étude dans une station de train à Melbourne nous renseigne sur la manière dont les utilisateurs sont enclin à partager leur données avec des institutions publiques et gouvernementales pour améliorer l'expérience et la sécurité des usagers. Il se trouve alors que si les personnes concernées étaient plus renseignées sur la manière dont leurs informations étaient traitées et sécurisées, elles seraient plus enclines à les mettre au service du bien commun \cite{cabalquinto_it_2020}.
+
+Enfin, même après avoir été anonymisées, certaines attaques~\cite{zhang_asynchronous_2018} permettent de ré-identifier le propriétaire de la trace de mobilité avec une probabilité élevée, dans le cas ou une partie de la donnée aurait été exposé.
+%Enfin, ces données de géolocalisation sont parfois collectées et publiées pour mener des études scientifiques \cite{mokhtar_privamov_2017}, après avoir été anonymisées \cite{primault_privacy-preserving_2015}. Toutefois, des attaques comme une \textit{Asynchronous side information attack from the edge} permettraient d'identifier le propriétaire de la trace avec une probabilité élevée, dans le cas ou une partie de la donnée aurait été exposé \cite{zhang_asynchronous_2018}. 
+En effet, quelque soit le type de collecte utilisé (GPS, Wifi ou antennes GSM), chaque trace se révèle hautement unique\cite{boutet_uniqueness_2016}. Pour un dataset où la localisation est renseignée toutes les heures avec la précision des antennes de téléphonie, 4 données spatio-temporelles suffisent pour identifier un utilisateur avec une probabilité de 95\% \cite{montjoye_unique_2013}.
+
+
+\subsection{Ciblage publicitaire}
+
+Les réseaux sociaux, en majorité écrasante, font leurs bénéfices sur les publicités qu'ils proposent à leur utilisateurs. Pour les annonceurs, ils sont un lieu particulièrement intéressant pour cibler les personnes qui reçoivent la publicité car ils fournissent de nombreuses informations telles que la localisation, l'âge, le genre et l'orientation sexuelle, les centres d'intérêts et les interactions sociales. Le ciblage publicitaire politique sur les réseaux sociaux est donc un outil potentiellement puissant pour les campagnes politiques\cite{maruyama_hybrid_2014}, mais le pouvoir est également dans les mains des réseaux sociaux eux-mêmes, qui ont un droit de veto sur le contenu éligible à la publication sur leurs plates-formes et peuvent bannir les publicités durant certaines périodes. C'est le cas de Facebook et Google qui ont interdit les publicités politiques pendant la période des élections aux États-Unis\cite{facebook_facebook_2020}. Proposer des publicités personnalisées afin d'avoir un plus fort impact sur l'utilisateur, c'est aussi donner du pouvoir à la manipulation via les fake news, qui peuvent être proposées aux utilisateur sous forme de publicité malicieuse \cite{ribeiro_microtargeting_2019}.
+
+A la suite du scandale Cambridge Analytica, Facebook et Twitter ont réduit l'accès à leurs APIs \cite{axel_bruns_after_2019}. En conséquence, nous avons du mettre en place d'autres techniques pour extraire les contenus sponsorisés proposés aux utilisateurs, comme par exemple du \textit{web scraping}. Ce terme désigne un ensemble de techniques permettant d'obtenir automatiquement les informations présentées par un site web sans avoir à y naviguer manuellement. Cette pratique permet notamment d'extraire certains contenus des pages web afin de les transformer puis de les stocker dans une structure de données appropriée. \\
+
+Une collecte de publicités Facebook a été réalisée au Brésil pour analyser les publicités à l'occasion des élections présidentielles en 2018~\cite{silva_facebook_2020}. Les publicités collectées sont ensuite triées pour extraire celles à caractère politique à l'aide d'algorithmes de classification supervisés. Il est constaté que certaines publicités politiques ainsi obtenues ne sont pas considérés dans l'API Facebook comme ayant une composante politique. % TODO est-ce un bypass des annonceurs ou Facebook laisse passer ? Développer -> pas plus d'infos dans le papier de Silva, seulement que la loi Brésilienne et les conditions d'utilisations des pub Facebook ne sont pas nécéssairement appliquées.
+% discuter du fait que cela est fait délibérément ou non ?
+
+
+Un jeu de données de publicités récolté par ProPublica en 2018 est analysé pour voir quels attributs d'un utilisateur en font un bon sujet pour recevoir des publicités politiques \cite{levi_automatically_2020}. Les publicités politiques sont ici extraites à l'aide d'une classification de texte naïve bayésienne sur les publicités encodées avec TF-IDF. Dans le document, la région apparaît être le deuxième critère après l'âge pour faire du ciblage publicitaire. \\
+
+
+Avec les smartphones, les annonceurs ont accès à davantage  d'éléments géographiques pour réaliser un ciblage publicitaire, en proposant des publicités spécifiques aux lieux de déplacement. Sur Android, Google permet aux développeurs de créer des géofences, c'est à dire de choisir un cercle géographique dans lequel une application peut opérer différemment. Quel degré de granularité géographique est proposé pour le ciblage publicitaire sur les différents réseaux sociaux ? Sur Facebook, les annonceurs peuvent choisir le lieu d'exposition de leur publicités, en particulier ils peuvent choisir un pays, une région, une ville, un code postal, un lieu avec un rayon (latitude, longitude), une circonscription électorale. Ils peuvent également choisir le type du lieu : si l'utilisateur est chez lui (localisation identique la ville renseignée sur son profil), en vacances (localisation différente la ville renseignée sur son profil, et avec plus de 100 miles de distance) ou s'il est simplement en déplacement \cite{noauthor_ciblage_nodate}. Sur Twitter, il est possible de cibler un ensemble de pays, régions, zones urbaines, ou codes postaux. 
+
+
+Le ciblage géographique n'est pas seulement d'utilité pour les annonceurs. Sur le moteur de recherche Google, les suggestions proposées pour compléter la recherche dépendent de la localisation. Il est un outil également pour la police, qui peut obtenir un mandat pour obtenir des informations sur des utilisateurs dans un géofence particulier\cite{ng_how_nodate}.
+
+
+Mais la possibilité d'utiliser la localisation pour recommander des services de proximité ou proposer des publicités personnalisées peut être une atteinte à la vie privée, par exemple en recommandant à des utilisateurs de se connecter à d'autres utilisateurs qui fréquentent les mêmes lieux. Aux Etats-Unis, les deux lois qui gouvernent les données de localisation sont l'Electronic Privacy Act de
+1986 et le Communications Act de 1934. Ces deux lois ont été écrites bien avant les usages que l'on peut observer aujourd'hui, et pourraient donc ne plus être pertinentes vis à vis des usages actuels. Certains états ont approuvé des lois supplémentaires mais sont toujours en attente d'approbation, comme par exemple le Geolocation Privacy and Surveillance Act ou le Location Privacy Protection Act. En Europe, la collecte des données personnelles est régie par le RGPD, datant de 2018\cite{karanja_unintended_2018}.
+
+
+\section{Protocole expérimental}
+
+Afin d'analyser l'impact de la position de l'utilisateur sur sa personnalisation de contenu, il est nécessaire d'instrumentaliser la géolocalisation du téléphone. 
+Dans cette partie, nous expliquons les différentes stratégies que nous avons élaboré pour instrumentaliser la position du téléphone, créer des identités uniques sur les réseaux sociaux, et enfin collecter les publicités.
+
+
+\subsection{Instrumentalisation de la position}\label{instrumentalisation_position}
+
+Afin d'instrumentaliser la position d'un utilisateur fictif, nous tentons d'utiliser tous les vecteurs de détermination de position.
+
+En ce qui concerne le GPS, nous déterminons au préalable un trajet qui ferait passer notre utilisateur fictif dans des zones identifiées comme potentiellement ciblées par des annonceurs politiques : lieux religieux, hôpitaux, bureaux de vote, clinique d'avortement. Nous dessinons une trace GPS de ce trajet à l'aide de l'outil \href{https://gpxstudio.github.io/}{GPX studio}. Les points GPS constituant ces traces sont ensuite convertis dans un repère \textit{Earth Centered Earth Fixed} afin de servir de données d'entrée à l'outil GPS-SDR-SIM ~\cite{osqzss_osqzssgps-sdr-sim_2020} qui, en utilisant un fichier d'éphéméride GNSS ~\cite{national_aeronautics_and_space_administration_gnss_2020}, permet de créer un signal GPS fictif simulant un déplacement le long de la trajectoire prédéfinie. Une fois généré, ce signal GPS est ensuite émis à l'aide d'une radio logicielle.
+
+De manière plus détaillée, le GPS fonctionne par triangulation de signaux reçus par le téléphone. Plusieurs constellations de satellites (GPS, Galileo, GLONASS, BeiDou) émettent un signal radio en continu. Le signal radio émis par chaque satellite contient l'heure d'émission précise provenant d'une horloge atomique embarquée ainsi que la position du satellite déterminée à l'aide des lois de la mécanique orbitale ainsi que de corrections mesurées par des stations au sol dont les positions sont connue. La distance $D$ d'un récepteur à un de ces satellites peut donc être exprimée par la relation
+
+\begin{equation}
+    D = c(\tau + \Delta t)
+\end{equation}
+
+où $c$ représente la vitesse de déplacement de l'onde radio, $\tau$ le temps de propagation de l'onde de l'émetteur au récepteur et $\Delta t$ la différence de synchronisation d'horloge entre l'émetteur et le récepteur.
+
+D'autre part, le théorème de Pythagore appliqué dans un repère ECEF, dans lequel le récepteur est immobile, nous donne la relation entre la position d'un satellite $i$ et du récepteur $r$.
+
+\begin{equation}
+    (x_i - x_r)^2 + (y_i - y_r)^2 + (z_i - z_r)^2 = D^2
+\end{equation}
+
+D'où l'équation de détermination de la position
+
+\begin{equation}
+    (x_i - x_r)^2 + (y_i - y_r)^2 + (z_i - z_r)^2 = c(\tau_i + \Delta t)
+    \label{eq:position_determination}
+\end{equation}
+
+Cette équation comporte 4 inconnues ($x_r$, $y_r$, $z_r$, $\Delta t$) et nécessite donc la réception d'au moins 4 signaux provenant de satellites différents pour déterminer précisément la position du récepteur. 
+
+Dans notre cas d'utilisation, nous cherchons à effectuer le calcul inverse : à partir de la position déterminée du récepteur (trajectoire prédéfinie) et celle des satellites (fichiers d'éphémérides), on calcule les $\tau_i$ vérifiant l'équation \ref{eq:position_determination}. Une fois ces délais de réception calculés, il est possible de construire les messages de navigation émis par les satellites et de les transmettre à l'aide de la radio logicielle.
+
+Afin d'augmenter cette instrumentalisation, nous récupérons à intervalles régulier la position GPS inférée par le téléphone, et nous l'utilisons pour interroger la base de données WiGLE afin d'obtenir les adresses MAC des points d'accès Wi-Fi et des appareils Bluetooth à proximité. Ces adresses MAC sont ensuite émises à l'aide de l'outil mdk3\cite{aspj_mdk3_2013} afin d'êtres captées par le téléphone instrumentalisé.
+
+Afin de s'assurer de la pertinence de cette méthode, nous avons étudié l'influence du nombre de points d'accès et de leur localisation sur les coordonnées inférées par le service de géolocalisation de Google. Nous envoyons donc des requêtes de localisation contenant des adresses MAC de points d'accès Wi-Fi à la fois à San Francisco et à Kyoto, en proportion différente.
+
+\newcommand{\green}{\cellcolor{green!50}}
+\newcommand{\red}{\cellcolor{red!50}}
+\newcommand{\yellow}{\cellcolor{yellow!80}}
+\begin{table}
+\centering
+\begin{tabular} {| m{4.5cm} | m{0.6cm}| m{0.6cm} | m{0.6cm} | m{0.6cm} | m{0.6cm} | m{0.6cm} | m{0.6cm} | m{0.6cm} | m{0.6cm} |}
+ \hline
+ AP San Francisco / Kyoto & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7   \\
+ \hline
+ 0  & \cellcolor{black} & \red & \red & \red & \red & \red & \red & \red     \\
+ \hline
+ 1 & \green & \yellow & \yellow & \red & \red & \red & \red & \red  \\
+ \hline
+ 2 & \green & \green & \green & \yellow & \red & \red & \red & \red  \\
+ \hline
+ 3 & \green & \green & \green & \green & \yellow & \red & \red & \red  \\
+ \hline
+ 4 & \green & \green & \green & \green & \green & \yellow & \yellow & \red  \\
+ \hline
+ 5 & \green & \green & \green & \green & \green & \green & \green & \yellow  \\
+ \hline
+\end{tabular} 
+\vspace{10pt}
+\caption{\label{tab:table-name} Localisation renvoyée par le geolocation service de Google (vert: San Francisco, rouge: Kyoto, jaune: fail}
+\end{table}
+
+On constate alors que le service de géolocalisation ignore les points d'accès qui sont en infériorité numérique. Lorsque qu'ils sont en proportion à peu près égale (en jaune sur le schéma), les points d'accès sont jugés non pertinents et le service utilise donc l'adresse IP, ce qui dégrade beaucoup la précision (environ 2km au lieu de 150m). Cela nous permet de conclure qu'il est possible de noyer les points d'accès réellement présents par l'émission de points d'accès fictifs, et ainsi de tromper la part de détermination de la position utilisant le Wi-Fi. 
+
+Enfin, nous utilisons un VPN afin d'obtenir une adresse IP proche du lieu de déplacement de notre utilisateur fictif.
+
+Ce protocole expérimental est sujet à un certain nombre de limitations pratiques. 
+Tout d'abord, l'émission du signal GPS doit être effectué sur la bande radio L1 située à une fréquence de 1575.42 MHz. Cependant, le modèle d'antenne en notre possession (ANT500) ne possède qu'une bande d'utilisation allant de 75 MHz à 1 GHz. D'autre part, l'horloge interne de notre radio logicielle (HackRF) possède un oscillateur interne ayant une stabilité de 20 ppm, tandis qu'une stabilité inférieure à 0.5 ppm est nécessaire pour obtenir une stabilité du signal GPS \cite{kao_miniature_2014}.
+
+Ensuite, l'API de WiGLE est à l'origine limitée à 5 requêtes quotidiennes. Bien qu'ayant obtenu une dérogation de l'auteur du projet afin de pouvoir effectuer 250 requêtes par jour, cette limitation empêche le passage à l'échelle de l'expérimentation. En effet, nous aurions souhaité mettre à jour les adresses MAC diffusées toutes les 10 secondes, ce qui ne nous aurait permis de simuler qu'une quarantaine de minutes de déplacement en cumulé pour nos utilisateurs avant d'atteindre ces limites quotidiennes.
+
+Enfin, il ne nous a pas été possible d'éliminer certaines variables externes liées au bruit ambiant. Nous n'avons trouvé aucune zone sans point d'accès Wi-Fi, sans réseau et sans aucun signal GPS. L'obscurité de l'algorithme de détermination de la position s'est révélé être un obstacle majeur aux expérimentations. 
+
+Ce protocole nous a permis d'obtenir des positions fictives de manière intermittente, et nous avons réussi à faire parcourir à un de nos téléphones un trajet d'une dizaine de minutes sur Google Maps dans la ville d'Austin au Texas. Cependant, bien qu'ayant pu constater le déplacement de la localisation le long du trajet, nous n'avons pas retrouvé ce trajet dans l'historique de nos déplacements Google. Il est donc envisageable qu'au delà des vecteurs de détermination de la position en temps réel, d'autres variables interviennent afin de juger de la plausibilité de la localisation. L'hypothèse que nous émettons est qu'un algorithme de filtrage permet d'éliminer les déplacements improbables, comme ce fut le cas pour notre téléphone qui s'est téléporté entre l'INSA et les États-Unis en quelques secondes.
+
+
+\subsection{Création d'identités}
+
+Afin d'étudier l'impact de la géolocalisation sur le ciblage publicitaire, il est nécessaire d'annuler l'influence des autres variables qui entrent en jeu. Pour ce faire, nous avons créé une flotte d'adresse e-mail servant à alimenter nos différents comptes. La tâche n'est pas aisée car il y a énormément de variables qui peuvent influencer le contenu publicitaire, et nous souhaitons étudier l'influence d'une seule d'entre elles : la localisation. Il s'agit donc de créer une identité assez banale, pour obtenir des publicités, sans qu'elles ne soient influencées par nos centres d'intérêt, mais par notre position.
+
+Nous avons vite été confrontés à des difficultés pour créer de telles identités. Les comptes étant totalement vierges, nous n'avions pas de contenu, et donc pas de publicités. En effet, il est légitime pour un annonceur de ne pas vouloir payer pour atteindre un utilisateur dont les centres d'intérêt ne sont pas encore déterminés. Nous avons donc essayé d'alimenter nos comptes pour créer des identités fictives : ajouter des amis et aimer des pages sur Facebook, suivre des comptes et poster sur Instagram, suivre des comptes sur Twitter. Au cours de cette démarche, nous avons été bloqués par l'algorithme de Facebook qui a assimilé notre comportement à celui d'un bot. Pour le débloquer, il nous a été demandé d'uploader une vidéo de notre visage au cours de laquelle nous devions effectuer certains mouvements. Nous avons essayé de le tromper avec un modèle de tête 3D en le manipulant, sans succès. Malgré nos efforts, nous n'avons réussi à obtenir que quelques encarts publicitaires sur Facebook, mais aucun sur Twitter, Instagram ou TikTok. Les hypothèses que nous émettons sont que notre comportement est peut-être détecté comme frauduleux, et que l'apparition de publicités est soumis à un délai initial permettant de déterminer les centres d'intérêts de l'utilisateur.
+
+Comme expliqué précédemment, il y a un grand nombre de variable aboutissant au ciblage publicitaire (âge, sexe, centres d'intérêt, orientation politique, localisation...). Cependant nous ne disposions que de trois téléphones mobiles, ce qui est peu pour produire des statistiques intéressantes. De plus, nous ne pouvions pas réinitialiser ou rooter ces téléphones. 
+% expliquer pourquoi on ne peut pas utiliser un téléphone routé
+
+Afin d'illustrer la difficulté combinatoire de cette création d'identité afin d'obtenir des statistiques utilisables, nous avons dressé une liste des variables pouvant potentiellement influer la manière dont un réseau social identifie la position d'un utilisateur : 
+
+\begin{itemize}
+    \item Variables liées aux services de localisation
+    
+    \begin{itemize}
+      \item GPS
+      \item Wifi
+      \item GSM
+      \item IP
+      \item Historique de localisation
+      
+    \end{itemize}
+    
+    \item Variables liées aux téléphones
+    
+    \begin{itemize}
+      \item Langue de l'interface
+      \item Adresse mac du téléphone, qui permet d'inférer le Vendor ID
+      \item Mode de localisation activé (GPS, Bluetooth + Wifi + GSM, All)
+      \item Comptes connectés sur le téléphone : compte Google nécessaire pour télécharger des applications pouvant être identifié comme habitant dans une ville
+    \end{itemize}
+    
+    \item Variables liées aux applications
+    
+    \begin{itemize}
+        \item Permission d'utilisation d'accès aux services de L
+    localisation
+        \item Liste des informations renseignées sur le profil, Lieu d'habitation, lieu d'études, lieu de travail
+        \item Informations inférées par rapport aux relations (amis avec que des gens d'une ville), par rapport aux appartenances à des groupes (neurchi de Lyon, appartements Lyon, bon plan etc..), pages aimées (restaurants lyonnais...)
+    \end{itemize}
+\end{itemize}
+
+\subsection{Collecte des données}
+
+Face à l'impossibilité de collecter le flux publicitaire en utilisant les API des plates-formes, nous avons mis en place d'autres moyens récupérer les publicités. 
+
+\subsubsection{Web scraping}\label{collecte_web}
+
+Nous avons tout d'abord utilisé une solution de collecte pour les publicités web. Cette première solution utilise un plugin Google Chrome - \textit{MyAdFinder} - pour réaliser un portefolio des publicités rencontrées sur Facebook. Ensuite, on utilise selenium webdriver pour extraire le titre de ces publicités toutes rassemblées dans une page HTML. C'est un processus lent, puisqu'il implique la consommation active du fil d'actualité Facebook de l'utilisateur et qu'il ne suffit pas de défiler pour obtenir de nouvelles publicités, il faut également laisser un intervalle de temps entre chaque connexion. 
+Cette approche permet cependant de tirer des conclusions restreintes sur le ciblage géographique, dans le sens où les utilisateurs consomment du contenu web principalement chez eux, alors qu'ils utilisent davantage leur smartphone en déplacement.
+
+\subsubsection{Collecte visuelle}\label{collecte_mobile}
+
+Afin d'automatiser la collecte de publicités davantage liées à la géolocalisation, nous avons également mis au point des protocoles de collecte de publicités sur mobile. À l'aide d'applications d'automatisation, nous effectuons un défilement permanent de l'écran ainsi que des captures d'écran à chaque intervalle de temps. Nous réalisons ensuite une segmentation des images capturées pour isoler chaque post du fil d'actualité. Nous filtrons ensuite les posts qui correspondent à du contenu sponsorisé, à l'aide d'un algorithme de pattern matching. Enfin, nous utilisons un outil de reconnaissance optique de caractères nommé Tesseract afin d'extraire le texte contenu dans chaque annonce publicitaire.
+
+Ce protocole de collecte fonctionne correctement, cependant il n'est pas généralisable sous cette forme. Il est particulièrement adapté à un réseau social comme Twitter, ou l'écran peut contenir l'intégralité d'un post, à la différence de Facebook ou Instagram qui peut scinder les posts dépassant un certain nombre de caractères. Afin de capturer ces publications, il serait nécessaire d'introduire une navigation plus complexe capable de cliquer sur un lien pour afficher la totalité du post, tout en sachant que certains de ces posts longs affichent leur contenu sur la même page lors de l'utilisation de ce lien, tandis que d'autres s'ouvrent dans un nouveau contexte et nécessitent un retour sur la page principale afin de continuer la collecte. Cette navigation n'est pas possible avec l'outil Automate, mais peut être développée dans le cadre d'une application de collecte dédiée.
+D'autre part, la chaîne de traitement des contenus sponsorisés pourrait être plus poussée dans le cas d'une collecte à grande échelle. En effet, les textes extraits des contenus publicitaires sont analysés manuellement, mais il est tout à fait envisageable d'utiliser un modèle de classification. Cela permettrait d'effectuer une analyse statistique plus poussée sur une quantité importante de données.
+
+\subsubsection{Interception de paquets}
+
+Afin de combiner l'efficacité et la transparence de cette collecte, nous proposons une solution hybride utilisant une attaque par Man In The Middle.
+Le principe est de transmettre les requêtes du téléphone cible via un proxy. En installant le certificat TLS du proxy sur le téléphone cible, ce proxy peut encrypter et décrypter le traffic HTTPS au fil des requêtes~\cite{noauthor_mitmproxy_2020}, ce qui permet d'observer en clair les réponses des API. Il est alors possible faire du reverse engineering afin de comprendre la structure de ces réponses et d'en extraire les posts, ainsi que les informations publicitaires associées. 
+
+De manière plus détaillée, l'interception de paquet se déroule de la manière suivante.
+
+\begin{itemize}
+    \item Le téléphone émet une requête HTTP CONNECT afin de demander au proxy de créer un pipe qui permettra d'établir une connection TLS entre le client et le serveur. Dans le cas d'un proxy classique, ce pipe est opaque au proxy qui ne fait que transférer des données cryptées
+    \item Le proxy répond \textit{200 Connection established}, comme s'il avait réellement établi le pipe demandé
+    \item Le téléphone pense alors parler au serveur et initie la connection TLS par la phase de handshake, en indiquant notamment le nom du serveur auquel il souhaite se connecter
+    \item Le proxy interrompt le handshake côté client et se connecte au serveur avec lequel le client souhaite communiquer
+    \item Le serveur répond en présentant son certificat TLS
+    \item Le proxy génère le certificat d'interception en remplaçant l'autorité de certification du serveur par celle du proxy, et en recopiant le Common Name ainsi que les Subject Alternative Names du serveur dans ce nouveau certificat
+    \item Le proxy termine le handshake TLS avec le téléphone, qui est désormais connecté au serveur par une connection TLS que le proxy peut décrypter
+    \item Le téléphone communique avec le serveur et le proxy intercepte et décrypte à la volée le flux de requêtes et de réponses
+\end{itemize}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{mitmproxy_concepts.png}
+    \caption{Fonctionnement du proxy utilisé pour intercepter les requêtes}
+    \label{fig:mitmproxy/concepts}
+\end{figure}
+
+Plusieurs obstacles empêchent cette solution de fonctionner parfaitement. Tout d'abord, depuis Août 2016 et la sortie d'Android Nougat (7.0), les applications Android ne font plus confiance par défaut aux certificats installés par les utilisateurs~\cite{chad_brubaker_changes_2016}. 
+Plusieurs solutions sont envisageables pour contourner cette mesure de sécurité. La plus simple consiste à utiliser la version mobile de l'application dans un navigateur tels que Firefox ou Chrome, car les navigateurs testés font confiance aux certificats utilisateurs. La seconde consiste à patcher les APK des applications afin de forcer la confiance dans les certificats utilisateurs. Cette méthode s'est avérée infructueuse car les organisations ciblées ont recours à l'obfuscation de leurs applications ce qui rend ardue leur décompilation. La troisième solution consiste à installer le certificat utilisateur dans le registre des certificats système. Ceci n'est possible qu'avec un appareil rooté, et n'est pas garanti de fonctionner si les applications mettent en place du certificate pinning~\cite{sleevi_rfc7469_2015}. La dernière solution consiste à intégrer les programmes de bug bounty mis en place afin de pouvoir utilser cette solution légalement. C'est le cas du programme Whitehat~\cite{facebook_whitehat_2020} de Facebook, qui permet entre autres de faire confiance aux certificats utilisateurs, et ainsi d'utiliser ce protocole de collecte sur Facebook, Instagram, Whatsapp et les autres applications développées par Facebook.
+
+Cette méthode nous a permis de collecter des publicités de manière quasi automatique, mais elle repose sur l'hypothèse de stabilité du format des requêtes interceptées. Cette hypothèse n'est cependant pas vérifiée en pratique, comme nous avons pu l'observer début Janvier lors de l'introduction d'une nouvelle stratégie d'encodage des réponses par l'application Facebook. La mise en place de l'algorithme de compression \textit{zstd}~\cite{collet_zstandard_2018} qui utilise des dictionnaires pour optimiser la vitesse et le ratio de compression pour des fichiers de petite taille empêche le proxy de décoder les requêtes et donc d'en extraire les publicités.
+
+Nous avons aussi tenté d'utiliser cette méthode pour instrumentaliser la position du téléphone en modifiant les requêtes qui transmettent nos données de géolocalisation aux serveurs applicatifs. Cela permettrait d'avoir un contrôle total sur les données transférées. Cependant, les requêtes modifiées n'étaient pas acceptées par le serveur à cause d'erreurs d'authentification. Nous en concluons que ces serveurs mettent en place un mécanisme empêchant la modification de requêtes à la volée.
+
+\section{Résultats}\label{analyse_dataset}
+
+La technique d'interception de paquets nous a permis de collecter un jeu de de données publicitaire. Ce dataset contient des publicités récoltées sur les applications mobiles de Facebook et Instagram, ainsi que sur les versions mobiles des sites de Facebook et Twitter.
+
+% dire qu'il est nécessaire de collecter à plus grande échelle pour pouvoir ếtre relevant statistiquement
+
+\section{Conclusion}\label{conclusion}
+
+\iffalse
+Figure décrivant les différentes étapes
+\fi
+
+
+% ---- Bibliography ----
+
+\bibliographystyle{splncs04} %ieeetr
+\bibliography{psat-geoloc}
+\end{document}
+
